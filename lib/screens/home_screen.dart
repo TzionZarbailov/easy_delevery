@@ -13,22 +13,9 @@ class HomeScreen extends StatelessWidget {
 
   void selectPage(BuildContext context, Widget pageScreen) {
     Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => pageScreen,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          var offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
-          );
+      MaterialPageRoute(
+        builder: (context) {
+          return pageScreen;
         },
       ),
     );
@@ -55,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                       selectedPage: () => selectPage(
                         context,
                         //* Sign in Screen
-                         LoginScreen(),
+                        LoginScreen(),
                       ),
                     ),
                   ],
