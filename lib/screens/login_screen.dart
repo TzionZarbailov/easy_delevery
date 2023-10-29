@@ -5,35 +5,17 @@ import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_textfield.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   //* text controllers
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-  void selectPage(BuildContext context, Widget pageScreen) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => pageScreen,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          var offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
-          );
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                   //* Icon facebook
                   IconButton(
                     focusColor: Colors.white,
-                    iconSize: 40,
+                    iconSize: 33,
                     onPressed: () {},
                     icon: const Icon(
                       Icons.facebook,
@@ -144,8 +126,8 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {},
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
-                      width: 40,
-                      height: 40,
+                      width: 33,
+                      height: 33,
                     ),
                   ),
                 ],
@@ -153,38 +135,31 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 15),
 
               //* text field for registration
-              GestureDetector(
-                onTap: () => selectPage(
-                  context,
-                  //* Sign in Screen
-                  const HomeScreen(),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      'להרשמה',
-                      style: TextStyle(
-                        color: Color(0xFFF98F13),
-                        fontSize: 20,
-                        fontFamily: 'Mukta Mahee',
-                        fontWeight: FontWeight.w700,
-                        height: 0.07,
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'גלול הצידה',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontFamily: 'Mukta Mahee',
+                      fontWeight: FontWeight.w700,
+                      height: 0.07,
                     ),
-                    SizedBox(width: 5),
-                    Text(
-                      '?אין לך חשבון',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Mukta Mahee',
-                        fontWeight: FontWeight.w700,
-                        height: 0.07,
-                      ),
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    'להרשמה',
+                    style: TextStyle(
+                      color: Color(0xFFF98F13),
+                      fontSize: 20,
+                      fontFamily: 'Mukta Mahee',
+                      fontWeight: FontWeight.w700,
+                      height: 0.07,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
