@@ -17,6 +17,9 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  //* login function
+  void login() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                selectedPage: () {},
+                selectedPage: login,
               ),
 
               const SizedBox(height: 3),
@@ -113,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //* Icon facebook
                   IconButton(
                     focusColor: Colors.white,
-                    iconSize: 33,
+                    iconSize: 40,
                     onPressed: () {},
                     icon: const Icon(
                       Icons.facebook,
@@ -126,36 +129,39 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {},
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
-                      width: 33,
-                      height: 33,
+                      width: 40,
+                      height: 40,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
 
               //* text field for registration
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    'גלול הצידה',
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: const Text(
+                      'להרשמה',
+                      style: TextStyle(
+                        color: Color(0xFFF98F13),
+                        fontSize: 20,
+                        fontFamily: 'Mukta Mahee',
+                        fontWeight: FontWeight.bold,
+                        height: 0.07,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  const Text(
+                    '? אין לך משתמש',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontFamily: 'Mukta Mahee',
-                      fontWeight: FontWeight.w700,
-                      height: 0.07,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    'להרשמה',
-                    style: TextStyle(
-                      color: Color(0xFFF98F13),
-                      fontSize: 20,
-                      fontFamily: 'Mukta Mahee',
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       height: 0.07,
                     ),
                   ),

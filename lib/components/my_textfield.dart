@@ -58,7 +58,7 @@ class MyTextField extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

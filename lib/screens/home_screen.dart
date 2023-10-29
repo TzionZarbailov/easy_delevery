@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                       selectedPage: () => selectPage(
                         context,
                         //* Sign in Screen
-                        LoginScreen(),
+                        const LoginScreen(),
                       ),
                     ),
                   ],
