@@ -5,8 +5,12 @@ class SignUpCustomers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.red,
+    return  Scaffold(
+     body: Column(
+      children: const [
+        
+      ],
+     ),
     );
   }
 }
