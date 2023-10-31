@@ -2,10 +2,10 @@ import 'package:easy_delevery/models/category.dart';
 import 'package:flutter/material.dart';
 
 enum MenuItemType {
-  starter,
-  mainCourse,
-  dessert,
-  drink,
+  starter, //*This is the starter menu item
+  mainCourse, //*This is the main course menu item
+  dessert, //*This is the dessert menu item
+  drink, //*This is the drink menu item
 }
 
 class MenuItem {
