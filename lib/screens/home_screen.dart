@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
 
             //* List text
             Column(
-              children: const <Widget>[
+              children: const [
                 //* This is the text on the top of the screen'
                 TextHomeScreen(text: 'פלטפורמה נוחה ומקוונת להזמנה'),
 
