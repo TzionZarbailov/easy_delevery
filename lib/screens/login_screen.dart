@@ -1,4 +1,4 @@
-import 'package:easy_delevery/screens/home_screen.dart';
+import 'package:easy_delevery/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
@@ -14,11 +14,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   //* text controllers
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  //* login function
-  void login() {}
+  //* login functions
+  void _login() {}
+
+  void _loginWithGoogle() {}
+
+  void _loginWithFacebook() {}
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 520,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('lib/assets/images/imageLogin.jpeg'),
+                        image: AssetImage(
+                          'lib/assets/images/imageLogin.jpeg',
+                        ),
                         fit: BoxFit.fill,
                       ),
                     ),
                     child: Container(
                       alignment: Alignment.bottomRight,
                       width: 430,
-                      decoration: ShapeDecoration(
-                        gradient: const LinearGradient(
+                      decoration: const ShapeDecoration(
+                        gradient: LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomRight,
                           colors: [
@@ -52,8 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Color.fromARGB(217, 0, 0, 0),
                           ],
                         ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2)),
+                        shape: RoundedRectangleBorder(),
                       ),
                       child: const Padding(
                         padding: EdgeInsets.symmetric(
@@ -74,6 +79,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black.withOpacity(0.3),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                              color: Colors.white, size: 26.5),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
 
@@ -83,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
               MyTextField(
                 labelText: ':דוא"ל',
                 obscureText: false,
-                controller: emailController,
+                controller: _emailController,
               ),
 
               const SizedBox(height: 10),
@@ -91,78 +114,55 @@ class _LoginScreenState extends State<LoginScreen> {
               MyTextField(
                 labelText: ':סיסמא',
                 obscureText: true,
-                controller: passwordController,
+                controller: _passwordController,
               ),
               const SizedBox(height: 5),
               //*password recovery
-              const TextHomeScreen(text: '?שכחת סיסמא'),
-
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => RegisterScreen(),
+                  ),
+                ),
+                child: const TextHomeScreen(text: '?שכחת סיסמה'),
+              ),
               const SizedBox(height: 5),
 
               MyButton(
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                selectedPage: login,
+                selectedPage: _login,
               ),
 
-              const SizedBox(height: 3),
+              const SizedBox(height: 10),
 
-              const TextHomeScreen(text: 'או התחבר עם'),
-              //* Icon google
+              const TextHomeScreen(
+                text: 'או התחבר עם',
+              ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //* Icon facebook
                   IconButton(
                     focusColor: Colors.white,
-                    iconSize: 40,
-                    onPressed: () {},
+                    iconSize: 50,
+                    onPressed: _loginWithFacebook,
                     icon: const Icon(
                       Icons.facebook,
                       color: Color(0xFF345FF6),
                     ),
                   ),
+                  const SizedBox(width: 15),
                   //* Icon google
                   IconButton(
                     focusColor: Colors.white,
-                    onPressed: () {},
+                    onPressed: _loginWithGoogle,
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              //* text field for registration
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: const Text(
-                      'להרשמה',
-                      style: TextStyle(
-                        color: Color(0xFFF98F13),
-                        fontSize: 20,
-                        fontFamily: 'Mukta Mahee',
-                        fontWeight: FontWeight.bold,
-                        height: 0.07,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  const Text(
-                    '? אין לך משתמש',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'Mukta Mahee',
-                      fontWeight: FontWeight.w600,
-                      height: 0.07,
+                      width: 50,
+                      height: 50,
                     ),
                   ),
                 ],
