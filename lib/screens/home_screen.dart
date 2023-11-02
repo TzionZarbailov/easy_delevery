@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                       text: 'התחבר',
                       horizontal: 10,
                       vertical: double.minPositive,
-                      selectedPage: () => selectPage(
+                      onTap: () => selectPage(
                         context,
                         //* Sign in Screen
                         const LoginScreen(),
@@ -98,7 +98,7 @@ class HomeScreen extends StatelessWidget {
               text: 'הרשמה ללקוחות',
               horizontal: 66,
               vertical: 12,
-              selectedPage: () => selectPage(
+              onTap: () => selectPage(
                 context,
                 //* Sign up for customers
                 const SignUpCustomers(),
@@ -111,7 +111,7 @@ class HomeScreen extends StatelessWidget {
               text: 'הרשמה לבעלי עסקים',
               horizontal: 43,
               vertical: 12,
-              selectedPage: () => selectPage(
+              onTap: () => selectPage(
                 context,
                 //* Sign up for business owners
                 const SignUpBusinessOwners(),
