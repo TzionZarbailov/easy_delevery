@@ -1,4 +1,4 @@
-import 'package:easy_delevery/screens/register_screen.dart';
+import 'package:easy_delevery/screens/reset_password.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: false,
                 controller: _emailController,
               ),
-
+            
               const SizedBox(height: 10),
               //* text field for password
               MyTextField(
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => RegisterScreen(),
+                    builder: (context) => const ResetPassword(),
                   ),
                 ),
                 child: const TextHomeScreen(text: '?שכחת סיסמה'),
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                selectedPage: _login,
+                onTap: _login,
               ),
 
               const SizedBox(height: 10),
