@@ -6,17 +6,21 @@ class MyButton extends StatelessWidget {
     required this.text,
     required this.horizontal,
     required this.vertical,
-    required this.selectedPage,
+    required this.onTap,
+    this.fontSize = 20,
+    this.color = const Color(0xFFF98F13),
   });
 
   final String text;
   final double horizontal;
   final double vertical;
-  final void Function() selectedPage;
+  final void Function() onTap;
+  final double fontSize;
+  final Color color;
 
   ButtonStyle get _textButtonStyle {
     return TextButton.styleFrom(
-      backgroundColor: const Color(0xFFF98F13),
+      backgroundColor: color,
       foregroundColor: Colors.white,
       padding: EdgeInsets.symmetric(
         horizontal: horizontal,
@@ -26,9 +30,9 @@ class MyButton extends StatelessWidget {
   }
 
   TextStyle get _textStyle {
-    return const TextStyle(
+    return TextStyle(
       color: Colors.white,
-      fontSize: 20,
+      fontSize: fontSize,
       fontWeight: FontWeight.bold,
     );
   }
@@ -37,7 +41,7 @@ class MyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: _textButtonStyle,
-      onPressed: selectedPage,
+      onPressed: onTap,
       child: Text(
         text,
         style: _textStyle,
