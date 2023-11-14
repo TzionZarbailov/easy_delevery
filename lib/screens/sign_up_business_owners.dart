@@ -24,6 +24,32 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
   final TextEditingController _streetController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
 
+  //* password visibility
+  bool _obscureText = true;
+
+  //* init state
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  //* dispose state
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _emailControler.dispose();
+    _nameController.dispose();
+    _phoneController.dispose();
+    _restaurantPhoneController.dispose();
+    _restaurantNameController.dispose();
+    _streetController.dispose();
+    _timeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     //* height: MediaQuery.of(context).size.height,
@@ -182,7 +208,23 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                             keyboardType: TextInputType.emailAddress,
                             controller: _passwordController,
                             labelText: 'סיסמה',
-                            obscureText: true,
+                            obscureText: _obscureText,
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 15,
+                              ),
+                              child: _passwordController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: Icon(_obscureText
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureText = !_obscureText;
+                                        });
+                                      })
+                                  : null,
+                            ),
                           ),
                         ),
                       ),
