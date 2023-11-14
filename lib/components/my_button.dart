@@ -1,3 +1,4 @@
+import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
@@ -8,7 +9,7 @@ class MyButton extends StatelessWidget {
     required this.vertical,
     required this.onTap,
     this.fontSize = 20,
-    this.color = const Color(0xFFF98F13),
+    this.color = myColors.buttonColor,
   });
 
   final String text;
@@ -16,7 +17,7 @@ class MyButton extends StatelessWidget {
   final double vertical;
   final void Function() onTap;
   final double fontSize;
-  final Color color;
+  final Color? color;
 
   ButtonStyle get _textButtonStyle {
     return TextButton.styleFrom(
