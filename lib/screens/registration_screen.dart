@@ -93,11 +93,7 @@ class RegistrationScreen extends StatelessWidget {
               horizontal: 66,
               vertical: 12,
               //* Sign up for customers
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SignUpCustomers(),
-                ),
-              ),
+              onTap: () => Navigator.pushNamed(context, '/sign_up_customers'),
             ),
 
             const SizedBox(height: 25),
@@ -107,11 +103,7 @@ class RegistrationScreen extends StatelessWidget {
               horizontal: 43,
               vertical: 12,
               //* Sign up for business owners
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SignUpBusinessOwners(),
-                ),
-              ),
+              onTap: () => Navigator.pushNamed(context, '/sign_up_business_owners'),
             ),
           ],
         ),
