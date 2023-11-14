@@ -1,3 +1,5 @@
+import 'package:easy_delevery/colors/my_colors.dart';
+import 'package:easy_delevery/screens/registration_screen.dart';
 import 'package:easy_delevery/screens/reset_password.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +19,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  //* password visibility
+  bool _obscureText = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
   //* login functions
   void _login() {}
 
@@ -27,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: myColors.backgroundColor,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -69,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           '!ברוכים השבים',
                           textAlign: TextAlign.right,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: myColors.textColor,
                             fontSize: 40,
                             fontFamily: 'Hind Vadodara',
                             fontWeight: FontWeight.w600,
@@ -81,19 +101,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black.withOpacity(0.3),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                              color: Colors.white, size: 26.5),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          MyButton(
+                            text: 'להרשמה',
+                            horizontal: 10,
+                            vertical: double.minPositive,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    //* Sign in Screen
+                                    const RegistrationScreen(),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -108,13 +132,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: false,
                 controller: _emailController,
               ),
-            
+
               const SizedBox(height: 10),
               //* text field for password
               MyTextField(
-                labelText: ':סיסמא',
-                obscureText: true,
+                labelText: ':סיסמה',
+                obscureText: _obscureText,
                 controller: _passwordController,
+                prefixIcon: _passwordController.text.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(_obscureText
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        })
+                    : null,
               ),
               const SizedBox(height: 5),
               //*password recovery
