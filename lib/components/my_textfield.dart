@@ -1,15 +1,18 @@
+import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
   final String labelText;
   final bool obscureText;
   final TextEditingController controller;
+  final Widget? prefixIcon;
 
   const MyTextField({
     super.key,
     required this.labelText,
     required this.obscureText,
     required this.controller,
+    this.prefixIcon,
   });
 
   @override
@@ -24,18 +27,18 @@ class MyTextField extends StatelessWidget {
         controller: controller,
         cursorColor: Colors.white,
         style: const TextStyle(
-          color: Colors.white,
+          color: myColors.textColor,
           fontSize: 15,
         ),
         decoration: InputDecoration(
           filled: true,
-          fillColor: const Color(0xFFF98F13),
+          fillColor: myColors.inputColor,
           enabledBorder: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(35),
             ),
             borderSide: BorderSide(
-              width: 3,
+              width: 1,
               color: Colors.white,
               style: BorderStyle.solid,
             ),
@@ -51,18 +54,20 @@ class MyTextField extends StatelessWidget {
             ),
           ),
           label: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
                 labelText,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: myColors.textColor,
                   fontSize: 20,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
+          prefixIcon: prefixIcon,
+          prefixIconColor: Colors.white,
           contentPadding: const EdgeInsets.only(
             left: 20,
             bottom: 10,
