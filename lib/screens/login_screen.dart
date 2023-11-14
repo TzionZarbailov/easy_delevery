@@ -1,6 +1,5 @@
 import 'package:easy_delevery/colors/my_colors.dart';
-import 'package:easy_delevery/screens/registration_screen.dart';
-import 'package:easy_delevery/screens/reset_password.dart';
+import 'package:easy_delevery/helper/helper_function.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
@@ -36,13 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     super.dispose();
   }
-
-  //* login functions
-  void _login() {}
-
-  void _loginWithGoogle() {}
-
-  void _loginWithFacebook() {}
 
   @override
   Widget build(BuildContext context) {
@@ -109,13 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             text: 'להרשמה',
                             horizontal: 10,
                             vertical: double.minPositive,
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    //* Sign in Screen
-                                    const RegistrationScreen(),
-                              ),
-                            ),
+                            onTap: () => Navigator.pushNamed(
+                                context, '/registration_screen'),
                           ),
                         ],
                       ),
@@ -154,20 +141,16 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 5),
               //*password recovery
               GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ResetPassword(),
-                  ),
-                ),
+                onTap: () => Navigator.pushNamed(context, '/reset_password'),
                 child: const TextHomeScreen(text: '?שכחת סיסמה'),
               ),
               const SizedBox(height: 5),
 
-              MyButton(
+              const MyButton(
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                onTap: _login,
+                onTap: login,
               ),
 
               const SizedBox(height: 10),
@@ -180,11 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //* Icon facebook
-                  IconButton(
+                  const IconButton(
                     focusColor: Colors.white,
                     iconSize: 50,
-                    onPressed: _loginWithFacebook,
-                    icon: const Icon(
+                    onPressed: loginWithFacebook,
+                    icon: Icon(
                       Icons.facebook,
                       color: Color(0xFF345FF6),
                     ),
@@ -193,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //* Icon google
                   IconButton(
                     focusColor: Colors.white,
-                    onPressed: _loginWithGoogle,
+                    onPressed: loginWithGoogle,
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
                       width: 50,
