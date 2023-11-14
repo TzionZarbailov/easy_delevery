@@ -6,6 +6,7 @@ class SecondTextField extends StatelessWidget {
   final String labelText;
   final bool obscureText;
   final TextInputType keyboardType;
+  final Widget? prefixIcon;
   final void Function() onTap;
 
   const SecondTextField({
@@ -15,6 +16,7 @@ class SecondTextField extends StatelessWidget {
     required this.controller,
     required this.labelText,
     required this.obscureText,
+    this.prefixIcon,
   });
 
   @override
@@ -49,6 +51,8 @@ class SecondTextField extends StatelessWidget {
           borderSide: BorderSide(color: myColors.focuseInputColor),
           borderRadius: BorderRadius.circular(8),
         ),
+        prefixIcon: prefixIcon,
+        prefixIconColor: myColors.greyColor,
       ),
     );
   }
