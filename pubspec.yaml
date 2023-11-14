@@ -67,6 +67,7 @@ flutter:
     - lib/assets/images/hamburgerImage.webp
     - lib/assets/images/imageLogin.jpeg
     - lib/assets/images/google-logo.png
+    - lib/assets/images/business_registration_image.jpeg
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
