@@ -1,4 +1,5 @@
 import 'package:easy_delevery/components/my_button.dart';
+import 'package:easy_delevery/components/second_text_field.dart';
 import 'package:flutter/material.dart';
 
 enum ResetMethod { email, mobile }
@@ -11,19 +12,21 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneNumController = TextEditingController();
-  ResetMethod? resetMethod;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneNumController = TextEditingController();
+  ResetMethod? _resetMethod;
 
   //* Register function
   void _reset() {}
 
   void get _emailReset => setState(() {
-        resetMethod = ResetMethod.email;
+        _resetMethod = ResetMethod.email;
+        _phoneNumController.clear();
       });
 
   void get _mobileReset => setState(() {
-        resetMethod = ResetMethod.mobile;
+        _resetMethod = ResetMethod.mobile;
+        _emailController.clear();
       });
 
   @override
@@ -80,7 +83,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               Padding(
                 padding: const EdgeInsets.all(35),
                 child: Column(
-                  children: <Widget>[
+                  children: [
                     ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
@@ -113,76 +116,32 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                       ),
                       onPressed: () => _mobileReset,
-
                       //! Use phoneNumController.text to get the entered phone number
                       //! Then, use a service like Firebase Authentication to send a password reset SMS
                     ),
+
                     const SizedBox(height: 25),
-                    if (resetMethod == ResetMethod.email)
-                      TextField(
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                        controller: emailController,
-                        cursorColor: const Color(0xFFF98F13),
-                        decoration: InputDecoration(
-                          label: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: const [
-                              Text(
-                                'דוא"ר',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          border: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.orange.shade300),
-                          ),
-                        ),
+
+                    if (_resetMethod == ResetMethod.email)
+                      SecondTextField(
+                        onTap: () {},
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailController,
+                        labelText: ':דוא"ל',
+                        obscureText: false,
                       ),
-                    if (resetMethod == ResetMethod.mobile)
-                      TextField(
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                        controller: phoneNumController,
-                        cursorColor: const Color(0xFFF98F13),
-                        decoration: InputDecoration(
-                          label: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: const [
-                              Text(
-                                'מספר טלפון',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          border: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.orange.shade300),
-                          ),
-                        ),
+
+                    if (_resetMethod == ResetMethod.mobile)
+                      SecondTextField(
+                        onTap: () {},
+                        keyboardType: TextInputType.phone,
+                        controller: _phoneNumController,
+                        labelText: ':מספר טלפון',
+                        obscureText: false,
                       ),
+
                     const SizedBox(height: 350),
+                    
                     MyButton(
                       text: 'איפוס סיסמה',
                       horizontal: 75,
