@@ -6,16 +6,18 @@ class TextHomeScreen extends StatelessWidget {
     required this.text,
     this.fontSize = 18,
     this.color = Colors.white,
+    this.fontWeight = FontWeight.bold,
   });
 
   final String text;
   final double fontSize;
   final Color color;
+  final FontWeight fontWeight;
 
   TextStyle get _textStyle {
     return TextStyle(
       color: color,
-      fontWeight: FontWeight.bold,
+      fontWeight: fontWeight,
       fontSize: fontSize,
     );
   }
