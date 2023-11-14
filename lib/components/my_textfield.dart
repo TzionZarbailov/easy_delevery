@@ -67,7 +67,7 @@ class MyTextField extends StatelessWidget {
             ],
           ),
           prefixIcon: prefixIcon,
-          prefixIconColor: Colors.white,
+          prefixIconColor: myColors.greyColor,
           contentPadding: const EdgeInsets.only(
             left: 20,
             bottom: 10,
