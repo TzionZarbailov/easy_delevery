@@ -1,5 +1,6 @@
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/second_text_field.dart';
+import 'package:easy_delevery/helper/helper_function.dart';
 import 'package:flutter/material.dart';
 
 enum ResetMethod { email, mobile }
@@ -15,9 +16,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
   ResetMethod? _resetMethod;
-
-  //* Register function
-  void _reset() {}
 
   void get _emailReset => setState(() {
         _resetMethod = ResetMethod.email;
@@ -119,9 +117,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       //! Use phoneNumController.text to get the entered phone number
                       //! Then, use a service like Firebase Authentication to send a password reset SMS
                     ),
-
                     const SizedBox(height: 25),
-
                     if (_resetMethod == ResetMethod.email)
                       SecondTextField(
                         onTap: () {},
@@ -130,7 +126,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                         labelText: ':דוא"ל',
                         obscureText: false,
                       ),
-
                     if (_resetMethod == ResetMethod.mobile)
                       SecondTextField(
                         onTap: () {},
@@ -139,15 +134,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                         labelText: ':מספר טלפון',
                         obscureText: false,
                       ),
-
                     const SizedBox(height: 350),
-                    
                     MyButton(
                       text: 'איפוס סיסמה',
                       horizontal: 75,
                       vertical: double.minPositive,
                       fontSize: 15,
-                      onTap: () => _reset(),
+                      onTap: () => resetPassword,
                       color: const Color(0xFFF98F13),
                     ),
                   ],
