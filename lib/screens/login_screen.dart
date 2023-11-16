@@ -1,7 +1,7 @@
-import 'package:easy_delevery/colors/my_colors.dart';
-import 'package:easy_delevery/helper/helper_function.dart';
 import 'package:flutter/material.dart';
 
+import 'package:easy_delevery/colors/my_colors.dart';
+import 'package:easy_delevery/helper/helper_function.dart';
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_textfield.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
