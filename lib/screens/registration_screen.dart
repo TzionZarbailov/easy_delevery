@@ -1,10 +1,7 @@
-import 'package:easy_delevery/screens/sign_up_business_owners.dart';
-import 'package:easy_delevery/screens/sign_up_customers.dart';
-import 'package:easy_delevery/components/text_home_screen.dart';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:easy_delevery/components/text_home_screen.dart';
 import 'package:easy_delevery/components/my_button.dart';
 
 class RegistrationScreen extends StatelessWidget {
@@ -103,7 +100,8 @@ class RegistrationScreen extends StatelessWidget {
               horizontal: 43,
               vertical: 12,
               //* Sign up for business owners
-              onTap: () => Navigator.pushNamed(context, '/sign_up_business_owners'),
+              onTap: () =>
+                  Navigator.pushNamed(context, '/sign_up_business_owners'),
             ),
           ],
         ),
