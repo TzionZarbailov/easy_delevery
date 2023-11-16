@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/second_text_field.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SignUpCustomers extends StatefulWidget {
   const SignUpCustomers({super.key});
