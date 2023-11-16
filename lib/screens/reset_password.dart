@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/second_text_field.dart';
 import 'package:easy_delevery/helper/helper_function.dart';
-import 'package:flutter/material.dart';
 
 enum ResetMethod { email, mobile }
 
