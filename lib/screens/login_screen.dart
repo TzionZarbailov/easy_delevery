@@ -15,8 +15,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   //* text controllers
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final Map<String, TextEditingController> _controllers = {
+    'email': TextEditingController(),
+    'password': TextEditingController(),
+  };
 
   //* password visibility
   bool _obscureText = true;
@@ -24,15 +26,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _passwordController.addListener(() {
-      setState(() {});
-    });
+    _controllers.forEach(
+      (key, controller) => controller.addListener(
+        () {
+          setState(() {});
+        },
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _passwordController.dispose();
-    _emailController.dispose();
+    _controllers.forEach((key, controller) => controller.dispose());
     super.dispose();
   }
 
@@ -117,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
               MyTextField(
                 labelText: ':דוא"ל',
                 obscureText: false,
-                controller: _emailController,
+                controller: _controllers['email']!,
               ),
 
               const SizedBox(height: 10),
@@ -125,8 +130,8 @@ class _LoginScreenState extends State<LoginScreen> {
               MyTextField(
                 labelText: ':סיסמה',
                 obscureText: _obscureText,
-                controller: _passwordController,
-                prefixIcon: _passwordController.text.isNotEmpty
+                controller: _controllers['password']!,
+                prefixIcon: _controllers['password']!.text.isNotEmpty
                     ? IconButton(
                         icon: Icon(_obscureText
                             ? Icons.visibility
