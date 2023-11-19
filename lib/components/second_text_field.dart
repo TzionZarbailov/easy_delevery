@@ -1,6 +1,28 @@
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:flutter/material.dart';
 
+Widget buildTextField({
+  EdgeInsets padding = const EdgeInsets.all(0),
+  TextInputType keyboardType = TextInputType.text,
+  required TextEditingController controller,
+  String labelText = '',
+  bool obscureText = false,
+  void Function()? onTap,
+  Widget? prefixIcon,
+}) {
+  return Padding(
+    padding: padding,
+    child: SecondTextField(
+      onTap: onTap ?? () {},
+      keyboardType: keyboardType,
+      controller: controller,
+      labelText: labelText,
+      obscureText: obscureText,
+      prefixIcon: prefixIcon,
+    ),
+  );
+}
+
 class SecondTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
