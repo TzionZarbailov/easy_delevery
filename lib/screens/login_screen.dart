@@ -151,11 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 5),
 
-              const MyButton(
+              MyButton(
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                onTap: login,
+                onTap: () {
+                  signIn(_controllers['email']!, _controllers['password']!);
+                },
               ),
 
               const SizedBox(height: 10),
