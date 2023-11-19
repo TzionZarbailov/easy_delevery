@@ -7,9 +7,11 @@ import 'package:easy_delevery/screens/sign_up_business_owners.dart';
 import 'package:easy_delevery/screens/sign_up_customers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(const MyApp());
@@ -34,9 +36,9 @@ class MyApp extends StatelessWidget {
         '/reset_password': (context) => const ResetPassword(),
         '/sign_up_business_owners': (context) => const SignUpBusinessOwners(),
         '/sign_up_customers': (context) => const SignUpCustomers(),
-        '/business_owner_home_screen': (context) => const BusinessOwnerHomeScreen(),
+        '/business_owner_home_screen': (context) =>
+            const BusinessOwnerHomeScreen(),
         '/consumer_home_screen': (context) => const ConsumerHomeScreen(),
-
       },
     );
   }
