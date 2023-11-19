@@ -14,6 +14,17 @@ class RegistrationScreen extends StatelessWidget {
 
     //* width: MediaQuery.of(context).size.width,
     double width = MediaQuery.of(context).size.width;
+    
+    //* This is the function that build the button
+    Widget buildMyButton(String text, String route) {
+      return MyButton(
+        text: text,
+        horizontal: text == 'הרשמה ללקוחות' ? 66 : 43,
+        vertical: 12,
+        onTap: () => Navigator.pushNamed(context, route),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -84,25 +95,13 @@ class RegistrationScreen extends StatelessWidget {
 
             const SizedBox(height: 40),
 
-            //* Tow inputText
-            MyButton(
-              text: 'הרשמה ללקוחות',
-              horizontal: 66,
-              vertical: 12,
-              //* Sign up for customers
-              onTap: () => Navigator.pushNamed(context, '/sign_up_customers'),
-            ),
+            //* Sign up for customers
+            buildMyButton('הרשמה ללקוחות', '/sign_up_customers'),
 
             const SizedBox(height: 25),
 
-            MyButton(
-              text: 'הרשמה לבעלי עסקים',
-              horizontal: 43,
-              vertical: 12,
-              //* Sign up for business owners
-              onTap: () =>
-                  Navigator.pushNamed(context, '/sign_up_business_owners'),
-            ),
+            //* Sign up for business owners
+            buildMyButton('הרשמה לבעלי עסקים', '/sign_up_business_owners'),
           ],
         ),
       ),
