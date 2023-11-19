@@ -3,7 +3,7 @@ class User {
   final String name; //* This is the name of the user
   final String email; //* This is the email of the user
   final String password; //* This is the password of the user
-  final bool userType; //* This is the type of the user
+  final bool userType; //* false for consumer, true for business
   final String address; //* This is the address of the user
   final String phoneNumber; //* This is the phone number of the user
 
