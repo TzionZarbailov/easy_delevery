@@ -12,27 +12,18 @@ class SignUpCustomers extends StatefulWidget {
   State<SignUpCustomers> createState() => _SignUpCustomersState();
 }
 
-void dispose() {
-  _SignUpCustomersState()._nameController.dispose();
-  _SignUpCustomersState()._cityController.dispose();
-  _SignUpCustomersState()._addresController.dispose();
-  _SignUpCustomersState()._floorController.dispose();
-  _SignUpCustomersState()._apartmentController.dispose();
-  _SignUpCustomersState()._phoneController.dispose();
-  _SignUpCustomersState()._emailController.dispose();
-  _SignUpCustomersState()._passwordController.dispose();
-}
-
 class _SignUpCustomersState extends State<SignUpCustomers> {
 //* text controllers
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _addresController = TextEditingController();
-  final TextEditingController _floorController = TextEditingController();
-  final TextEditingController _apartmentController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final Map<String, TextEditingController> _controllers = {
+    'name': TextEditingController(),
+    'city': TextEditingController(),
+    'address': TextEditingController(),
+    'floor': TextEditingController(),
+    'apartment': TextEditingController(),
+    'phone': TextEditingController(),
+    'email': TextEditingController(),
+    'password': TextEditingController(),
+  };
 
   //* password visibility
   bool _obscureText = true;
@@ -41,7 +32,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
   @override
   void initState() {
     super.initState();
-    _passwordController.addListener(() {
+    _controllers['password']!.addListener(() {
       setState(() {});
     });
   }
@@ -49,14 +40,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
   //* dispose state
   @override
   void dispose() {
-    _passwordController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _apartmentController.dispose();
-    _floorController.dispose();
-    _addresController.dispose();
-    _cityController.dispose();
-    _nameController.dispose();
+    _controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
 
@@ -184,7 +168,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                       child: SecondTextField(
                         onTap: () {},
                         keyboardType: TextInputType.name,
-                        controller: _nameController,
+                        controller: _controllers['name']!,
                         labelText: 'שם מלא',
                         obscureText: false,
                       ),
@@ -198,7 +182,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             child: SecondTextField(
                               onTap: () {},
                               keyboardType: TextInputType.number,
-                              controller: _apartmentController,
+                              controller: _controllers['apartment']!,
                               labelText: 'דירה',
                               obscureText: false,
                             ),
@@ -212,7 +196,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             child: SecondTextField(
                               onTap: () {},
                               keyboardType: TextInputType.number,
-                              controller: _floorController,
+                              controller: _controllers['floor']!,
                               labelText: 'קומה',
                               obscureText: false,
                             ),
@@ -224,7 +208,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                           child: SecondTextField(
                             onTap: () {},
                             keyboardType: TextInputType.streetAddress,
-                            controller: _addresController,
+                            controller: _controllers['address']!,
                             labelText: 'כתובת',
                             obscureText: false,
                           ),
@@ -239,7 +223,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             child: SecondTextField(
                               onTap: () {},
                               keyboardType: TextInputType.text,
-                              controller: _cityController,
+                              controller: _controllers['city']!,
                               labelText: 'ישוב',
                               obscureText: false,
                             ),
@@ -252,7 +236,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                       child: SecondTextField(
                         onTap: () {},
                         keyboardType: TextInputType.number,
-                        controller: _phoneController,
+                        controller: _controllers['phone']!,
                         labelText: 'טלפון',
                         obscureText: false,
                       ),
@@ -262,7 +246,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                       child: SecondTextField(
                         onTap: () {},
                         keyboardType: TextInputType.emailAddress,
-                        controller: _emailController,
+                        controller: _controllers['email']!,
                         labelText: 'דוא"ל',
                         obscureText: false,
                       ),
@@ -276,12 +260,12 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             child: SecondTextField(
                               onTap: () {},
                               keyboardType: TextInputType.text,
-                              controller: _passwordController,
+                              controller: _controllers['password']!,
                               labelText: 'סיסמא',
                               obscureText: _obscureText,
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.only(top: 15),
-                                child: _passwordController.text.isNotEmpty
+                                child: _controllers['password']!.text.isNotEmpty
                                     ? IconButton(
                                         icon: Icon(_obscureText
                                             ? Icons.visibility
