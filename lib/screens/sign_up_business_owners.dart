@@ -179,15 +179,12 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                   Row(
                     children: [
                       Expanded(
-                        child: Padding(
+                        child: buildTextField(
                           padding: EdgeInsets.only(left: width / 3),
-                          child: SecondTextField(
-                            onTap: () {},
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _controllers['email']!,
-                            labelText: 'דוא"ל',
-                            obscureText: false,
-                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _controllers['email']!,
+                          labelText: 'דוא"ל',
+                          onTap: () {},
                         ),
                       ),
                     ],
@@ -195,30 +192,28 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                   Row(
                     children: [
                       Expanded(
-                        child: Padding(
+                        child: buildTextField(
                           padding: EdgeInsets.only(left: width / 3),
-                          child: SecondTextField(
-                            onTap: () {},
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _controllers['password']!,
-                            labelText: 'סיסמה',
-                            obscureText: _obscureText,
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.only(
-                                top: 15,
-                              ),
-                              child: _controllers['password']!.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: Icon(_obscureText
-                                          ? Icons.visibility
-                                          : Icons.visibility_off),
-                                      onPressed: () {
-                                        setState(() {
-                                          _obscureText = !_obscureText;
-                                        });
-                                      })
-                                  : null,
+                          keyboardType: TextInputType.text,
+                          controller: _controllers['password']!,
+                          labelText: 'סיסמה',
+                          obscureText: _obscureText,
+                          onTap: () {},
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 15,
                             ),
+                            child: _controllers['password']!.text.isNotEmpty
+                                ? IconButton(
+                                    icon: Icon(_obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscureText = !_obscureText;
+                                      });
+                                    })
+                                : null,
                           ),
                         ),
                       ),
@@ -227,25 +222,20 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                   Row(
                     children: [
                       Expanded(
-                        child: Padding(
+                        child: buildTextField(
                           padding: EdgeInsets.only(left: width / 15),
-                          child: SecondTextField(
-                            onTap: () {},
-                            keyboardType: TextInputType.number,
-                            controller: _controllers['phone']!,
-                            labelText: 'טלפון',
-                            obscureText: false,
-                          ),
+                          keyboardType: TextInputType.number,
+                          controller: _controllers['phone']!,
+                          labelText: 'טלפון',
+                          onTap: () {},
                         ),
                       ),
                       const SizedBox(width: 40),
                       Expanded(
-                        child: SecondTextField(
-                          onTap: () {},
-                          keyboardType: TextInputType.text,
+                        child: buildTextField(
                           controller: _controllers['name']!,
                           labelText: 'שם מלא',
-                          obscureText: false,
+                          onTap: () {},
                         ),
                       ),
                     ],
@@ -253,15 +243,11 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                   Row(
                     children: [
                       Expanded(
-                        child: Padding(
+                        child: buildTextField(
                           padding: EdgeInsets.only(left: width / 3),
-                          child: SecondTextField(
-                            onTap: () {},
-                            keyboardType: TextInputType.text,
-                            controller: _controllers['restaurantName']!,
-                            labelText: 'שם המסעדה',
-                            obscureText: false,
-                          ),
+                          controller: _controllers['restaurantName']!,
+                          labelText: 'שם המסעדה',
+                          onTap: () {},
                         ),
                       ),
                     ],
@@ -269,25 +255,21 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                   Row(
                     children: [
                       Expanded(
-                        child: Padding(
+                        child: buildTextField(
                           padding: EdgeInsets.only(left: width / 15),
-                          child: SecondTextField(
-                            onTap: () {},
-                            keyboardType: TextInputType.streetAddress,
-                            controller: _controllers['street']!,
-                            labelText: 'עיר',
-                            obscureText: false,
-                          ),
+                          keyboardType: TextInputType.streetAddress,
+                          controller: _controllers['street']!,
+                          labelText: 'עיר',
+                          onTap: () {},
                         ),
                       ),
                       const SizedBox(width: 40),
                       Expanded(
-                        child: SecondTextField(
-                          onTap: () {},
+                        child: buildTextField(
                           keyboardType: TextInputType.number,
                           controller: _controllers['restaurantPhone']!,
                           labelText: 'טלפון של מסעדה',
-                          obscureText: false,
+                          onTap: () {},
                         ),
                       ),
                     ],
@@ -295,15 +277,12 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                   Row(
                     children: [
                       Expanded(
-                        child: Padding(
+                        child: buildTextField(
                           padding: EdgeInsets.only(left: width / 2),
-                          child: SecondTextField(
-                            onTap: () {},
-                            keyboardType: TextInputType.datetime,
-                            controller: _controllers['time']!,
-                            labelText: 'שעות פעילות',
-                            obscureText: false,
-                          ),
+                          keyboardType: TextInputType.datetime,
+                          controller: _controllers['time']!,
+                          labelText: 'שעות פעילות',
+                          onTap: () {},
                         ),
                       ),
                     ],
