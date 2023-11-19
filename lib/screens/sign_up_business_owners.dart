@@ -14,7 +14,7 @@ class SignUpBusinessOwners extends StatefulWidget {
 
 class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
   //* text controllers
-  Map<String, TextEditingController> controllers = {
+  final Map<String, TextEditingController> _controllers = {
     'email': TextEditingController(),
     'name': TextEditingController(),
     'phone': TextEditingController(),
@@ -32,7 +32,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
   @override
   void initState() {
     super.initState();
-    controllers['password']?.addListener(() {
+    _controllers['password']?.addListener(() {
       setState(() {});
     });
   }
@@ -40,7 +40,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
   //* dispose state
   @override
   void dispose() {
-    controllers.forEach((_, controller) => controller.dispose());
+    _controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
 
@@ -184,7 +184,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           child: SecondTextField(
                             onTap: () {},
                             keyboardType: TextInputType.emailAddress,
-                            controller: controllers['email']!,
+                            controller: _controllers['email']!,
                             labelText: 'דוא"ל',
                             obscureText: false,
                           ),
@@ -200,14 +200,14 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           child: SecondTextField(
                             onTap: () {},
                             keyboardType: TextInputType.emailAddress,
-                            controller: controllers['password']!,
+                            controller: _controllers['password']!,
                             labelText: 'סיסמה',
                             obscureText: _obscureText,
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(
                                 top: 15,
                               ),
-                              child: controllers['password']!.text.isNotEmpty
+                              child: _controllers['password']!.text.isNotEmpty
                                   ? IconButton(
                                       icon: Icon(_obscureText
                                           ? Icons.visibility
@@ -232,7 +232,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           child: SecondTextField(
                             onTap: () {},
                             keyboardType: TextInputType.number,
-                            controller: controllers['phone']!,
+                            controller: _controllers['phone']!,
                             labelText: 'טלפון',
                             obscureText: false,
                           ),
@@ -243,7 +243,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                         child: SecondTextField(
                           onTap: () {},
                           keyboardType: TextInputType.text,
-                          controller: controllers['name']!,
+                          controller: _controllers['name']!,
                           labelText: 'שם מלא',
                           obscureText: false,
                         ),
@@ -258,7 +258,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           child: SecondTextField(
                             onTap: () {},
                             keyboardType: TextInputType.text,
-                            controller: controllers['restaurantName']!,
+                            controller: _controllers['restaurantName']!,
                             labelText: 'שם המסעדה',
                             obscureText: false,
                           ),
@@ -274,7 +274,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           child: SecondTextField(
                             onTap: () {},
                             keyboardType: TextInputType.streetAddress,
-                            controller: controllers['street']!,
+                            controller: _controllers['street']!,
                             labelText: 'עיר',
                             obscureText: false,
                           ),
@@ -285,7 +285,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                         child: SecondTextField(
                           onTap: () {},
                           keyboardType: TextInputType.number,
-                          controller: controllers['restaurantPhone']!,
+                          controller: _controllers['restaurantPhone']!,
                           labelText: 'טלפון של מסעדה',
                           obscureText: false,
                         ),
@@ -300,7 +300,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           child: SecondTextField(
                             onTap: () {},
                             keyboardType: TextInputType.datetime,
-                            controller: controllers['time']!,
+                            controller: _controllers['time']!,
                             labelText: 'שעות פעילות',
                             obscureText: false,
                           ),
