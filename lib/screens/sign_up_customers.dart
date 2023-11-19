@@ -47,10 +47,12 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
   @override
   Widget build(BuildContext context) {
     //* height: MediaQuery.of(context).size.height,
-    double height = MediaQuery.of(context).size.height;
+    double getHeight(BuildContext context) =>
+        MediaQuery.of(context).size.height;
 
     //* width: MediaQuery.of(context).size.width,
-    double width = MediaQuery.of(context).size.width;
+    double getWidth(BuildContext context) => MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
@@ -124,8 +126,8 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                 //* image customer_registration
                 Image.asset(
                   'lib/assets/images/hamburgerImage.webp',
-                  height: height / 2.4,
-                  width: width,
+                  height: getHeight(context) / 2.4,
+                  width: getWidth(context),
                   fit: BoxFit.cover,
                 ),
 
@@ -163,120 +165,98 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
               children: [
                 Column(
                   children: [
-                    Padding(
+                    buildTextField(
                       padding: const EdgeInsets.only(left: 150, right: 25),
-                      child: SecondTextField(
-                        onTap: () {},
-                        keyboardType: TextInputType.name,
-                        controller: _controllers['name']!,
-                        labelText: 'שם מלא',
-                        obscureText: false,
-                      ),
+                      keyboardType: TextInputType.name,
+                      controller: _controllers['name']!,
+                      labelText: 'שם מלא',
+                      onTap: () {},
                     ),
                     Row(
                       children: [
                         Expanded(
                           flex: 2,
-                          child: Padding(
+                          child: buildTextField(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: SecondTextField(
-                              onTap: () {},
-                              keyboardType: TextInputType.number,
-                              controller: _controllers['apartment']!,
-                              labelText: 'דירה',
-                              obscureText: false,
-                            ),
+                            keyboardType: TextInputType.number,
+                            controller: _controllers['apartment']!,
+                            labelText: 'דירה',
+                            onTap: () {},
                           ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(
                           flex: 2,
-                          child: Padding(
+                          child: buildTextField(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: SecondTextField(
-                              onTap: () {},
-                              keyboardType: TextInputType.number,
-                              controller: _controllers['floor']!,
-                              labelText: 'קומה',
-                              obscureText: false,
-                            ),
+                            keyboardType: TextInputType.number,
+                            controller: _controllers['floor']!,
+                            labelText: 'קומה',
+                            onTap: () {},
                           ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(
                           flex: 3,
-                          child: SecondTextField(
-                            onTap: () {},
+                          child: buildTextField(
                             keyboardType: TextInputType.streetAddress,
                             controller: _controllers['address']!,
                             labelText: 'כתובת',
-                            obscureText: false,
+                            onTap: () {},
                           ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(
                           flex: 3,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              right: 25,
-                            ),
-                            child: SecondTextField(
-                              onTap: () {},
-                              keyboardType: TextInputType.text,
-                              controller: _controllers['city']!,
-                              labelText: 'ישוב',
-                              obscureText: false,
-                            ),
+                          child: buildTextField(
+                            padding: const EdgeInsets.only(right: 25),
+                            controller: _controllers['city']!,
+                            labelText: 'ישוב',
+                            onTap: () {},
                           ),
                         ),
                       ],
                     ),
-                    Padding(
+                    buildTextField(
                       padding: const EdgeInsets.only(left: 150, right: 25),
-                      child: SecondTextField(
-                        onTap: () {},
-                        keyboardType: TextInputType.number,
-                        controller: _controllers['phone']!,
-                        labelText: 'טלפון',
-                        obscureText: false,
-                      ),
+                      keyboardType: TextInputType.number,
+                      controller: _controllers['phone']!,
+                      labelText: 'טלפון',
+                      onTap: () {},
                     ),
-                    Padding(
+                    buildTextField(
                       padding: const EdgeInsets.only(left: 150, right: 25),
-                      child: SecondTextField(
-                        onTap: () {},
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _controllers['email']!,
-                        labelText: 'דוא"ל',
-                        obscureText: false,
-                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _controllers['email']!,
+                      labelText: 'דוא"ל',
+                      onTap: () {},
                     ),
                     Row(
                       children: [
                         Expanded(
-                          child: Padding(
+                          child: buildTextField(
                             padding:
                                 const EdgeInsets.only(left: 200, right: 25),
-                            child: SecondTextField(
-                              onTap: () {},
-                              keyboardType: TextInputType.text,
-                              controller: _controllers['password']!,
-                              labelText: 'סיסמא',
-                              obscureText: _obscureText,
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.only(top: 15),
-                                child: _controllers['password']!.text.isNotEmpty
-                                    ? IconButton(
-                                        icon: Icon(_obscureText
-                                            ? Icons.visibility
-                                            : Icons.visibility_off),
-                                        onPressed: () {
-                                          setState(() {
-                                            _obscureText = !_obscureText;
-                                          });
-                                        })
-                                    : null,
+                            keyboardType: TextInputType.text,
+                            controller: _controllers['password']!,
+                            labelText: 'סיסמה',
+                            obscureText: _obscureText,
+                            onTap: () {},
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 15,
                               ),
+                              child: _controllers['password']!.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: Icon(_obscureText
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureText = !_obscureText;
+                                        });
+                                      })
+                                  : null,
                             ),
                           ),
                         ),
