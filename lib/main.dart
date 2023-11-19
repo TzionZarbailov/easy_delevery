@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:easy_delevery/screens/business_owner_home_screen.dart';
 import 'package:easy_delevery/screens/consumer_home_screen.dart';
 import 'package:easy_delevery/screens/login_screen.dart';
@@ -5,9 +9,6 @@ import 'package:easy_delevery/screens/registration_screen.dart';
 import 'package:easy_delevery/screens/reset_password.dart';
 import 'package:easy_delevery/screens/sign_up_business_owners.dart';
 import 'package:easy_delevery/screens/sign_up_customers.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
