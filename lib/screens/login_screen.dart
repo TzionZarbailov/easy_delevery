@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/colors/my_colors.dart';
-import 'package:easy_delevery/helper/helper_function.dart';
+
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_textfield.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
@@ -19,6 +20,13 @@ class _LoginScreenState extends State<LoginScreen> {
     'email': TextEditingController(),
     'password': TextEditingController(),
   };
+
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _controllers['email']!.text.trim(),
+      password: _controllers['password']!.text.trim(),
+    );
+  }
 
   //* password visibility
   bool _obscureText = true;
@@ -155,9 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                onTap: () {
-                  signIn(_controllers['email']!, _controllers['password']!);
-                },
+                onTap: () {},
               ),
 
               const SizedBox(height: 10),
@@ -170,11 +176,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //* Icon facebook
-                  const IconButton(
+                  IconButton(
                     focusColor: Colors.white,
                     iconSize: 50,
-                    onPressed: loginWithFacebook,
-                    icon: Icon(
+                    onPressed: () {}, //loginWithFacebook
+                    icon: const Icon(
                       Icons.facebook,
                       color: Color(0xFF345FF6),
                     ),
@@ -183,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //* Icon google
                   IconButton(
                     focusColor: Colors.white,
-                    onPressed: loginWithGoogle,
+                    onPressed: () {}, //loginWithGoogle
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
                       width: 50,

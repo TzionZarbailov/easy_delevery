@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/second_text_field.dart';
-import 'package:easy_delevery/helper/helper_function.dart';
+
 
 enum ResetMethod { email, mobile }
 
@@ -141,7 +141,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       horizontal: 75,
                       vertical: double.minPositive,
                       fontSize: 15,
-                      onTap: () => resetPassword,
+                      onTap: () {}, //resetPassword,
                       color: const Color(0xFFF98F13),
                     ),
                   ],
