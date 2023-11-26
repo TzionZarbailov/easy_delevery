@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_delevery/models/user.dart';
+import 'package:easy_delevery/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -296,7 +299,25 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           text: 'הרשמה',
                           horizontal: 25,
                           vertical: double.minPositive,
-                          onTap: () {},
+                          onTap: () async {
+                            String autoId = FirebaseFirestore.instance
+                                .collection('business')
+                                .doc()
+                                .id;
+                            await AuthService().saveBusinessOwner(
+                              BusinessOwner(
+                                id: autoId,
+                                email: _controllers['email']!.text,
+                                password: _controllers['password']!.text,
+                                name: _controllers['name']!.text,
+                                phoneNumber: _controllers['phone']!.text,
+                                businessName: _controllers['restaurantName']!.text,
+                                city: _controllers['street']!.text,
+                                businessPhone: _controllers['restaurantPhone']!.text,
+                                workHours: _controllers['time']!.text,
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

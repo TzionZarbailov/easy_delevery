@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_delevery/models/user.dart';
+import 'package:easy_delevery/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -271,7 +274,24 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             text: 'הרשמה',
                             horizontal: 25,
                             vertical: double.minPositive,
-                            onTap: () {},
+                            onTap: () async {
+                              String autoId = FirebaseFirestore.instance.collection('consumers').doc().id;
+                              await AuthService().saveConsumer(
+                                Consumer(
+                                  id: autoId,
+                                  name: _controllers['name']!.text,
+                                  email: _controllers['email']!.text,
+                                  password: _controllers['password']!.text,
+                                  city: _controllers['city']!.text,
+                                  address: _controllers['address']!.text,
+                                  floor: int.parse( _controllers['floor']!.text),
+                                  apartmentNumber: int.parse(_controllers['apartment']!.text),
+                                  phoneNumber: _controllers['phone']!.text,
+                                ),
+                              );
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushNamed(context, '/login_screen');
+                            }
                           ),
                         ],
                       ),

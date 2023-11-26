@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'package:easy_delevery/screens/business_owner_home_screen.dart';
 import 'package:easy_delevery/screens/consumer_home_screen.dart';
@@ -10,13 +12,13 @@ import 'package:easy_delevery/screens/reset_password.dart';
 import 'package:easy_delevery/screens/sign_up_business_owners.dart';
 import 'package:easy_delevery/screens/sign_up_customers.dart';
 
+//firebasecrudtute
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
-    runApp(const MyApp());
-  });
+      .then((_) {});
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -2,6 +2,7 @@ class User {
   final String id; //* This is the id of the user
   final String name; //* This is the name of the user
   final String email; //* This is the email of the user
+  final String password; //* This is the password of the user
   final String phoneNumber; //* This is the phone number of the user
   final String city; //* This is the city of the user
 
@@ -9,6 +10,7 @@ class User {
     required this.id,
     required this.name,
     required this.email,
+    required this.password,
     required this.phoneNumber,
     required this.city,
   });
@@ -17,6 +19,7 @@ class User {
     return {
       'name': name,
       'email': email,
+      'password': password,
       'phoneNumber': phoneNumber,
       'city': city,
     };
@@ -28,10 +31,11 @@ class Consumer extends User {
   final int floor;
   final int apartmentNumber;
 
-  Consumer({
+  const Consumer({
     required String id,
     required String name,
     required String email,
+    required String password,
     required String phoneNumber,
     required String city,
     required this.address,
@@ -41,6 +45,7 @@ class Consumer extends User {
           id: id,
           name: name,
           email: email,
+          password: password,
           phoneNumber: phoneNumber,
           city: city,
         );
@@ -50,6 +55,7 @@ class Consumer extends User {
           id: map['id'],
           name: map['name'],
           email: map['email'],
+          password: map['password'],
           address: map['address'],
           phoneNumber: map['phoneNumber'],
           floor: map['floor'],
@@ -57,7 +63,6 @@ class Consumer extends User {
           apartmentNumber: map['apartmentNumber'],
         );
 
-  get password => null;
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
@@ -71,21 +76,23 @@ class Consumer extends User {
 class BusinessOwner extends User {
   final String businessName;
   final String businessPhone;
-  final String addressRestaurant;
+  final String workHours;
 
-  BusinessOwner({
+  const BusinessOwner({
     required String id,
     required String name,
     required String email,
+    required String password,
     required String phoneNumber,
     required String city,
     required this.businessName,
     required this.businessPhone,
-    required this.addressRestaurant,
+    required this.workHours,
   }) : super(
           id: id,
           name: name,
           email: email,
+          password: password,
           phoneNumber: phoneNumber,
           city: city,
         );
@@ -95,20 +102,20 @@ class BusinessOwner extends User {
           id: map['id'],
           name: map['name'],
           email: map['email'],
-          addressRestaurant: map['addressRestaurant'],
+          password: map['password'],
           phoneNumber: map['phoneNumber'],
           businessName: map['businessName'],
           businessPhone: map['businessPhone'],
           city: map['city'],
+          workHours: map['workHours'],
         );
-
-  get password => null;
 
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
     map['businessName'] = businessName;
     map['businessPhone'] = businessPhone;
+    map['workHours'] = workHours;
     return map;
   }
 }

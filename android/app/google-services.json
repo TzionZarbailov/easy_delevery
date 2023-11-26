@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "711576456264",
-    "project_id": "easydelevery-17dc3",
-    "storage_bucket": "easydelevery-17dc3.appspot.com"
+    "project_number": "216343927083",
+    "project_id": "easydelevery-f3638",
+    "storage_bucket": "easydelevery-f3638.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:711576456264:android:184f532c66522fe2989c7d",
+        "mobilesdk_app_id": "1:216343927083:android:ba39cc7a187db45109cd6e",
         "android_client_info": {
           "package_name": "com.example.easy_delevery"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB3HuVM9LWbe3sOtT36VXQvxDuEOhrks-o"
+          "current_key": "AIzaSyAfJHILdOyxUaR4ZQMBKB6xweNdEWExTPA"
         }
       ],
       "services": {
