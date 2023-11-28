@@ -1,41 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_delevery/colors/my_colors.dart';
-import 'package:easy_delevery/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 
 class AuthService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance; // instance of firestore
   final FirebaseAuth _auth = FirebaseAuth.instance; // instance of firebase auth
-  final CollectionReference _consumersCollectionReference = FirebaseFirestore.instance.collection('consumers'); // instance of consumers collection
-  final CollectionReference _businessOwnerCollectionReference = FirebaseFirestore.instance.collection('businessOwner'); // instance of business owner collection
-  Future<void> saveConsumer(Consumer consumer) async {
-    try {
-      await _firestore
-          .collection('consumers')
-          .doc(consumer.id)
-          .set(consumer.toMap());
-      await _auth.createUserWithEmailAndPassword(
-          email: consumer.email, password: consumer.password);
-    } catch (e) {
-      Text('Error saving consumer: $e');
-    }
+  // add a user to the database
+  Future<void> addUser(String email, String password) async {
+    await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 
-  Future<void> saveBusinessOwner(BusinessOwner businessOwner) async {
-    try {
-      await _firestore
-          .collection('business_owners')
-          .doc(businessOwner.id)
-          .set(businessOwner.toMap());
-      await _auth.createUserWithEmailAndPassword(
-          email: businessOwner.email, password: businessOwner.password);
-    } catch (e) {
-      Text(
-        'Error saving business owner: $e',
-        style: const TextStyle(color: myColors.errorColor),
-      );
-    }
+  // sign in a user
+  Future<void> signIn(String email, String password) async {
+    await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
-  
+
+  // sign out a user
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+
+  // get collection type of user
+  Stream<QuerySnapshot> getUser() {
+    return FirebaseFirestore.instance.collection('user').snapshots();
+  }
+ 
+  // Checks if mail already exists
+  Future<bool> emailExists(String email) async {
+  final List<String> signInMethods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+  return signInMethods.isNotEmpty;
+}
+
+  //* Read: get a user by id
+  // Future<User> getUserById(String id) async {
+  //   var doc = await FirebaseFirestore.instance.collection('user').doc(id).get();
+  //   if (doc.data() != null) {
+  //     return User.fromMap(doc.data()!);
+  //   } else {
+  //     throw Exception('Document does not exist in the database');
+  //   }
+  // }
 }

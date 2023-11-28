@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '216343927083',
     projectId: 'easydelevery-f3638',
     storageBucket: 'easydelevery-f3638.appspot.com',
+    iosClientId: '216343927083-qkt5q4qggk75ujlkafl07h01beo9prkr.apps.googleusercontent.com',
     iosBundleId: 'com.example.easyDelevery',
   );
 }

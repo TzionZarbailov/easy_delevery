@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_delevery/components/my_show_dialog.dart';
 import 'package:easy_delevery/models/user.dart';
 import 'package:easy_delevery/services/auth_service.dart';
+import 'package:easy_delevery/services/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,7 +20,7 @@ class SignUpCustomers extends StatefulWidget {
 class _SignUpCustomersState extends State<SignUpCustomers> {
 //* text controllers
   final Map<String, TextEditingController> _controllers = {
-    'name': TextEditingController(),
+    'fullName': TextEditingController(),
     'city': TextEditingController(),
     'address': TextEditingController(),
     'floor': TextEditingController(),
@@ -27,6 +29,45 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     'email': TextEditingController(),
     'password': TextEditingController(),
   };
+  final AuthService _authService = AuthService();
+  final FirestoreService _firestoreService = FirestoreService();
+
+  void signInCustomers() async {
+    // Extract controller values
+    String email = _controllers['email']!.text;
+    String password = _controllers['password']!.text;
+    String fullName = _controllers['fullName']!.text;
+    String phoneNumber = _controllers['phone']!.text;
+    String city = _controllers['city']!.text;
+    String address = _controllers['address']!.text;
+    int floor = int.parse(_controllers['floor']!.text);
+    int apartmentNumber = int.parse(_controllers['apartment']!.text);
+
+    // Create new user in auth
+    await _authService.addUser(email, password);
+
+    // Create new document reference
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection(FirestoreCollection.consumer).doc();
+
+    // Create new consumer
+    Consumer newConsumer = Consumer(
+      id: docRef.id,
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      city: city,
+      address: address,
+      floor: floor,
+      apartmentNumber: apartmentNumber,
+    );
+
+    // Add new consumer to Firestore
+    await _firestoreService.addConsumer(newConsumer);
+
+    // Clear text controllers
+    _controllers.forEach((_, controller) => controller.clear());
+  }
 
   //* password visibility
   bool _obscureText = true;
@@ -171,7 +212,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                     buildTextField(
                       padding: const EdgeInsets.only(left: 150, right: 25),
                       keyboardType: TextInputType.name,
-                      controller: _controllers['name']!,
+                      controller: _controllers['fullName']!,
                       labelText: 'שם מלא',
                       onTap: () {},
                     ),
@@ -274,24 +315,20 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             text: 'הרשמה',
                             horizontal: 25,
                             vertical: double.minPositive,
-                            onTap: () async {
-                              String autoId = FirebaseFirestore.instance.collection('consumers').doc().id;
-                              await AuthService().saveConsumer(
-                                Consumer(
-                                  id: autoId,
-                                  name: _controllers['name']!.text,
-                                  email: _controllers['email']!.text,
-                                  password: _controllers['password']!.text,
-                                  city: _controllers['city']!.text,
-                                  address: _controllers['address']!.text,
-                                  floor: int.parse( _controllers['floor']!.text),
-                                  apartmentNumber: int.parse(_controllers['apartment']!.text),
-                                  phoneNumber: _controllers['phone']!.text,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => MyShowDialog(
+                                  title: 'הרשמה בוצעה בהצלחה',
+                                  onPressed: () async {
+                                    // Navigate to login screen
+                                    Navigator.popAndPushNamed(
+                                        context, '/login_screen');
+                                    return signInCustomers();
+                                  },
                                 ),
                               );
-                              // ignore: use_build_context_synchronously
-                              Navigator.pushNamed(context, '/login_screen');
-                            }
+                            },
                           ),
                         ],
                       ),

@@ -1,25 +1,23 @@
 class User {
   final String id; //* This is the id of the user
-  final String name; //* This is the name of the user
+  final String fullName; //* This is the name of the user
   final String email; //* This is the email of the user
-  final String password; //* This is the password of the user
+
   final String phoneNumber; //* This is the phone number of the user
   final String city; //* This is the city of the user
 
   const User({
     required this.id,
-    required this.name,
+    required this.fullName,
     required this.email,
-    required this.password,
     required this.phoneNumber,
     required this.city,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
+      'fullName': fullName,
       'email': email,
-      'password': password,
       'phoneNumber': phoneNumber,
       'city': city,
     };
@@ -33,9 +31,8 @@ class Consumer extends User {
 
   const Consumer({
     required String id,
-    required String name,
+    required String fullName,
     required String email,
-    required String password,
     required String phoneNumber,
     required String city,
     required this.address,
@@ -43,9 +40,8 @@ class Consumer extends User {
     required this.apartmentNumber,
   }) : super(
           id: id,
-          name: name,
+          fullName: fullName,
           email: email,
-          password: password,
           phoneNumber: phoneNumber,
           city: city,
         );
@@ -53,9 +49,8 @@ class Consumer extends User {
   Consumer.fromMap(Map<String, dynamic> map)
       : this(
           id: map['id'],
-          name: map['name'],
+          fullName: map['fullName'],
           email: map['email'],
-          password: map['password'],
           address: map['address'],
           phoneNumber: map['phoneNumber'],
           floor: map['floor'],
@@ -80,9 +75,8 @@ class BusinessOwner extends User {
 
   const BusinessOwner({
     required String id,
-    required String name,
+    required String fullName,
     required String email,
-    required String password,
     required String phoneNumber,
     required String city,
     required this.businessName,
@@ -90,9 +84,8 @@ class BusinessOwner extends User {
     required this.workHours,
   }) : super(
           id: id,
-          name: name,
+          fullName: fullName,
           email: email,
-          password: password,
           phoneNumber: phoneNumber,
           city: city,
         );
@@ -100,9 +93,8 @@ class BusinessOwner extends User {
   BusinessOwner.fromMap(Map<String, dynamic> map)
       : this(
           id: map['id'],
-          name: map['name'],
+          fullName: map['fullName'],
           email: map['email'],
-          password: map['password'],
           phoneNumber: map['phoneNumber'],
           businessName: map['businessName'],
           businessPhone: map['businessPhone'],

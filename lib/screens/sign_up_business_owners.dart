@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_delevery/components/my_show_dialog.dart';
 import 'package:easy_delevery/models/user.dart';
 import 'package:easy_delevery/services/auth_service.dart';
+
+import 'package:easy_delevery/services/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,10 +19,12 @@ class SignUpBusinessOwners extends StatefulWidget {
 }
 
 class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
+  //* firestore instance
+
   //* text controllers
   final Map<String, TextEditingController> _controllers = {
     'email': TextEditingController(),
-    'name': TextEditingController(),
+    'fullName': TextEditingController(),
     'phone': TextEditingController(),
     'restaurantPhone': TextEditingController(),
     'password': TextEditingController(),
@@ -27,6 +32,46 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     'street': TextEditingController(),
     'time': TextEditingController(),
   };
+  //* add a new business owner to the database
+  final AuthService _authService = AuthService();
+  final FirestoreService _firestoreService = FirestoreService();
+
+  void signUpBusinessOwners() async {
+    // Extract controller values
+    String email = _controllers['email']!.text;
+    String password = _controllers['password']!.text;
+    String fullName = _controllers['fullName']!.text;
+    String phoneNumber = _controllers['phone']!.text;
+    String city = _controllers['street']!.text;
+    String businessName = _controllers['restaurantName']!.text;
+    String businessPhone = _controllers['restaurantPhone']!.text;
+    String workHours = _controllers['time']!.text;
+
+    // Create new user in auth
+    await _authService.addUser(email, password);
+
+    // Create new document reference
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection(FirestoreCollection.businessOwner).doc();
+
+    // Create new business owner
+    BusinessOwner newBusinessOwner = BusinessOwner(
+      id: docRef.id,
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      city: city,
+      businessName: businessName,
+      businessPhone: businessPhone,
+      workHours: workHours,
+    );
+
+    // Add new business owner to Firestore
+    await _firestoreService.addBusinessOwner(newBusinessOwner);
+
+    // Clear text controllers
+    _controllers.forEach((_, controller) => controller.clear());
+  }
 
   //* password visibility
   bool _obscureText = true;
@@ -236,7 +281,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                       const SizedBox(width: 40),
                       Expanded(
                         child: buildTextField(
-                          controller: _controllers['name']!,
+                          controller: _controllers['fullName']!,
                           labelText: 'שם מלא',
                           onTap: () {},
                         ),
@@ -299,25 +344,16 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           text: 'הרשמה',
                           horizontal: 25,
                           vertical: double.minPositive,
-                          onTap: () async {
-                            String autoId = FirebaseFirestore.instance
-                                .collection('business')
-                                .doc()
-                                .id;
-                            await AuthService().saveBusinessOwner(
-                              BusinessOwner(
-                                id: autoId,
-                                email: _controllers['email']!.text,
-                                password: _controllers['password']!.text,
-                                name: _controllers['name']!.text,
-                                phoneNumber: _controllers['phone']!.text,
-                                businessName: _controllers['restaurantName']!.text,
-                                city: _controllers['street']!.text,
-                                businessPhone: _controllers['restaurantPhone']!.text,
-                                workHours: _controllers['time']!.text,
-                              ),
-                            );
-                          },
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) => MyShowDialog(
+                                title: 'הרשמה בוצעה בהצלחה',
+                                onPressed: () async {
+                                  Navigator.popAndPushNamed(
+                                      context, '/login_screen');
+                                  return signUpBusinessOwners();
+                                }),
+                          ),
                         ),
                       ],
                     ),
