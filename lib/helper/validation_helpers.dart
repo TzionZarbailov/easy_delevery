@@ -1,29 +1,29 @@
+import 'package:easy_delevery/services/location_service.dart';
+
 enum ConsumerValidationError {
-    invalidEmail,
-    invalidPassword,
-    invalidFullName,
-    invalidPhoneNumber,
-    invalidCity,
-    invalidAddress,
-    none,
-  }
+  invalidEmail,
+  invalidPassword,
+  invalidFullName,
+  invalidPhoneNumber,
+  invalidCity,
+  invalidAddress,
+  none,
+}
 
 enum RestaurantValidationError {
-    invalidEmail,
-    invalidPassword,
-    invalidFullName,
-    invalidPhoneNumber,
-    invalidRestaurantPhoneNumber,
-    invalidCity,
-    invalidAddress,
-    invalidOpeningTime,
-    invalidClosingTime,
-    none,
-  }  
-
+  invalidEmail,
+  invalidPassword,
+  invalidFullName,
+  invalidPhoneNumber,
+  invalidRestaurantPhoneNumber,
+  invalidCity,
+  invalidAddress,
+  invalidOpeningTime,
+  invalidClosingTime,
+  none,
+}
 
 class ValidationHelper {
-
   // Vaild for email
   static bool isValidEmail(String email) {
     final RegExp regex = RegExp(
@@ -93,5 +93,56 @@ class ValidationHelper {
 
     // Check if the current time is within the opening and closing times
     return now.isAfter(openingDateTime) && now.isBefore(closingDateTime);
+  }
+
+  // is address in city?
+  static Future<bool> isAddressInCity(String address, String city) async {
+    LocationService locationService = LocationService();
+    return await locationService.isAddressInCity(address, city);
+  }
+
+  // is the city in israel?
+  static Future<bool> isCityInIsrael(String city) {
+    // Implement your logic here to check if the city is in Israel
+    // This is just a placeholder implementation
+    return Future.value(true);
+  }
+  
+  // Validate consumer text editing controller
+  static Future<List<ConsumerValidationError>> validateConsumer(
+      String email,
+      String password,
+      String fullName,
+      String phoneNumber,
+      String city,
+      String address) async {
+    List<ConsumerValidationError> errors = [];
+    // Check if the email is valid
+    if (!isValidEmail(email)) {
+      errors.add(ConsumerValidationError.invalidEmail);
+    }
+
+    // Check if the password is valid
+    if (!isValidPassword(password)) {
+      errors.add(ConsumerValidationError.invalidPassword);
+    }
+    // Check if the full name is valid
+    if (!isValidFullName(fullName)) {
+      errors.add(ConsumerValidationError.invalidFullName);
+    }
+    // Check if the phone number is valid
+    if (!isValidPhoneNumber(phoneNumber)) {
+      errors.add(ConsumerValidationError.invalidPhoneNumber);
+    }
+    // Check if the city is valid
+    if (!await isCityInIsrael(city)) {
+      errors.add(ConsumerValidationError.invalidCity);
+    }
+    // Check if the address is valid
+    if (!await isAddressInCity(address, city)) {
+      errors.add(ConsumerValidationError.invalidAddress);
+    }
+    // Return the list of errors
+    return errors;
   }
 }

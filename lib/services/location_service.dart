@@ -1,6 +1,7 @@
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:geolocator/geolocator.dart';
 
 class LocationService {
   Future<bool> isCityInIsrael(String city) async {
@@ -30,5 +31,35 @@ class LocationService {
 
     // Check if the user is within the given radius of the restaurant
     return distanceInMeters <= radiusInMeters;
+  }
+
+  Future<bool> isAddressInCity(String address, String city) async {
+    // Convert the address to coordinates
+    List<Location> locations = await locationFromAddress(address);
+
+    // If the geocoding service couldn't find the address, return false
+    if (locations.isEmpty) {
+      return false;
+    }
+
+    // Get the first result
+    Location location = locations.first;
+
+    // Convert the coordinates back to a placemark
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      location.latitude,
+      location.longitude,
+    );
+
+    // If the geocoding service couldn't find the placemark, return false
+    if (placemarks.isEmpty) {
+      return false;
+    }
+
+    // Get the first result
+    Placemark placemark = placemarks.first;
+
+    // Check if the city of the placemark matches the given city
+    return placemark.locality == city;
   }
 }
