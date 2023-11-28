@@ -2,9 +2,9 @@ class User {
   final String id; //* This is the id of the user
   final String fullName; //* This is the name of the user
   final String email; //* This is the email of the user
-
   final String phoneNumber; //* This is the phone number of the user
   final String city; //* This is the city of the user
+  final String address; //* This is the address of the user
 
   const User({
     required this.id,
@@ -12,6 +12,7 @@ class User {
     required this.email,
     required this.phoneNumber,
     required this.city,
+    required this.address,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,12 +21,13 @@ class User {
       'email': email,
       'phoneNumber': phoneNumber,
       'city': city,
+      'address': address,
     };
   }
 }
 
 class Consumer extends User {
-  final String address;
+  
   final int floor;
   final int apartmentNumber;
 
@@ -35,7 +37,7 @@ class Consumer extends User {
     required String email,
     required String phoneNumber,
     required String city,
-    required this.address,
+    required String address,
     required this.floor,
     required this.apartmentNumber,
   }) : super(
@@ -44,6 +46,7 @@ class Consumer extends User {
           email: email,
           phoneNumber: phoneNumber,
           city: city,
+          address: address,
         );
 
   Consumer.fromMap(Map<String, dynamic> map)
@@ -79,6 +82,7 @@ class BusinessOwner extends User {
     required String email,
     required String phoneNumber,
     required String city,
+    required String address,
     required this.businessName,
     required this.businessPhone,
     required this.workHours,
@@ -88,6 +92,7 @@ class BusinessOwner extends User {
           email: email,
           phoneNumber: phoneNumber,
           city: city,
+          address: address,
         );
 
   BusinessOwner.fromMap(Map<String, dynamic> map)
@@ -99,6 +104,7 @@ class BusinessOwner extends User {
           businessName: map['businessName'],
           businessPhone: map['businessPhone'],
           city: map['city'],
+          address: map['address'],
           workHours: map['workHours'],
         );
 

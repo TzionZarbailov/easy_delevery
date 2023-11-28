@@ -29,7 +29,8 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     'restaurantPhone': TextEditingController(),
     'password': TextEditingController(),
     'restaurantName': TextEditingController(),
-    'street': TextEditingController(),
+    'city': TextEditingController(),
+    'address': TextEditingController(),
     'time': TextEditingController(),
   };
   //* add a new business owner to the database
@@ -42,7 +43,8 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     String password = _controllers['password']!.text;
     String fullName = _controllers['fullName']!.text;
     String phoneNumber = _controllers['phone']!.text;
-    String city = _controllers['street']!.text;
+    String city = _controllers['city']!.text;
+    String address = _controllers['address']!.text;
     String businessName = _controllers['restaurantName']!.text;
     String businessPhone = _controllers['restaurantPhone']!.text;
     String workHours = _controllers['time']!.text;
@@ -51,8 +53,9 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     await _authService.addUser(email, password);
 
     // Create new document reference
-    DocumentReference docRef =
-        FirebaseFirestore.instance.collection(FirestoreCollection.businessOwner).doc();
+    DocumentReference docRef = FirebaseFirestore.instance
+        .collection(FirestoreCollection.businessOwner)
+        .doc();
 
     // Create new business owner
     BusinessOwner newBusinessOwner = BusinessOwner(
@@ -61,6 +64,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
       email: email,
       phoneNumber: phoneNumber,
       city: city,
+      address: address,
       businessName: businessName,
       businessPhone: businessPhone,
       workHours: workHours,
@@ -304,19 +308,33 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                     children: [
                       Expanded(
                         child: buildTextField(
+                          padding: EdgeInsets.only(left: width / 3),
+                          keyboardType: TextInputType.number,
+                          controller: _controllers['restaurantPhone']!,
+                          labelText: 'טלפון של מסעדה',
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildTextField(
                           padding: EdgeInsets.only(left: width / 15),
                           keyboardType: TextInputType.streetAddress,
-                          controller: _controllers['street']!,
-                          labelText: 'עיר',
+                          controller: _controllers['address']!,
+                          labelText: 'כתובת',
                           onTap: () {},
                         ),
                       ),
                       const SizedBox(width: 40),
                       Expanded(
                         child: buildTextField(
-                          keyboardType: TextInputType.number,
-                          controller: _controllers['restaurantPhone']!,
-                          labelText: 'טלפון של מסעדה',
+                          padding: EdgeInsets.only(left: width / 15),
+                          keyboardType: TextInputType.streetAddress,
+                          controller: _controllers['city']!,
+                          labelText: 'עיר',
                           onTap: () {},
                         ),
                       ),
