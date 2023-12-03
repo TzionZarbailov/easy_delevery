@@ -1,8 +1,8 @@
+import 'package:easy_delevery/services/user_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/second_text_field.dart';
-
 
 enum ResetMethod { email, mobile }
 
@@ -17,6 +17,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
   ResetMethod? _resetMethod;
+
+  final UserRepository _userRepository = UserRepository();
 
   void get _emailReset => setState(() {
         _resetMethod = ResetMethod.email;
@@ -141,7 +143,17 @@ class _ResetPasswordState extends State<ResetPassword> {
                       horizontal: 75,
                       vertical: double.minPositive,
                       fontSize: 15,
-                      onTap: () {}, //resetPassword,
+                      onTap: ()  {
+                        if (_resetMethod == ResetMethod.email) {
+                           _userRepository
+                              .resetPassword(_emailController.text);
+                              Navigator.pop(context);
+                        } else if (_resetMethod == ResetMethod.mobile) {
+                           _userRepository
+                              .resetPasswordPhone(_phoneNumController.text);
+                        }
+                        
+                      },
                       color: const Color(0xFFF98F13),
                     ),
                   ],

@@ -1,3 +1,7 @@
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
+
 class User {
   final String id; //* This is the id of the user
   final String fullName; //* This is the name of the user
@@ -5,20 +9,21 @@ class User {
   final String phoneNumber; //* This is the phone number of the user
   final String city; //* This is the city of the user
   final String address; //* This is the address of the user
+  final String role;
 
-  const User({
-    required this.id,
+  User({
     required this.fullName,
     required this.email,
     required this.phoneNumber,
     required this.city,
     required this.address,
-  });
+    required this.role,
+  }) : id = uuid.v4();
 
   Map<String, dynamic> toMap() {
     return {
-      'fullName': fullName,
       'email': email,
+      'fullName': fullName,
       'phoneNumber': phoneNumber,
       'city': city,
       'address': address,
@@ -27,12 +32,10 @@ class User {
 }
 
 class Consumer extends User {
-  
   final int floor;
   final int apartmentNumber;
 
-  const Consumer({
-    required String id,
+  Consumer({
     required String fullName,
     required String email,
     required String phoneNumber,
@@ -41,24 +44,23 @@ class Consumer extends User {
     required this.floor,
     required this.apartmentNumber,
   }) : super(
-          id: id,
           fullName: fullName,
           email: email,
           phoneNumber: phoneNumber,
           city: city,
           address: address,
+          role: 'consumer',
         );
 
   Consumer.fromMap(Map<String, dynamic> map)
       : this(
-          id: map['id'],
-          fullName: map['fullName'],
           email: map['email'],
+          fullName: map['fullName'],
           address: map['address'],
-          phoneNumber: map['phoneNumber'],
           floor: map['floor'],
           city: map['city'],
           apartmentNumber: map['apartmentNumber'],
+          phoneNumber: map['phoneNumber'],
         );
 
   @override
@@ -75,9 +77,10 @@ class BusinessOwner extends User {
   final String businessName;
   final String businessPhone;
   final String workHours;
+  final String restaurantId;
 
-  const BusinessOwner({
-    required String id,
+  BusinessOwner({
+    required this.restaurantId,
     required String fullName,
     required String email,
     required String phoneNumber,
@@ -87,21 +90,21 @@ class BusinessOwner extends User {
     required this.businessPhone,
     required this.workHours,
   }) : super(
-          id: id,
-          fullName: fullName,
           email: email,
+          fullName: fullName,
           phoneNumber: phoneNumber,
           city: city,
           address: address,
+          role: 'businessOwner',
         );
 
   BusinessOwner.fromMap(Map<String, dynamic> map)
       : this(
-          id: map['id'],
-          fullName: map['fullName'],
+          restaurantId: map['restaurantId'],
           email: map['email'],
-          phoneNumber: map['phoneNumber'],
+          fullName: map['fullName'],
           businessName: map['businessName'],
+          phoneNumber: map['phoneNumber'],
           businessPhone: map['businessPhone'],
           city: map['city'],
           address: map['address'],
@@ -111,6 +114,7 @@ class BusinessOwner extends User {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
+    map['restaurantId'] = restaurantId;
     map['businessName'] = businessName;
     map['businessPhone'] = businessPhone;
     map['workHours'] = workHours;

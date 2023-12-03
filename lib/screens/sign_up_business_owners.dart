@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/components/my_show_dialog.dart';
 import 'package:easy_delevery/models/user.dart';
-import 'package:easy_delevery/services/auth_service.dart';
 
-import 'package:easy_delevery/services/cloud_firestore.dart';
+import 'package:easy_delevery/services/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,6 +22,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
 
   //* text controllers
   final Map<String, TextEditingController> _controllers = {
+    'restaurantId': TextEditingController(),
     'email': TextEditingController(),
     'fullName': TextEditingController(),
     'phone': TextEditingController(),
@@ -34,11 +34,12 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     'time': TextEditingController(),
   };
   //* add a new business owner to the database
-  final AuthService _authService = AuthService();
-  final FirestoreService _firestoreService = FirestoreService();
+
+  final UserRepository _userRepository = UserRepository();
 
   void signUpBusinessOwners() async {
     // Extract controller values
+    String restaurantId = _controllers['restaurantId']!.text;
     String email = _controllers['email']!.text;
     String password = _controllers['password']!.text;
     String fullName = _controllers['fullName']!.text;
@@ -50,16 +51,11 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     String workHours = _controllers['time']!.text;
 
     // Create new user in auth
-    await _authService.addUser(email, password);
-
-    // Create new document reference
-    DocumentReference docRef = FirebaseFirestore.instance
-        .collection(FirestoreCollection.businessOwner)
-        .doc();
+    await _userRepository.registerWithEmailAndPassword(email, password);
 
     // Create new business owner
     BusinessOwner newBusinessOwner = BusinessOwner(
-      id: docRef.id,
+      restaurantId: restaurantId,
       fullName: fullName,
       email: email,
       phoneNumber: phoneNumber,
@@ -71,7 +67,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     );
 
     // Add new business owner to Firestore
-    await _firestoreService.addBusinessOwner(newBusinessOwner);
+    await _userRepository.addBusinessOwners(newBusinessOwner);
 
     // Clear text controllers
     _controllers.forEach((_, controller) => controller.clear());
@@ -299,6 +295,19 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           padding: EdgeInsets.only(left: width / 3),
                           controller: _controllers['restaurantName']!,
                           labelText: 'שם המסעדה',
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildTextField(
+                          padding: EdgeInsets.only(left: width / 3),
+                          keyboardType: TextInputType.number,
+                          controller: _controllers['restaurantId']!,
+                          labelText: 'מספר עסק',
                           onTap: () {},
                         ),
                       ),

@@ -64,6 +64,9 @@ class ValidationHelper {
     return regex.hasMatch(address);
   }
 
+ 
+
+
 // Check if the restaurant is open
   static bool isRestaurantOpen(String openingTime, String closingTime) {
     // Parse the opening and closing times

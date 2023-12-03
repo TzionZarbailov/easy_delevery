@@ -4,7 +4,7 @@ import 'firebase_options.dart';
 import 'package:flutter/services.dart';
 
 
-import 'package:easy_delevery/screens/business_owner_home_screen.dart';
+import 'package:easy_delevery/screens/restaurant_home_screen.dart';
 import 'package:easy_delevery/screens/consumer_home_screen.dart';
 import 'package:easy_delevery/screens/login_screen.dart';
 import 'package:easy_delevery/screens/registration_screen.dart';
@@ -39,8 +39,8 @@ class MyApp extends StatelessWidget {
         '/reset_password': (context) => const ResetPassword(),
         '/sign_up_business_owners': (context) => const SignUpBusinessOwners(),
         '/sign_up_customers': (context) => const SignUpCustomers(),
-        '/business_owner_home_screen': (context) =>
-            const BusinessOwnerHomeScreen(),
+        '/restaurant_home_screen': (context) =>
+            const RestaurantHomeScreen(),
         '/consumer_home_screen': (context) => const ConsumerHomeScreen(),
       },
     );

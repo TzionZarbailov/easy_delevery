@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/components/my_show_dialog.dart';
 import 'package:easy_delevery/models/user.dart';
-import 'package:easy_delevery/services/auth_service.dart';
-import 'package:easy_delevery/services/cloud_firestore.dart';
+import 'package:easy_delevery/services/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,8 +27,8 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     'email': TextEditingController(),
     'password': TextEditingController(),
   };
-  final AuthService _authService = AuthService();
-  final FirestoreService _firestoreService = FirestoreService();
+
+  final UserRepository _userRepository = UserRepository();
 
   void signInCustomers() async {
     // Extract controller values
@@ -44,17 +42,12 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     int apartmentNumber = int.parse(_controllers['apartment']!.text);
 
     // Create new user in auth
-    await _authService.addUser(email, password);
-
-    // Create new document reference
-    DocumentReference docRef =
-        FirebaseFirestore.instance.collection(FirestoreCollection.consumer).doc();
+    await UserRepository().registerWithEmailAndPassword(email, password);
 
     // Create new consumer
     Consumer newConsumer = Consumer(
-      id: docRef.id,
-      fullName: fullName,
       email: email,
+      fullName: fullName,
       phoneNumber: phoneNumber,
       city: city,
       address: address,
@@ -63,7 +56,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     );
 
     // Add new consumer to Firestore
-    await _firestoreService.addConsumer(newConsumer);
+    await _userRepository.addConsumer(newConsumer);
 
     // Clear text controllers
     _controllers.forEach((_, controller) => controller.clear());

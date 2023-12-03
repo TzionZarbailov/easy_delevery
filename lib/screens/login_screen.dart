@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/colors/my_colors.dart';
@@ -6,6 +5,7 @@ import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_textfield.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
+import 'package:easy_delevery/services/user_repository.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,16 +21,12 @@ class _LoginScreenState extends State<LoginScreen> {
     'password': TextEditingController(),
   };
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _controllers['email']!.text.trim(),
-      password: _controllers['password']!.text.trim(),
-    );
-  }
-
   //* password visibility
   bool _obscureText = true;
 
+  //* user repository
+
+  final UserRepository _userRepository = UserRepository();
   @override
   void initState() {
     super.initState();
@@ -41,6 +37,33 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ),
     );
+  }
+
+  //* login with email and password
+  Future<void> login() async {
+    // final userEmail = _controllers['email']!.text;
+    // final userPassword = _controllers['password']!.text;
+
+    // final userCollection = await _userRepository.getUserCollection(userEmail);
+    // final isPasswordCorrect = await _userRepository.isEmailAndPasswordCorrect(
+    //     userEmail, userPassword);
+
+    // if (userCollection == UserRepository.consumer && isPasswordCorrect) {
+    //   if (context.mounted) return;
+    //   Navigator.of(context).pushReplacementNamed('/consumer_home_screen');
+    // } else if (userCollection == UserRepository.businessOwner &&
+    //     isPasswordCorrect) {
+    //   if (context.mounted) return;
+    //   Navigator.of(context).pushReplacementNamed('/restaurant_home_screen');
+    // } else {
+    //   if (context.mounted) return;
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('הדוא"ל או הסיסמה שגויים'),
+    //       backgroundColor: Colors.red,
+    //     ),
+    //   );
+    // }
   }
 
   @override
@@ -163,7 +186,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                onTap: () {},
+                onTap: () {
+                  login();
+                },
               ),
 
               const SizedBox(height: 10),
@@ -189,7 +214,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   //* Icon google
                   IconButton(
                     focusColor: Colors.white,
-                    onPressed: () {}, //loginWithGoogle
+                    onPressed: () async {
+                      await _userRepository.signInWithGoogle();
+                    },
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
                       width: 50,
