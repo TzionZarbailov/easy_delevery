@@ -1,8 +1,8 @@
+import 'package:easy_delevery/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
-
 
 import 'package:easy_delevery/screens/restaurant_home_screen.dart';
 import 'package:easy_delevery/screens/consumer_home_screen.dart';
@@ -16,13 +16,15 @@ import 'package:easy_delevery/screens/sign_up_customers.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {});
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +34,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       title: 'Easy_Delevery',
-      home: const LoginScreen(),
+      home: MainScreen(),
       routes: {
-        '/login_screen': (context) => const LoginScreen(),
-        '/registration_screen': (context) => const RegistrationScreen(),
         '/reset_password': (context) => const ResetPassword(),
         '/sign_up_business_owners': (context) => const SignUpBusinessOwners(),
         '/sign_up_customers': (context) => const SignUpCustomers(),
-        '/restaurant_home_screen': (context) =>
-            const RestaurantHomeScreen(),
+        '/restaurant_home_screen': (context) => const RestaurantHomeScreen(),
         '/consumer_home_screen': (context) => const ConsumerHomeScreen(),
       },
     );

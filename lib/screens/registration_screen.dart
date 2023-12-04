@@ -4,9 +4,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
 import 'package:easy_delevery/components/my_button.dart';
 
-class RegistrationScreen extends StatelessWidget {
-  const RegistrationScreen({super.key});
+class RegistrationScreen extends StatefulWidget {
+  final VoidCallback showLoginPage;
+  const RegistrationScreen({
+    super.key,
+    required this.showLoginPage,
+  });
 
+  @override
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
+}
+
+class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     //* height: MediaQuery.of(context).size.height,
@@ -14,7 +23,7 @@ class RegistrationScreen extends StatelessWidget {
 
     //* width: MediaQuery.of(context).size.width,
     double width = MediaQuery.of(context).size.width;
-    
+
     //* This is the function that build the button
     Widget buildMyButton(String text, String route) {
       return MyButton(
@@ -43,9 +52,7 @@ class RegistrationScreen extends StatelessWidget {
                         color: Color(0xFFF98F13),
                         size: 33,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: widget.showLoginPage,
                     ),
                   ],
                 ),
@@ -80,8 +87,8 @@ class RegistrationScreen extends StatelessWidget {
             ),
 
             //* List text
-            Column(
-              children: const [
+            const Column(
+              children: [
                 //* This is the text on the top of the screen'
                 TextHomeScreen(text: 'פלטפורמה נוחה ומקוונת להזמנה'),
 

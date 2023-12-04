@@ -15,7 +15,7 @@ class MyButton extends StatelessWidget {
   final String text;
   final double horizontal;
   final double vertical;
-  final void Function() onTap;
+  final Function() onTap;
   final double fontSize;
   final Color? color;
 

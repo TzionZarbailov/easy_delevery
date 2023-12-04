@@ -30,7 +30,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
 
   final UserRepository _userRepository = UserRepository();
 
-  void signInCustomers() async {
+  Future<void> signInCustomers() async {
     // Extract controller values
     String email = _controllers['email']!.text;
     String password = _controllers['password']!.text;
@@ -43,6 +43,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
 
     // Create new user in auth
     await UserRepository().registerWithEmailAndPassword(email, password);
+    final String uid = _userRepository.getCurrentUid();
 
     // Create new consumer
     Consumer newConsumer = Consumer(
@@ -53,10 +54,11 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
       address: address,
       floor: floor,
       apartmentNumber: apartmentNumber,
+      role: 'consumer',
     );
 
     // Add new consumer to Firestore
-    await _userRepository.addConsumer(newConsumer);
+    await _userRepository.addConsumer(newConsumer, uid);
 
     // Clear text controllers
     _controllers.forEach((_, controller) => controller.clear());
@@ -119,9 +121,9 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 children: [
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       Text(
                         'ברוכים הבאים',
                         style: TextStyle(

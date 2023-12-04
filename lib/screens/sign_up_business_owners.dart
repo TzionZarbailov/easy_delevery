@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/components/my_show_dialog.dart';
 import 'package:easy_delevery/models/user.dart';
 
@@ -37,7 +36,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
 
   final UserRepository _userRepository = UserRepository();
 
-  void signUpBusinessOwners() async {
+  Future<void> signUpBusinessOwners() async {
     // Extract controller values
     String restaurantId = _controllers['restaurantId']!.text;
     String email = _controllers['email']!.text;
@@ -52,6 +51,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
 
     // Create new user in auth
     await _userRepository.registerWithEmailAndPassword(email, password);
+    final String uid = _userRepository.getCurrentUid();
 
     // Create new business owner
     BusinessOwner newBusinessOwner = BusinessOwner(
@@ -64,19 +64,20 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
       businessName: businessName,
       businessPhone: businessPhone,
       workHours: workHours,
+      role: 'businessOwner',
     );
 
     // Add new business owner to Firestore
-    await _userRepository.addBusinessOwners(newBusinessOwner);
+    await _userRepository.addBusinessOwners(newBusinessOwner, uid);
 
     // Clear text controllers
     _controllers.forEach((_, controller) => controller.clear());
   }
 
-  //* password visibility
+  // password visibility
   bool _obscureText = true;
 
-  //* init state
+  // init state
   @override
   void initState() {
     super.initState();
@@ -85,7 +86,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     });
   }
 
-  //* dispose state
+  // dispose state
   @override
   void dispose() {
     _controllers.forEach((_, controller) => controller.dispose());
@@ -94,10 +95,10 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
 
   @override
   Widget build(BuildContext context) {
-    //* height: MediaQuery.of(context).size.height,
+    // height: MediaQuery.of(context).size.height,
     double height = MediaQuery.of(context).size.height;
 
-    //* width: MediaQuery.of(context).size.width,
+    // width: MediaQuery.of(context).size.width,
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -120,9 +121,9 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                         horizontal: 30, vertical: 40),
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
+                          children: [
                             Text(
                               'ברוכים הבאים',
                               style: TextStyle(

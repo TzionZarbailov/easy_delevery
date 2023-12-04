@@ -143,17 +143,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       horizontal: 75,
                       vertical: double.minPositive,
                       fontSize: 15,
-                      onTap: ()  {
-                        if (_resetMethod == ResetMethod.email) {
-                           _userRepository
-                              .resetPassword(_emailController.text);
-                              Navigator.pop(context);
-                        } else if (_resetMethod == ResetMethod.mobile) {
-                           _userRepository
-                              .resetPasswordPhone(_phoneNumController.text);
-                        }
-                        
-                      },
+                      onTap: () {},
                       color: const Color(0xFFF98F13),
                     ),
                   ],

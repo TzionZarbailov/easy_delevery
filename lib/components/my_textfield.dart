@@ -6,9 +6,11 @@ class MyTextField extends StatelessWidget {
   final bool obscureText;
   final TextEditingController controller;
   final Widget? prefixIcon;
+  final TextInputType keyboardType;
 
   const MyTextField({
     super.key,
+    required this.keyboardType,
     required this.labelText,
     required this.obscureText,
     required this.controller,
@@ -22,6 +24,7 @@ class MyTextField extends StatelessWidget {
         horizontal: 45,
       ),
       child: TextField(
+        keyboardType: keyboardType,
         textAlign: TextAlign.center,
         obscureText: obscureText,
         controller: controller,

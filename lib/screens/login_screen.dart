@@ -1,74 +1,40 @@
+import 'package:easy_delevery/services/user_repository.dart';
+
 import 'package:flutter/material.dart';
-
 import 'package:easy_delevery/colors/my_colors.dart';
-
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_textfield.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
-import 'package:easy_delevery/services/user_repository.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback showRegisterPage;
+
+  const LoginScreen({super.key, required this.showRegisterPage});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  //* text controllers
-  final Map<String, TextEditingController> _controllers = {
-    'email': TextEditingController(),
-    'password': TextEditingController(),
-  };
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  //* password visibility
   bool _obscureText = true;
 
-  //* user repository
-
   final UserRepository _userRepository = UserRepository();
+
   @override
   void initState() {
     super.initState();
-    _controllers.forEach(
-      (key, controller) => controller.addListener(
-        () {
-          setState(() {});
-        },
-      ),
-    );
-  }
-
-  //* login with email and password
-  Future<void> login() async {
-    // final userEmail = _controllers['email']!.text;
-    // final userPassword = _controllers['password']!.text;
-
-    // final userCollection = await _userRepository.getUserCollection(userEmail);
-    // final isPasswordCorrect = await _userRepository.isEmailAndPasswordCorrect(
-    //     userEmail, userPassword);
-
-    // if (userCollection == UserRepository.consumer && isPasswordCorrect) {
-    //   if (context.mounted) return;
-    //   Navigator.of(context).pushReplacementNamed('/consumer_home_screen');
-    // } else if (userCollection == UserRepository.businessOwner &&
-    //     isPasswordCorrect) {
-    //   if (context.mounted) return;
-    //   Navigator.of(context).pushReplacementNamed('/restaurant_home_screen');
-    // } else {
-    //   if (context.mounted) return;
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //       content: Text('הדוא"ל או הסיסמה שגויים'),
-    //       backgroundColor: Colors.red,
-    //     ),
-    //   );
-    // }
+    _passwordController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    _controllers.forEach((key, controller) => controller.dispose());
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -80,17 +46,15 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: Column(
             children: [
-              //* get image from assets folder
               Stack(
                 children: [
+                  // image
                   Container(
                     width: 425,
                     height: 520,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(
-                          'lib/assets/images/imageLogin.jpeg',
-                        ),
+                        image: AssetImage('lib/assets/images/imageLogin.jpeg'),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -109,10 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         shape: RoundedRectangleBorder(),
                       ),
                       child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 40,
-                          horizontal: 20,
-                        ),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                         child: Text(
                           '!ברוכים השבים',
                           textAlign: TextAlign.right,
@@ -127,6 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
+
+                  // registration button
                   SafeArea(
                     child: Padding(
                       padding: const EdgeInsets.all(10),
@@ -137,8 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             text: 'להרשמה',
                             horizontal: 10,
                             vertical: double.minPositive,
-                            onTap: () => Navigator.pushNamed(
-                                context, '/registration_screen'),
+                            onTap: widget.showRegisterPage,
                           ),
                         ],
                       ),
@@ -149,20 +112,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 5),
 
-              //* text field for email
+              // email text field
               MyTextField(
                 labelText: ':דוא"ל',
+                keyboardType: TextInputType.emailAddress,
                 obscureText: false,
-                controller: _controllers['email']!,
+                controller: _emailController,
               ),
 
               const SizedBox(height: 10),
-              //* text field for password
+
+              // password text field
               MyTextField(
+                keyboardType: TextInputType.visiblePassword,
                 labelText: ':סיסמה',
                 obscureText: _obscureText,
-                controller: _controllers['password']!,
-                prefixIcon: _controllers['password']!.text.isNotEmpty
+                controller: _passwordController,
+                prefixIcon: _passwordController.text.isNotEmpty
                     ? IconButton(
                         icon: Icon(_obscureText
                             ? Icons.visibility
@@ -174,49 +140,48 @@ class _LoginScreenState extends State<LoginScreen> {
                         })
                     : null,
               ),
+
               const SizedBox(height: 5),
-              //*password recovery
+
+              // forgot password
               GestureDetector(
                 onTap: () => Navigator.pushNamed(context, '/reset_password'),
                 child: const TextHomeScreen(text: '?שכחת סיסמה'),
               ),
+
               const SizedBox(height: 5),
 
+              // login button
               MyButton(
-                text: 'התחבר',
-                horizontal: 22,
-                vertical: 5,
-                onTap: () {
-                  login();
-                },
-              ),
+                  text: 'התחבר',
+                  horizontal: 22,
+                  vertical: 5,
+                  onTap: () {
+                    _userRepository.singIn(_emailController.text.trim(),
+                        _passwordController.text.trim());
+                  }),
 
               const SizedBox(height: 10),
 
-              const TextHomeScreen(
-                text: 'או התחבר עם',
-              ),
-
+              // or login with
+              const TextHomeScreen(text: 'או התחבר עם'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //* Icon facebook
+                  // facebook icon
                   IconButton(
                     focusColor: Colors.white,
                     iconSize: 50,
-                    onPressed: () {}, //loginWithFacebook
-                    icon: const Icon(
-                      Icons.facebook,
-                      color: Color(0xFF345FF6),
-                    ),
+                    onPressed: () {}, // Add your Facebook login logic here
+                    icon: const Icon(Icons.facebook, color: Color(0xFF345FF6)),
                   ),
+
                   const SizedBox(width: 15),
-                  //* Icon google
+
+                  // google icon
                   IconButton(
                     focusColor: Colors.white,
-                    onPressed: () async {
-                      await _userRepository.signInWithGoogle();
-                    },
+                    onPressed: () {},
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
                       width: 50,

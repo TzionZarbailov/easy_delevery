@@ -3,7 +3,6 @@ import 'package:uuid/uuid.dart';
 const uuid = Uuid();
 
 class User {
-  final String id; //* This is the id of the user
   final String fullName; //* This is the name of the user
   final String email; //* This is the email of the user
   final String phoneNumber; //* This is the phone number of the user
@@ -11,14 +10,14 @@ class User {
   final String address; //* This is the address of the user
   final String role;
 
-  User({
+  const User({
     required this.fullName,
     required this.email,
     required this.phoneNumber,
     required this.city,
     required this.address,
     required this.role,
-  }) : id = uuid.v4();
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,6 +26,7 @@ class User {
       'phoneNumber': phoneNumber,
       'city': city,
       'address': address,
+      'role': role,
     };
   }
 }
@@ -41,6 +41,7 @@ class Consumer extends User {
     required String phoneNumber,
     required String city,
     required String address,
+    required String role,
     required this.floor,
     required this.apartmentNumber,
   }) : super(
@@ -49,7 +50,7 @@ class Consumer extends User {
           phoneNumber: phoneNumber,
           city: city,
           address: address,
-          role: 'consumer',
+          role: role,
         );
 
   Consumer.fromMap(Map<String, dynamic> map)
@@ -61,6 +62,7 @@ class Consumer extends User {
           city: map['city'],
           apartmentNumber: map['apartmentNumber'],
           phoneNumber: map['phoneNumber'],
+          role: map['role'],
         );
 
   @override
@@ -86,6 +88,7 @@ class BusinessOwner extends User {
     required String phoneNumber,
     required String city,
     required String address,
+    required String role,
     required this.businessName,
     required this.businessPhone,
     required this.workHours,
@@ -95,7 +98,7 @@ class BusinessOwner extends User {
           phoneNumber: phoneNumber,
           city: city,
           address: address,
-          role: 'businessOwner',
+          role: role,
         );
 
   BusinessOwner.fromMap(Map<String, dynamic> map)
@@ -109,6 +112,7 @@ class BusinessOwner extends User {
           city: map['city'],
           address: map['address'],
           workHours: map['workHours'],
+          role: map['role'],
         );
 
   @override
