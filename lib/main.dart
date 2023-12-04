@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 
 import 'package:easy_delevery/screens/restaurant_home_screen.dart';
 import 'package:easy_delevery/screens/consumer_home_screen.dart';
-import 'package:easy_delevery/screens/login_screen.dart';
-import 'package:easy_delevery/screens/registration_screen.dart';
 import 'package:easy_delevery/screens/reset_password.dart';
 import 'package:easy_delevery/screens/sign_up_business_owners.dart';
 import 'package:easy_delevery/screens/sign_up_customers.dart';
@@ -34,7 +32,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       title: 'Easy_Delevery',
-      home: MainScreen(),
+      home: const MainScreen(),
       routes: {
         '/reset_password': (context) => const ResetPassword(),
         '/sign_up_business_owners': (context) => const SignUpBusinessOwners(),
