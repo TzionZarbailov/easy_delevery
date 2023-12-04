@@ -1,4 +1,3 @@
-import 'package:easy_delevery/services/user_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
@@ -17,8 +16,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
   ResetMethod? _resetMethod;
-
-  final UserRepository _userRepository = UserRepository();
 
   void get _emailReset => setState(() {
         _resetMethod = ResetMethod.email;
