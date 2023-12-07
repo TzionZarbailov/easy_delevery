@@ -1,3 +1,4 @@
+import 'package:easy_delevery/services/user_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
@@ -6,7 +7,7 @@ import 'package:easy_delevery/components/second_text_field.dart';
 enum ResetMethod { email, mobile }
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({super.key});
+  const ResetPassword({Key? key}) : super(key: key);
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -16,6 +17,14 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
   ResetMethod? _resetMethod;
+  UserRepository _userRepository = UserRepository();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _phoneNumController.dispose();
+    super.dispose();
+  }
 
   void get _emailReset => setState(() {
         _resetMethod = ResetMethod.email;
@@ -140,7 +149,11 @@ class _ResetPasswordState extends State<ResetPassword> {
                       horizontal: 75,
                       vertical: double.minPositive,
                       fontSize: 15,
-                      onTap: () {},
+                      onTap: () {
+                        return _userRepository.resetPasswordWithEmail(
+                          _emailController.text,
+                        );
+                      },
                       color: const Color(0xFFF98F13),
                     ),
                   ],

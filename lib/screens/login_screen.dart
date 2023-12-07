@@ -153,13 +153,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // login button
               MyButton(
-                  text: 'התחבר',
-                  horizontal: 22,
-                  vertical: 5,
-                  onTap: () {
-                    _userRepository.singIn(_emailController.text.trim(),
-                        _passwordController.text.trim());
-                  }),
+                text: 'התחבר',
+                horizontal: 22,
+                vertical: 5,
+                onTap: () {
+                  _userRepository.singIn(_emailController.text.trim(),
+                      _passwordController.text.trim());
+                },
+              ),
 
               const SizedBox(height: 10),
 

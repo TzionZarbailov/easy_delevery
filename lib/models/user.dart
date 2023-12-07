@@ -32,8 +32,8 @@ class User {
 }
 
 class Consumer extends User {
-  final int floor;
-  final int apartmentNumber;
+  final String floor;
+  final String apartmentNumber;
 
   Consumer({
     required String fullName,

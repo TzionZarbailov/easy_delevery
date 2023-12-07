@@ -1,4 +1,5 @@
-import 'package:easy_delevery/components/my_show_dialog.dart';
+import 'package:easy_delevery/colors/my_colors.dart';
+import 'package:easy_delevery/helper/validation_helpers.dart';
 import 'package:easy_delevery/models/user.dart';
 import 'package:easy_delevery/services/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,10 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     'email': TextEditingController(),
     'password': TextEditingController(),
   };
-
   final UserRepository _userRepository = UserRepository();
+  final ValidationHelper _validationHelper = ValidationHelper();
 
-  Future<void> signInCustomers() async {
+  Future signUpCustomers() async {
     // Extract controller values
     String email = _controllers['email']!.text;
     String password = _controllers['password']!.text;
@@ -38,30 +39,157 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     String phoneNumber = _controllers['phone']!.text;
     String city = _controllers['city']!.text;
     String address = _controllers['address']!.text;
-    int floor = int.parse(_controllers['floor']!.text);
-    int apartmentNumber = int.parse(_controllers['apartment']!.text);
+    String floor = _controllers['floor']!.text;
+    String apartmentNumber = _controllers['apartment']!.text;
 
-    // Create new user in auth
-    await UserRepository().registerWithEmailAndPassword(email, password);
-    final String uid = _userRepository.getCurrentUid();
+    // Create new user in auth and firestore
+    final List<String> errors = [];
 
-    // Create new consumer
-    Consumer newConsumer = Consumer(
-      email: email,
-      fullName: fullName,
-      phoneNumber: phoneNumber,
-      city: city,
-      address: address,
-      floor: floor,
-      apartmentNumber: apartmentNumber,
-      role: 'consumer',
-    );
+    if (!_validationHelper.isValidEmail(email) || email.isEmpty) {
+      errors.add('.כתובת הדוא"ל אינה תקינה');
+    }
+    if (!_validationHelper.isValidPassword(password)) {
+      errors
+          .add('.הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה ומספר');
+    }
+    if (!_validationHelper.isValidFullName(fullName)) {
+      errors.add('.שם מלא אינו תקין');
+    }
+    if (!_validationHelper.isValidPhoneNumber(phoneNumber)) {
+      errors.add('.מספר הטלפון אינו תקין');
+    }
+    if (!_validationHelper.isValidAddress(address)) {
+      errors.add('.כתובת אינה תקינה');
+    }
+    if (!_validationHelper.isValidAddress(address)) {
+      errors.add('.כתובת אינה תקינה');
+    }
 
-    // Add new consumer to Firestore
-    await _userRepository.addConsumer(newConsumer, uid);
+    if (errors.isEmpty) {
+      // Create new consumer
+      Consumer newConsumer = Consumer(
+        email: email,
+        fullName: fullName,
+        phoneNumber: phoneNumber,
+        city: city,
+        address: address,
+        floor: floor,
+        apartmentNumber: apartmentNumber,
+        role: 'consumer',
+      );
 
-    // Clear text controllers
-    _controllers.forEach((_, controller) => controller.clear());
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: AlertDialog(
+            backgroundColor: myColors.inputColor,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '!ההרשמה בוצעה בהצלחה',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, '/main_screen');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text(
+                      'המשך',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // Add new consumer to Firestore
+      await _userRepository.addConsumer(newConsumer);
+
+      await _userRepository.signUp(email, password);
+
+      // signOut from previous user
+      await _userRepository.signOut();
+
+      // Clear text controllers
+      _controllers.forEach((_, controller) => controller.clear());
+    } else {
+      // Show dialog with error messages
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: AlertDialog(
+            backgroundColor: myColors.inputColor,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '!שגיאה',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
+                ),
+              ],
+            ),
+            content: Text(
+              errors.join('\n'),
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: Color(0xFFF44336),
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text(
+                      'נסה שוב',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // Clear text controllers
+      _controllers.forEach((_, controller) => controller.clear());
+    }
   }
 
   //* password visibility
@@ -220,7 +348,6 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             keyboardType: TextInputType.number,
                             controller: _controllers['apartment']!,
                             labelText: 'דירה',
-                            onTap: () {},
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -231,7 +358,6 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             keyboardType: TextInputType.number,
                             controller: _controllers['floor']!,
                             labelText: 'קומה',
-                            onTap: () {},
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -241,7 +367,6 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             keyboardType: TextInputType.streetAddress,
                             controller: _controllers['address']!,
                             labelText: 'כתובת',
-                            onTap: () {},
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -251,7 +376,6 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             padding: const EdgeInsets.only(right: 25),
                             controller: _controllers['city']!,
                             labelText: 'ישוב',
-                            onTap: () {},
                           ),
                         ),
                       ],
@@ -261,14 +385,12 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                       keyboardType: TextInputType.number,
                       controller: _controllers['phone']!,
                       labelText: 'טלפון',
-                      onTap: () {},
                     ),
                     buildTextField(
                       padding: const EdgeInsets.only(left: 150, right: 25),
                       keyboardType: TextInputType.emailAddress,
                       controller: _controllers['email']!,
                       labelText: 'דוא"ל',
-                      onTap: () {},
                     ),
                     Row(
                       children: [
@@ -280,7 +402,6 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             controller: _controllers['password']!,
                             labelText: 'סיסמה',
                             obscureText: _obscureText,
-                            onTap: () {},
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(
                                 top: 15,
@@ -310,20 +431,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                             text: 'הרשמה',
                             horizontal: 25,
                             vertical: double.minPositive,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => MyShowDialog(
-                                  title: 'הרשמה בוצעה בהצלחה',
-                                  onPressed: () async {
-                                    // Navigate to login screen
-                                    Navigator.popAndPushNamed(
-                                        context, '/login_screen');
-                                    return signInCustomers();
-                                  },
-                                ),
-                              );
-                            },
+                            onTap: signUpCustomers,
                           ),
                         ],
                       ),

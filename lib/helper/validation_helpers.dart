@@ -1,45 +1,25 @@
-enum ConsumerValidationError {
-  invalidEmail,
-  invalidPassword,
-  invalidFullName,
-  invalidPhoneNumber,
-  invalidCity,
-  invalidAddress,
-  none,
-}
-
-enum RestaurantValidationError {
-  invalidEmail,
-  invalidPassword,
-  invalidFullName,
-  invalidPhoneNumber,
-  invalidRestaurantPhoneNumber,
-  invalidCity,
-  invalidAddress,
-  invalidOpeningTime,
-  invalidClosingTime,
-  none,
-}
-
 class ValidationHelper {
   // Vaild for email
-  static bool isValidEmail(String email) {
+
+  bool isValidEmail(String email) {
     final RegExp regex = RegExp(
       r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
     );
+
     return regex.hasMatch(email);
   }
 
 // Vaild for password
-  static bool isValidPassword(String password) {
+  bool isValidPassword(String password) {
     final RegExp regex = RegExp(
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$',
     );
+
     return regex.hasMatch(password);
   }
 
 // Vaild for phone number
-  static bool isValidPhoneNumber(String phoneNumber) {
+  bool isValidPhoneNumber(String phoneNumber) {
     final RegExp regex = RegExp(
       r'^[0-9]{10}$',
     );
@@ -47,15 +27,22 @@ class ValidationHelper {
   }
 
 // Vaild for fullName
-  static bool isValidFullName(String fullName) {
+  bool isValidFullName(String fullName) {
     final RegExp regex = RegExp(
       r'^[a-zA-Z\u0590-\u05FF ]+$',
     );
-    return regex.hasMatch(fullName);
+
+    if (!regex.hasMatch(fullName)) {
+      return false;
+    }
+
+    final List<String> names = fullName.split(' ');
+    // Check that there are at least two names
+    return names.length >= 2;
   }
 
 // Vaild for address
-  static bool isValidAddress(String address) {
+  bool isValidAddress(String address) {
     final RegExp regex = RegExp(
       r'^[a-zA-Z0-9\u0590-\u05FF ]+$',
     );
@@ -63,7 +50,7 @@ class ValidationHelper {
   }
 
 // Check if the restaurant is open
-  static bool isRestaurantOpen(String openingTime, String closingTime) {
+  bool isRestaurantOpen(String openingTime, String closingTime) {
     // Parse the opening and closing times
     final openingHour = int.parse(openingTime.split(':')[0]);
     final openingMinute = int.parse(openingTime.split(':')[1]);
@@ -91,12 +78,5 @@ class ValidationHelper {
 
     // Check if the current time is within the opening and closing times
     return now.isAfter(openingDateTime) && now.isBefore(closingDateTime);
-  }
-
-  // is the city in israel?
-  static Future<bool> isCityInIsrael(String city) {
-    // Implement your logic here to check if the city is in Israel
-    // This is just a placeholder implementation
-    return Future.value(true);
   }
 }

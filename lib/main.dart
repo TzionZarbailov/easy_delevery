@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
       title: 'Easy_Delevery',
       home: const MainScreen(),
       routes: {
+        '/main_screen': (context) => const MainScreen(), //'/login_screen
         '/reset_password': (context) => const ResetPassword(),
         '/sign_up_business_owners': (context) => const SignUpBusinessOwners(),
         '/sign_up_customers': (context) => const SignUpCustomers(),

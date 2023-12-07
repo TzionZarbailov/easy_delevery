@@ -1,10 +1,11 @@
-import 'package:easy_delevery/components/my_show_dialog.dart';
+import 'package:easy_delevery/helper/validation_helpers.dart';
 import 'package:easy_delevery/models/user.dart';
 
 import 'package:easy_delevery/services/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/second_text_field.dart';
 import 'package:easy_delevery/components/text_home_screen.dart';
@@ -35,8 +36,9 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
   //* add a new business owner to the database
 
   final UserRepository _userRepository = UserRepository();
+  final ValidationHelper _validationHelper = ValidationHelper();
 
-  Future<void> signUpBusinessOwners() async {
+  Future signUpBusinessOwners() async {
     // Extract controller values
     String restaurantId = _controllers['restaurantId']!.text;
     String email = _controllers['email']!.text;
@@ -49,29 +51,162 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     String businessPhone = _controllers['restaurantPhone']!.text;
     String workHours = _controllers['time']!.text;
 
-    // Create new user in auth
-    await _userRepository.registerWithEmailAndPassword(email, password);
-    final String uid = _userRepository.getCurrentUid();
+    // Create new user in auth and firestore
+    final List<String> errors = [];
 
-    // Create new business owner
-    BusinessOwner newBusinessOwner = BusinessOwner(
-      restaurantId: restaurantId,
-      fullName: fullName,
-      email: email,
-      phoneNumber: phoneNumber,
-      city: city,
-      address: address,
-      businessName: businessName,
-      businessPhone: businessPhone,
-      workHours: workHours,
-      role: 'businessOwner',
-    );
+    if (!_validationHelper.isValidEmail(email)) {
+      errors.add('.כתובת הדוא"ל אינה תקינה');
+    }
+    if (!_validationHelper.isValidPassword(password)) {
+      errors
+          .add('.הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה ומספר');
+    }
+    if (!_validationHelper.isValidFullName(fullName)) {
+      errors.add('.שם מלא אינו תקין');
+    }
+    if (!_validationHelper.isValidPhoneNumber(phoneNumber)) {
+      errors.add('.מספר הטלפון אינו תקין');
+    }
+    if (!_validationHelper.isValidAddress(address)) {
+      errors.add('.כתובת אינה תקינה');
+    }
+    if (!_validationHelper.isValidPhoneNumber(businessPhone)) {
+      errors.add('.מספר הטלפון של העסק אינו תקין');
+    }
+    if (restaurantId.isEmpty) {
+      errors.add('.מספר עסק אינו תקין');
+    }
+    if (businessName.isEmpty) {
+      errors.add('.שם המסעדה אינו תקין');
+    }
 
-    // Add new business owner to Firestore
-    await _userRepository.addBusinessOwners(newBusinessOwner, uid);
+    if (errors.isEmpty) {
+      // Create new business owner
+      BusinessOwner newBusinessOwner = BusinessOwner(
+        restaurantId: restaurantId,
+        fullName: fullName,
+        email: email,
+        phoneNumber: phoneNumber,
+        city: city,
+        address: address,
+        businessName: businessName,
+        businessPhone: businessPhone,
+        workHours: workHours,
+        role: 'businessOwner',
+      );
 
-    // Clear text controllers
-    _controllers.forEach((_, controller) => controller.clear());
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: AlertDialog(
+            backgroundColor: myColors.inputColor,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '!ההרשמה בוצעה בהצלחה',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, '/main_screen');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text(
+                      'המשך',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // Add new business owner to Firestore
+      _userRepository.addBusinessOwners(newBusinessOwner);
+
+      // Sign up in auth with email and password
+      _userRepository.signUp(email, password);
+
+      // signOut from previous user
+      await _userRepository.signOut();
+
+      // Clear text controllers
+      _controllers.forEach((_, controller) => controller.clear());
+    } else {
+      // Show dialog with error messages
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: AlertDialog(
+            backgroundColor: myColors.inputColor,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '!שגיאה',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
+                ),
+              ],
+            ),
+            content: Text(
+              errors.join('\n'),
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                color: Color(0xFFF44336),
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text(
+                      'נסה שוב',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      // Clear text controllers
+      _controllers.forEach((_, controller) => controller.clear());
+    }
   }
 
   // password visibility
@@ -197,8 +332,8 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                       ),
                       shape: RoundedRectangleBorder(),
                     ),
-                    child: Column(
-                      children: const [
+                    child: const Column(
+                      children: [
                         TextHomeScreen(
                           text: 'Easy_Delevery-הצטרפות ל',
                           fontSize: 20,
@@ -276,7 +411,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           keyboardType: TextInputType.number,
                           controller: _controllers['phone']!,
                           labelText: 'טלפון',
-                          onTap: () {},
                         ),
                       ),
                       const SizedBox(width: 40),
@@ -284,7 +418,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                         child: buildTextField(
                           controller: _controllers['fullName']!,
                           labelText: 'שם מלא',
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -296,7 +429,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           padding: EdgeInsets.only(left: width / 3),
                           controller: _controllers['restaurantName']!,
                           labelText: 'שם המסעדה',
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -309,7 +441,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           keyboardType: TextInputType.number,
                           controller: _controllers['restaurantId']!,
                           labelText: 'מספר עסק',
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -322,7 +453,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           keyboardType: TextInputType.number,
                           controller: _controllers['restaurantPhone']!,
                           labelText: 'טלפון של מסעדה',
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -335,7 +465,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           keyboardType: TextInputType.streetAddress,
                           controller: _controllers['address']!,
                           labelText: 'כתובת',
-                          onTap: () {},
                         ),
                       ),
                       const SizedBox(width: 40),
@@ -345,7 +474,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           keyboardType: TextInputType.streetAddress,
                           controller: _controllers['city']!,
                           labelText: 'עיר',
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -358,7 +486,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           keyboardType: TextInputType.datetime,
                           controller: _controllers['time']!,
                           labelText: 'שעות פעילות',
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -372,16 +499,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                           text: 'הרשמה',
                           horizontal: 25,
                           vertical: double.minPositive,
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => MyShowDialog(
-                                title: 'הרשמה בוצעה בהצלחה',
-                                onPressed: () async {
-                                  Navigator.popAndPushNamed(
-                                      context, '/login_screen');
-                                  return signUpBusinessOwners();
-                                }),
-                          ),
+                          onTap: signUpBusinessOwners,
                         ),
                       ],
                     ),

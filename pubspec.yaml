@@ -38,7 +38,8 @@ dependencies:
   google_fonts: ^4.0.4
   google_sign_in: ^6.1.6
   http: ^0.13.6
-  uuid: '<4.2.1'
+  location_distance_calculator: ^0.0.5
+  uuid: <4.2.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
