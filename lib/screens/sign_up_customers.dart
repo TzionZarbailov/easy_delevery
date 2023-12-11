@@ -67,8 +67,9 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
 
     if (errors.isEmpty) {
       // Create new consumer
-      Consumer newConsumer = Consumer(
+      final Consumer newConsumer = Consumer(
         email: email,
+        password: password,
         fullName: fullName,
         phoneNumber: phoneNumber,
         city: city,
@@ -89,7 +90,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
                 Text(
                   '!ההרשמה בוצעה בהצלחה',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -122,13 +123,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
         ),
       );
 
-      // Add new consumer to Firestore
-      await _userRepository.addConsumer(newConsumer);
-
-      await _userRepository.signUp(email, password);
-
-      // signOut from previous user
-      await _userRepository.signOut();
+      await _userRepository.registerConsumer(newConsumer);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());
@@ -156,9 +151,8 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
               errors.join('\n'),
               textAlign: TextAlign.right,
               style: const TextStyle(
-                color: Color(0xFFF44336),
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+                color: Colors.black,
+                fontSize: 17,
               ),
             ),
             actions: [

@@ -38,6 +38,70 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  Future signIn(context) async {
+    try {
+      await _userRepository
+          .signIn(
+            _emailController.text.trim(),
+            _passwordController.text.trim(),
+          )
+          .then((value) => null);
+    } catch (_) {
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: AlertDialog(
+            backgroundColor: myColors.inputColor,
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '!שגיאה',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            content: const Text(
+              '.שם משתמש או סיסמה לא נכונים',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text(
+                      'נסה שוב',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    _passwordController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,9 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'התחבר',
                 horizontal: 22,
                 vertical: 5,
-                onTap: () {
-                  _userRepository.singIn(_emailController.text.trim(),
-                      _passwordController.text.trim());
+                onTap: () async {
+                  signIn(context);
                 },
               ),
 

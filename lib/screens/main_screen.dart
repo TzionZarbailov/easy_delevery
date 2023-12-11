@@ -15,19 +15,15 @@ class MainScreen extends StatelessWidget {
 
     return Scaffold(
       body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (userRepository.getRole(userRepository.currentUserEmail()) ==
-                  'businessOwners') {
-                return const RestaurantHomeScreen();
-              } else {
-                return const ConsumerHomeScreen();
-              }
-            } else {
-              return const AuthScreen();
-            }
-          }),
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return userRepository.getStreamBuilder();
+          } else {
+            return const AuthScreen();
+          }
+        },
+      ),
     );
   }
 }

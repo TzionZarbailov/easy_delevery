@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/services/user_repository.dart';
@@ -21,7 +20,8 @@ class _ConsumerHomeScreenState extends State<ConsumerHomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Consumer signed in as: ' + user.currentUserEmail()),
+              // ignore: prefer_interpolation_to_compose_strings
+              Text('Consumer signed in as: ' + user.getUserEmail),
               ElevatedButton(
                 onPressed: () async {
                   await user.signOut();

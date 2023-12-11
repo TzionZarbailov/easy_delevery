@@ -8,6 +8,7 @@ class ValidationHelper {
 
     return regex.hasMatch(email);
   }
+  
 
 // Vaild for password
   bool isValidPassword(String password) {

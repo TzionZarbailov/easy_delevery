@@ -1,10 +1,7 @@
-import 'package:uuid/uuid.dart';
-
-const uuid = Uuid();
-
 class User {
   final String fullName; //* This is the name of the user
   final String email; //* This is the email of the user
+  final String password; //* This is the password of the user
   final String phoneNumber; //* This is the phone number of the user
   final String city; //* This is the city of the user
   final String address; //* This is the address of the user
@@ -13,6 +10,7 @@ class User {
   const User({
     required this.fullName,
     required this.email,
+    required this.password,
     required this.phoneNumber,
     required this.city,
     required this.address,
@@ -38,6 +36,7 @@ class Consumer extends User {
   Consumer({
     required String fullName,
     required String email,
+    required String password,
     required String phoneNumber,
     required String city,
     required String address,
@@ -47,6 +46,7 @@ class Consumer extends User {
   }) : super(
           fullName: fullName,
           email: email,
+          password: password,
           phoneNumber: phoneNumber,
           city: city,
           address: address,
@@ -56,6 +56,7 @@ class Consumer extends User {
   Consumer.fromMap(Map<String, dynamic> map)
       : this(
           email: map['email'],
+          password: map['password'],
           fullName: map['fullName'],
           address: map['address'],
           floor: map['floor'],
@@ -85,6 +86,7 @@ class BusinessOwner extends User {
     required this.restaurantId,
     required String fullName,
     required String email,
+    required String password,
     required String phoneNumber,
     required String city,
     required String address,
@@ -94,6 +96,7 @@ class BusinessOwner extends User {
     required this.workHours,
   }) : super(
           email: email,
+          password: password,
           fullName: fullName,
           phoneNumber: phoneNumber,
           city: city,
@@ -105,6 +108,7 @@ class BusinessOwner extends User {
       : this(
           restaurantId: map['restaurantId'],
           email: map['email'],
+          password: map['password'],
           fullName: map['fullName'],
           businessName: map['businessName'],
           phoneNumber: map['phoneNumber'],

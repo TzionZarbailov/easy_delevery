@@ -86,6 +86,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
         restaurantId: restaurantId,
         fullName: fullName,
         email: email,
+        password: password,
         phoneNumber: phoneNumber,
         city: city,
         address: address,
@@ -106,7 +107,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                 Text(
                   '!ההרשמה בוצעה בהצלחה',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -139,14 +140,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
         ),
       );
 
-      // Add new business owner to Firestore
-      _userRepository.addBusinessOwners(newBusinessOwner);
-
-      // Sign up in auth with email and password
-      _userRepository.signUp(email, password);
-
-      // signOut from previous user
-      await _userRepository.signOut();
+      await _userRepository.registerBusinessOwner(newBusinessOwner);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());
@@ -174,9 +168,8 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
               errors.join('\n'),
               textAlign: TextAlign.right,
               style: const TextStyle(
-                color: Color(0xFFF44336),
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+                color: Colors.black,
+                fontSize: 17,
               ),
             ),
             actions: [
