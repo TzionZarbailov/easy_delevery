@@ -245,7 +245,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   // google icon
                   IconButton(
                     focusColor: Colors.white,
-                    onPressed: () {},
+                    onPressed: () async {
+                      await _userRepository.signInWithGoogle();
+                    },
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',
                       width: 50,

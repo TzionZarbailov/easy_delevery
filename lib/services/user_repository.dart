@@ -11,8 +11,6 @@ class UserRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
 
@@ -35,20 +33,21 @@ class UserRepository {
 
   // sign in with email and password
   Future<UserCredential> signIn(String email, String password) async {
-  try {
-    final userCredential = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    // Check if the userCredential is null or has an empty user UID
-    if (userCredential.toString().isEmpty || userCredential.user?.uid == null) {
+    try {
+      final userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // Check if the userCredential is null or has an empty user UID
+      if (userCredential.toString().isEmpty ||
+          userCredential.user?.uid == null) {
+        throw Exception('Invalid email or password');
+      }
+      return userCredential;
+    } catch (e) {
       throw Exception('Invalid email or password');
     }
-    return userCredential;
-  } catch (e) {
-    throw Exception('Invalid email or password');
   }
-}
 
   //! Bring me a stream that checks in firestore collection if it is a consumer or a business owner
   Stream<DocumentReference> getRoleStream(String email) {
@@ -109,23 +108,6 @@ class UserRepository {
     await _auth.sendPasswordResetEmail(email: email);
   }
 
-  // bool if user email equals to email in _firestore
-  bool isUserExist(String email) {
-    bool isExist = false;
-    _firestore
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get()
-        .then((users) {
-      for (var user in users.docs) {
-        if (user['email'] == email) {
-          isExist = true;
-        }
-      }
-    });
-    return isExist;
-  }
-
   // get user role consumer or business owner
   String getUserRole(String email) {
     String role = '';
@@ -148,20 +130,24 @@ class UserRepository {
     return _auth.currentUser!.email!;
   }
 
-  Future signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) throw Exception('Google sign in failed');
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
 
+    // Create a new credential
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
     );
 
-    return await _auth.signInWithCredential(credential);
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
+  
 
   Future resetPassword(String email) {
     return _auth.sendPasswordResetEmail(email: email);
