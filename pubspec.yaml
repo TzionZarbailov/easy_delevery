@@ -34,6 +34,7 @@ dependencies:
   firebase_core: ^2.22.0
   flutter:
     sdk: flutter
+  flutter_login_facebook: ^1.9.0
   geocoding: ^2.1.1
   google_fonts: ^4.0.4
   google_sign_in: ^6.1.6

@@ -44,7 +44,6 @@ class SecondTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onTap: onTap,
       keyboardType: keyboardType,
       obscureText: obscureText,
       style: const TextStyle(

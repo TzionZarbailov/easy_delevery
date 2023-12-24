@@ -139,8 +139,9 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
           ),
         ),
       );
-
+      
       await _userRepository.registerBusinessOwner(newBusinessOwner);
+
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());

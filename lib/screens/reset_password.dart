@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/second_text_field.dart';
 
-enum ResetMethod { email, mobile }
-
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
 
@@ -16,8 +14,8 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
-  ResetMethod? _resetMethod;
-  UserRepository _userRepository = UserRepository();
+
+  final UserRepository _userRepository = UserRepository();
 
   @override
   void dispose() {
@@ -25,16 +23,6 @@ class _ResetPasswordState extends State<ResetPassword> {
     _phoneNumController.dispose();
     super.dispose();
   }
-
-  void get _emailReset => setState(() {
-        _resetMethod = ResetMethod.email;
-        _phoneNumController.clear();
-      });
-
-  void get _mobileReset => setState(() {
-        _resetMethod = ResetMethod.mobile;
-        _emailController.clear();
-      });
 
   @override
   Widget build(BuildContext context) {
@@ -90,69 +78,59 @@ class _ResetPasswordState extends State<ResetPassword> {
               Padding(
                 padding: const EdgeInsets.all(35),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFFF98F13),
-                        ),
-                      ),
-                      child: const Text(
-                        'איפוס סיסמה באמצעות דואר אלקטרוני',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      //! Use emailController.text to get the entered email address
-                      //! Then, use a service like Firebase Authentication to send a password reset email
-                      onPressed: () => _emailReset,
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFFF98F13),
-                        ),
-                      ),
-                      child: const Text(
-                        'איפוס סיסמה דרך הנייד',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onPressed: () => _mobileReset,
-                      //! Use phoneNumController.text to get the entered phone number
-                      //! Then, use a service like Firebase Authentication to send a password reset SMS
+                    SecondTextField(
+                      onTap: () {},
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailController,
+                      labelText: ':דוא"ל',
+                      obscureText: false,
                     ),
                     const SizedBox(height: 25),
-                    if (_resetMethod == ResetMethod.email)
-                      SecondTextField(
-                        onTap: () {},
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _emailController,
-                        labelText: ':דוא"ל',
-                        obscureText: false,
-                      ),
-                    if (_resetMethod == ResetMethod.mobile)
-                      SecondTextField(
-                        onTap: () {},
-                        keyboardType: TextInputType.phone,
-                        controller: _phoneNumController,
-                        labelText: ':מספר טלפון',
-                        obscureText: false,
-                      ),
-                    const SizedBox(height: 350),
                     MyButton(
                       text: 'איפוס סיסמה',
                       horizontal: 75,
                       vertical: double.minPositive,
                       fontSize: 15,
-                      onTap: () {
-                        return _userRepository.resetPasswordWithEmail(
-                          _emailController.text,
-                        );
+                      onTap: () async {
+                        if (await _userRepository
+                            .checkIfEmailExists(_emailController.text)) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'הסיסמה נשלחה לכתובת הדוא"ל שלך',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            Navigator.pop(context);
+                            _userRepository
+                                .resetPasswordWithEmail(_emailController.text);
+                          }
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'אנא הכנס כתובת דוא"ל תקינה',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
                       },
                       color: const Color(0xFFF98F13),
                     ),

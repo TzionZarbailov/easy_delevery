@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_delevery/models/user.dart';
+// ignore: library_prefixes
+import 'package:easy_delevery/models/user.dart' as EasyDeliveryUser;
+import 'package:easy_delevery/screens/auth_screen.dart';
 import 'package:easy_delevery/screens/consumer_home_screen.dart';
 import 'package:easy_delevery/screens/restaurant_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,11 +12,31 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final CollectionReference users =
+  static final CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
+
+  static final List<String> docBusinessOwners = [];
+
+  signInWithGoogle() async {
+    //* begin interactive sign-in process
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    //* obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
+
+    //* create a new credential user
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    //* finally, lets sign in
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   Future<UserCredential> signUpWithEmailAndPassword(
       String email, String password) async {
@@ -23,12 +47,43 @@ class UserRepository {
   }
 
   // add business owner to firestore
-  Future addBusinessOwner(BusinessOwner businessOwner) async {
-    await users.doc(businessOwner.email.trim()).set(businessOwner.toMap());
+  Future addBusinessOwner(EasyDeliveryUser.BusinessOwner businessOwner) async {
+    await collection.doc(businessOwner.email.trim()).set(businessOwner.toMap());
   }
 
-  Future addConsumer(Consumer consumer) async {
-    await users.doc(consumer.email).set(consumer.toMap());
+  // add consumer to firestore
+  Future addConsumer(EasyDeliveryUser.Consumer consumer) async {
+    await collection.doc(consumer.email).set(consumer.toMap());
+  }
+
+  Future getBusinessOwnerr() async {
+    await _firestore.collection('users').get().then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (snapshot) => snapshot.docs.forEach(
+            (document) {
+              // ignore: avoid_print
+              print(document.reference);
+              docBusinessOwners.add(document.reference.id);
+            },
+          ),
+        );
+  }
+
+  
+
+  // rea*d business owner from firestore
+  Future<EasyDeliveryUser.BusinessOwner> readBusinessOwner(String email,
+      {required businessName}) async {
+    final businessOwner = await collection.doc(email).get();
+    return EasyDeliveryUser.BusinessOwner.fromMap(
+        businessOwner.data()! as Map<String, dynamic>);
+  }
+
+  //* read consumer from firestore
+  Future<EasyDeliveryUser.Consumer> readConsumer(String email) async {
+    final consumer = await collection.doc(email).get();
+    return EasyDeliveryUser.Consumer.fromMap(
+        consumer.data()! as Map<String, dynamic>);
   }
 
   // sign in with email and password
@@ -59,7 +114,8 @@ class UserRepository {
   }
 
   //! register BusinessOwner
-  Future registerBusinessOwner(BusinessOwner businessOwner) async {
+  Future registerBusinessOwner(
+      EasyDeliveryUser.BusinessOwner businessOwner) async {
     // create user in auth by email and password
     await _auth.createUserWithEmailAndPassword(
       email: businessOwner.email.trim(),
@@ -74,7 +130,7 @@ class UserRepository {
   }
 
   //! register Consumer
-  Future registerConsumer(Consumer consumer) async {
+  Future registerConsumer(EasyDeliveryUser.Consumer consumer) async {
     // create user in auth
     await _auth.createUserWithEmailAndPassword(
       email: consumer.email.trim(),
@@ -103,9 +159,23 @@ class UserRepository {
     return _auth.currentUser!.uid;
   }
 
-  // password reset
+  // password reset with email
   Future resetPasswordWithEmail(String email) async {
-    await _auth.sendPasswordResetEmail(email: email);
+    await _auth.sendPasswordResetEmail(
+      email: email,
+    );
+  }
+
+  //Checking if the email exists in auth
+  Future<bool> checkIfEmailExists(String email) async {
+    bool exists = false;
+    try {
+      await _auth.fetchSignInMethodsForEmail(email);
+      exists = true;
+    } catch (e) {
+      exists = false;
+    }
+    return exists;
   }
 
   // get user role consumer or business owner
@@ -130,25 +200,6 @@ class UserRepository {
     return _auth.currentUser!.email!;
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-  
-
   Future resetPassword(String email) {
     return _auth.sendPasswordResetEmail(email: email);
   }
@@ -159,13 +210,47 @@ class UserRepository {
 
   StreamBuilder getStreamBuilder() {
     return StreamBuilder(
-      stream: _firestore.collection('users').doc(getEmail).snapshots(),
+      stream: _auth.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data['role'] == 'consumer') {
-          return const ConsumerHomeScreen();
-        } else {
-          return const RestaurantHomeScreen();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting for the authentication state
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasData) {
+          User? user = snapshot.data;
+          if (user != null) {
+            // Check if the authentication provider is Google
+            if (user.providerData
+                .any((userInfo) => userInfo.providerId == 'google.com')) {
+              // Navigate to the ConsumerHomeScreen
+              return const ConsumerHomeScreen();
+            } else {
+              // User is registered, check their role in Firestore
+              return StreamBuilder<DocumentSnapshot>(
+                stream:
+                    _firestore.collection('users').doc(getEmail).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a loading indicator while waiting for the Firestore data
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasData) {
+                    String? role = snapshot.data!.get('role');
+                    if (role == 'consumer') {
+                      // Navigate to the ConsumerHomeScreen
+                      return const ConsumerHomeScreen();
+                    } else if (role == 'businessOwner') {
+                      // Navigate to the RestaurantHomeScreen
+                      return const RestaurantHomeScreen();
+                    }
+                  }
+                  // Handle empty Firestore data
+                  return const Text('משתמש לא קיים');
+                },
+              );
+            }
+          }
         }
+        // User is not authenticated, show the login screen
+        return const AuthScreen();
       },
     );
   }
