@@ -56,7 +56,7 @@ class UserRepository {
     await collection.doc(consumer.email).set(consumer.toMap());
   }
 
-  Future getBusinessOwnerr() async {
+  Future getUser() async {
     await _firestore.collection('users').get().then(
           // ignore: avoid_function_literals_in_foreach_calls
           (snapshot) => snapshot.docs.forEach(
