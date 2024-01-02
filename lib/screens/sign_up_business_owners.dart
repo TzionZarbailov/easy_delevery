@@ -1,10 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:easy_delevery/helper/validation_helpers.dart';
 import 'package:easy_delevery/models/user.dart';
 import 'package:easy_delevery/services/auth_services.dart';
-
-import 'package:easy_delevery/services/user_repository.dart';
 import 'package:easy_delevery/services/user_services.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:easy_delevery/colors/my_colors.dart';
