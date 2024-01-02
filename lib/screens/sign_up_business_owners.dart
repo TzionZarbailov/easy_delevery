@@ -1,7 +1,9 @@
 import 'package:easy_delevery/helper/validation_helpers.dart';
 import 'package:easy_delevery/models/user.dart';
+import 'package:easy_delevery/services/auth_services.dart';
 
 import 'package:easy_delevery/services/user_repository.dart';
+import 'package:easy_delevery/services/user_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,9 +37,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
   };
   //* add a new business owner to the database
 
-  final UserRepository _userRepository = UserRepository();
-  final ValidationHelper _validationHelper = ValidationHelper();
-
   Future signUpBusinessOwners() async {
     // Extract controller values
     String restaurantId = _controllers['restaurantId']!.text;
@@ -54,23 +53,23 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     // Create new user in auth and firestore
     final List<String> errors = [];
 
-    if (!_validationHelper.isValidEmail(email)) {
+    if (!ValidationHelper().isValidEmail(email)) {
       errors.add('.כתובת הדוא"ל אינה תקינה');
     }
-    if (!_validationHelper.isValidPassword(password)) {
+    if (!ValidationHelper().isValidPassword(password)) {
       errors
           .add('.הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה ומספר');
     }
-    if (!_validationHelper.isValidFullName(fullName)) {
+    if (!ValidationHelper().isValidFullName(fullName)) {
       errors.add('.שם מלא אינו תקין');
     }
-    if (!_validationHelper.isValidPhoneNumber(phoneNumber)) {
+    if (!ValidationHelper().isValidPhoneNumber(phoneNumber)) {
       errors.add('.מספר הטלפון אינו תקין');
     }
-    if (!_validationHelper.isValidAddress(address)) {
+    if (!ValidationHelper().isValidAddress(address)) {
       errors.add('.כתובת אינה תקינה');
     }
-    if (!_validationHelper.isValidPhoneNumber(businessPhone)) {
+    if (!ValidationHelper().isValidPhoneNumber(businessPhone)) {
       errors.add('.מספר הטלפון של העסק אינו תקין');
     }
     if (restaurantId.isEmpty) {
@@ -139,9 +138,10 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
           ),
         ),
       );
-      
-      await _userRepository.registerBusinessOwner(newBusinessOwner);
 
+      await AuthServices().registerWithEmailAndPassword(email, password);
+
+      await UserServices().addUser(newBusinessOwner);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());

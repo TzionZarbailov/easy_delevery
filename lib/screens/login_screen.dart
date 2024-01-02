@@ -1,3 +1,4 @@
+import 'package:easy_delevery/services/auth_services.dart';
 import 'package:easy_delevery/services/user_repository.dart';
 
 import 'package:flutter/material.dart';
@@ -21,8 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _obscureText = true;
 
-  final UserRepository _userRepository = UserRepository();
-
   @override
   void initState() {
     super.initState();
@@ -40,11 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future signIn(context) async {
     try {
-      await _userRepository
-          .signIn(
-            _emailController.text.trim(),
-            _passwordController.text.trim(),
-          )
+      await AuthServices()
+          .signInWithEmailAndPassword(
+              _emailController.text, _passwordController.text)
           .then((value) => null);
     } catch (_) {
       showDialog(
@@ -246,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   IconButton(
                     focusColor: Colors.white,
                     onPressed: () async {
-                      await _userRepository.signInWithGoogle();
+                      await AuthServices().signInWithGoogle();
                     },
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',

@@ -1,7 +1,9 @@
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/helper/validation_helpers.dart';
 import 'package:easy_delevery/models/user.dart';
+import 'package:easy_delevery/services/auth_services.dart';
 import 'package:easy_delevery/services/user_repository.dart';
+import 'package:easy_delevery/services/user_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,8 +30,6 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     'email': TextEditingController(),
     'password': TextEditingController(),
   };
-  final UserRepository _userRepository = UserRepository();
-  final ValidationHelper _validationHelper = ValidationHelper();
 
   Future signUpCustomers() async {
     // Extract controller values
@@ -45,23 +45,23 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
     // Create new user in auth and firestore
     final List<String> errors = [];
 
-    if (!_validationHelper.isValidEmail(email) || email.isEmpty) {
+    if (!ValidationHelper().isValidEmail(email) || email.isEmpty) {
       errors.add('.כתובת הדוא"ל אינה תקינה');
     }
-    if (!_validationHelper.isValidPassword(password)) {
+    if (!ValidationHelper().isValidPassword(password)) {
       errors
           .add('.הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה ומספר');
     }
-    if (!_validationHelper.isValidFullName(fullName)) {
+    if (!ValidationHelper().isValidFullName(fullName)) {
       errors.add('.שם מלא אינו תקין');
     }
-    if (!_validationHelper.isValidPhoneNumber(phoneNumber)) {
+    if (!ValidationHelper().isValidPhoneNumber(phoneNumber)) {
       errors.add('.מספר הטלפון אינו תקין');
     }
-    if (!_validationHelper.isValidAddress(address)) {
+    if (!ValidationHelper().isValidAddress(address)) {
       errors.add('.כתובת אינה תקינה');
     }
-    if (!_validationHelper.isValidAddress(address)) {
+    if (!ValidationHelper().isValidAddress(address)) {
       errors.add('.כתובת אינה תקינה');
     }
 
@@ -123,7 +123,9 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
         ),
       );
 
-      await _userRepository.registerConsumer(newConsumer);
+      await AuthServices().registerWithEmailAndPassword(email, password);
+
+      await UserServices().addUser(newConsumer);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());
