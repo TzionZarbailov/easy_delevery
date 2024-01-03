@@ -1,9 +1,13 @@
+import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_delevery/services/get_firestore/get_restaurant_name.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easy_delevery/services/auth_services.dart';
+
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/models/user.dart';
-import 'package:easy_delevery/services/get_firestore/get_restaurant_name.dart';
-import 'package:easy_delevery/services/user_repository.dart';
-import 'package:flutter/material.dart';
 
 class RestaurantHomeScreen extends StatefulWidget {
   const RestaurantHomeScreen({super.key, this.businessOwner});
@@ -14,14 +18,28 @@ class RestaurantHomeScreen extends StatefulWidget {
 }
 
 class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
-  final user = UserRepository();
+  final user = FirebaseAuth.instance.currentUser!;
 
-  List<String> docID = UserRepository.docBusinessOwners;
+  List<String> docID = [];
 
   // get restaurant name
-  getNameRestaurant() {
+  Future getDocId() async {
+    await FirebaseFirestore.instance.collection('users').get().then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (snapshot) => snapshot.docs.forEach(
+            (document) {
+              // ignore: avoid_print
+              print(document.reference);
+
+              docID.add(document.reference.id);
+            },
+          ),
+        );
+  }
+
+  getRestaurantName() {
     for (int i = 0; i < docID.length; i++) {
-      if (docID[i] == user.getUserEmail) {
+      if (docID[i] == user.email) {
         return GetRestaurantName(documentId: docID[i]);
       }
     }
@@ -30,7 +48,6 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
   @override
   void initState() {
     super.initState();
-    user.getUser();
   }
 
   @override
@@ -57,9 +74,9 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   FutureBuilder(
-                    future: user.getUser(),
+                    future: getDocId(),
                     builder: (context, snapshot) {
-                      return getNameRestaurant();
+                      return getRestaurantName();
                     },
                   ),
                 ],
@@ -117,7 +134,7 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                     fontSize: 17),
               ),
               onTap: () async {
-                await user.signOut();
+                await AuthServices().signOut();
               },
             ),
           ],
@@ -132,9 +149,9 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
             ),
             backgroundColor: Colors.black,
             title: FutureBuilder(
-              future: user.getUser(),
+              future: getDocId(),
               builder: (context, snapshot) {
-                return getNameRestaurant();
+                return getRestaurantName();
               },
             ),
             centerTitle: true,

@@ -1,4 +1,4 @@
-import 'package:easy_delevery/services/user_repository.dart';
+import 'package:easy_delevery/services/stream_services.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
@@ -6,10 +6,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserRepository userRepository = UserRepository();
-
     return Scaffold(
-      body: userRepository.getStreamBuilder(),
+      body: StreamServices().getStreamHomeScreen(),
     );
   }
 }

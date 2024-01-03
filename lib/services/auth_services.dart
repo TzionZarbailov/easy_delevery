@@ -2,7 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String get getEmail {
+    return _auth.currentUser!.email!;
+  }
 
   // sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async {
@@ -74,6 +78,18 @@ class AuthServices {
       // ignore: avoid_print
       print(e.toString());
       return null;
+    }
+  }
+
+  // checkIfEmailExists
+  Future<bool> checkIfEmailExists(String email) async {
+    try {
+      final result = await _auth.fetchSignInMethodsForEmail(email.trim());
+      return result.isNotEmpty;
+    } catch (e) {
+      // ignore: avoid_print
+      print(e.toString());
+      return false;
     }
   }
 

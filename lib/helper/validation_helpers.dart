@@ -1,6 +1,50 @@
-class ValidationHelper {
-  // Vaild for email
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+class ValidationHelper {
+  // The user already exists using firebaseAuth
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  final List restaurantIds = [];
+
+  //* get all restaurant documents in restaurantsIds list
+  void getRestaurantIds() async {
+    final QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('restaurants').get();
+
+    // ignore: avoid_function_literals_in_foreach_calls
+    snapshot.docs.forEach((doc) {
+      restaurantIds.add(doc.id);
+    });
+  }
+
+  // get collection of restaurants
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('restaurants');
+
+  bool isUserAlreadyExists(String email) {
+    try {
+      auth.fetchSignInMethodsForEmail(email);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // The restaurant already exists using firestore collection restaurants
+  bool isRestaurantIdAlreadyExists(String restaurantId) {
+    bool isRestaurantAlreadyExists = false;
+
+    for (var i = 0; i < restaurantIds.length; i++) {
+      if (restaurantIds[i] == restaurantId) {
+        isRestaurantAlreadyExists = true;
+        break;
+      }
+    }
+    return isRestaurantAlreadyExists;
+  }
+
+  // Vaild for email
   bool isValidEmail(String email) {
     final RegExp regex = RegExp(
       r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
@@ -8,7 +52,6 @@ class ValidationHelper {
 
     return regex.hasMatch(email);
   }
-  
 
 // Vaild for password
   bool isValidPassword(String password) {

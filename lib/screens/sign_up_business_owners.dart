@@ -1,3 +1,5 @@
+import 'package:easy_delevery/models/restaurant.dart';
+import 'package:easy_delevery/services/restaurant_services.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_delevery/helper/validation_helpers.dart';
 import 'package:easy_delevery/models/user.dart';
@@ -76,6 +78,12 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     if (businessName.isEmpty) {
       errors.add('.שם המסעדה אינו תקין');
     }
+    if (errors.isEmpty && !ValidationHelper().isUserAlreadyExists(email)) {
+      errors.add('.המשתמש כבר קיים');
+    }
+    if (errors.isEmpty && !ValidationHelper().isRestaurantIdAlreadyExists(restaurantId)) {
+      errors.add('.העסק כבר קיים');
+    }
 
     if (errors.isEmpty) {
       // Create new business owner
@@ -85,12 +93,18 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
         email: email,
         password: password,
         phoneNumber: phoneNumber,
-        city: city,
-        address: address,
         businessName: businessName,
-        businessPhone: businessPhone,
-        workHours: workHours,
         role: 'businessOwner',
+      );
+
+      Restaurant newRestaurant = Restaurant(
+        id: restaurantId,
+        name: businessName,
+        address: address,
+        city: city,
+        workHours: workHours,
+        phoneNumber: businessPhone,
+        isOpen: false,
       );
 
       showDialog(
@@ -140,6 +154,8 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
       await AuthServices().registerWithEmailAndPassword(email, password);
 
       await UserServices().addUser(newBusinessOwner);
+
+      await RestaurantServices().addRestaurant(newRestaurant);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());

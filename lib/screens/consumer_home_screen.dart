@@ -1,7 +1,6 @@
 import 'package:easy_delevery/colors/my_colors.dart';
+import 'package:easy_delevery/services/auth_services.dart';
 import 'package:flutter/material.dart';
-
-import 'package:easy_delevery/services/user_repository.dart';
 
 class ConsumerHomeScreen extends StatefulWidget {
   const ConsumerHomeScreen({Key? key}) : super(key: key);
@@ -11,8 +10,6 @@ class ConsumerHomeScreen extends StatefulWidget {
 }
 
 class _ConsumerHomeScreenState extends State<ConsumerHomeScreen> {
-  final user = UserRepository();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +79,7 @@ class _ConsumerHomeScreenState extends State<ConsumerHomeScreen> {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  await user.signOut();
+                  await AuthServices().signOut();
                 },
                 child: const Text('התנתקות'))
           ],

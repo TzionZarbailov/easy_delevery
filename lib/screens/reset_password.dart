@@ -1,4 +1,4 @@
-import 'package:easy_delevery/services/user_repository.dart';
+import 'package:easy_delevery/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
@@ -14,8 +14,6 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumController = TextEditingController();
-
-  final UserRepository _userRepository = UserRepository();
 
   @override
   void dispose() {
@@ -94,7 +92,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       vertical: double.minPositive,
                       fontSize: 15,
                       onTap: () async {
-                        if (await _userRepository
+                        if (await AuthServices()
                             .checkIfEmailExists(_emailController.text)) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -111,8 +109,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               ),
                             );
                             Navigator.pop(context);
-                            _userRepository
-                                .resetPasswordWithEmail(_emailController.text);
+                            AuthServices().resetPassword(_emailController.text);
                           }
                         } else {
                           if (context.mounted) {

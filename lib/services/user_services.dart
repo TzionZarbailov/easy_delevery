@@ -18,6 +18,13 @@ class UserServices {
     });
   }
 
+  Stream<QuerySnapshot> getRestaurantName() {
+    final userStream =
+        _user.orderBy('businessName', descending: true).snapshots();
+
+    return userStream;
+  }
+
   // READ: Get a user role User by email and return a map
   Stream<QuerySnapshot> getUserRole() {
     final userStream = _user.orderBy('role', descending: true).snapshots();
