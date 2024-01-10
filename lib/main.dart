@@ -4,11 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
 
-import 'package:easy_delevery/screens/restaurant_home_screen.dart';
-import 'package:easy_delevery/screens/consumer_home_screen.dart';
+import 'package:easy_delevery/screens/business/restaurant_home_screen.dart';
+import 'package:easy_delevery/screens/consumer/home_page.dart';
 import 'package:easy_delevery/screens/reset_password.dart';
-import 'package:easy_delevery/screens/sign_up_business_owners.dart';
-import 'package:easy_delevery/screens/sign_up_customers.dart';
+import 'package:easy_delevery/screens/business/sign_up_business_owners.dart';
+import 'package:easy_delevery/screens/consumer/sign_up_customers.dart';
 
 //firebasecrudtute
 void main() async {
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         '/sign_up_business_owners': (context) => const SignUpBusinessOwners(),
         '/sign_up_customers': (context) => const SignUpCustomers(),
         '/restaurant_home_screen': (context) => const RestaurantHomeScreen(),
-        '/consumer_home_screen': (context) => const ConsumerHomeScreen(),
+        '/home_screen': (context) => const HomeScreen(),
       },
     );
   }

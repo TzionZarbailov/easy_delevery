@@ -1,9 +1,11 @@
 import 'package:easy_delevery/models/category.dart';
 import 'package:easy_delevery/models/menu_item.dart';
+import 'package:flutter/material.dart';
 
 class Restaurant {
   final String id; //*This is the id of the restaurant
   final String name; //*This is the name of the restaurant
+  final Image? restaurantImage;
   final String address; //*This is the address of the restaurant
   final String city; //*This is the city of the restaurant
   final String? phoneNumber; //*This is the phone number of the restaurant
@@ -22,6 +24,7 @@ class Restaurant {
     required this.phoneNumber,
     required this.workHours,
     required this.isOpen,
+    this.restaurantImage,
     this.categories,
     this.menuItems,
   });
@@ -30,6 +33,7 @@ class Restaurant {
     return {
       'id': id,
       'name': name,
+      'restaurantImage': restaurantImage,
       'address': address,
       'phoneNumber': phoneNumber,
       'isOpen': isOpen,
@@ -42,6 +46,7 @@ class Restaurant {
   Restaurant.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         name = map['name'],
+        restaurantImage = map['restaurantImage'],
         phoneNumber = map['phoneNumber'],
         address = map['address'],
         city = map['city'],

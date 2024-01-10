@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/screens/auth_screen.dart';
-import 'package:easy_delevery/screens/consumer_home_screen.dart';
-import 'package:easy_delevery/screens/restaurant_home_screen.dart';
+import 'package:easy_delevery/screens/consumer/home_page.dart';
+import 'package:easy_delevery/screens/business/restaurant_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +29,7 @@ class StreamServices {
             if (user.providerData
                 .any((userInfo) => userInfo.providerId == 'google.com')) {
               // Navigate to the ConsumerHomeScreen
-              return const ConsumerHomeScreen();
+              return const HomeScreen();
             } else {
               // User is registered, check their role in Firestore
               return StreamBuilder<DocumentSnapshot>(
@@ -43,7 +43,7 @@ class StreamServices {
                     String? role = snapshot.data!.get('role');
                     if (role == 'consumer') {
                       // Navigate to the ConsumerHomeScreen
-                      return const ConsumerHomeScreen();
+                      return const HomeScreen();
                     } else if (role == 'businessOwner') {
                       // Navigate to the RestaurantHomeScreen
                       return const RestaurantHomeScreen();
