@@ -1,75 +1,18 @@
-import 'package:easy_delevery/colors/my_colors.dart';
-import 'package:easy_delevery/components/restaurant_list.dart';
-import 'package:easy_delevery/screens/consumer/profile.dart';
-import 'package:easy_delevery/screens/consumer/shopping_cart.dart';
 import 'package:flutter/material.dart';
-
+import 'package:easy_delevery/components/restaurant_list.dart';
 import 'package:easy_delevery/components/categories.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class ConsumerHome extends StatefulWidget {
+  const ConsumerHome({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ConsumerHome> createState() => _ConsumerHomeState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int currentPageIndex = 0;
-
-  void _onPageChanged(int index) {
-    setState(() {
-      currentPageIndex = index;
-    });
-  }
-
-  final List<Widget> pages = [
-    const HomeScreen(),
-    const ShoppingCart(),
-    const Profile(),
-  ];
-
+class _ConsumerHomeState extends State<ConsumerHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white.withOpacity(0.7),
-              myColors.buttonColor.withOpacity(0.5),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: NavigationBar(
-          height: 60,
-          backgroundColor: Colors.transparent,
-          selectedIndex: currentPageIndex,
-          onDestinationSelected: (index) {
-            _onPageChanged(index);
-          },
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home),
-              selectedIcon: Icon(Icons.home),
-              label: 'דף הבית',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.shopping_cart),
-              selectedIcon: Icon(Icons.shopping_cart),
-              label: 'עגלה',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person),
-              selectedIcon: Icon(Icons.person),
-              label: 'פרופיל',
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
@@ -152,8 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-
-              const SizedBox(height: 5),
 
               //* list view Restaurants
               const RestaurantList(onTap: null),

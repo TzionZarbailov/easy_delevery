@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/screens/auth_screen.dart';
-import 'package:easy_delevery/screens/consumer/home_page.dart';
-import 'package:easy_delevery/screens/business/restaurant_home_screen.dart';
+import 'package:easy_delevery/screens/consumer_screens/consumer_home.dart';
+import 'package:easy_delevery/screens/business_screens/restaurant_home_screen.dart';
+import 'package:easy_delevery/screens/consumer_screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
