@@ -1,7 +1,7 @@
-import 'package:easy_delevery/colors/my_colors.dart';
-import 'package:easy_delevery/screens/consumer_screens/home_screen.dart';
-import 'package:easy_delevery/services/auth_services.dart';
 import 'package:flutter/material.dart';
+
+import 'package:easy_delevery/colors/my_colors.dart';
+import 'package:easy_delevery/services/auth_services.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
