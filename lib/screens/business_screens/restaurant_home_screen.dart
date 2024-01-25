@@ -1,3 +1,5 @@
+import 'package:easy_delevery/screens/business_screens/order_history.dart';
+import 'package:easy_delevery/screens/business_screens/edit_menu.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,7 +41,7 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
 
   getRestaurantName() {
     for (int i = 0; i < docID.length; i++) {
-      if (docID[i] == user.email) {
+      if (docID[i] == AuthServices().getEmail) {
         return GetRestaurantName(documentId: docID[i]);
       }
     }
@@ -70,7 +72,8 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                 children: [
                   const CircleAvatar(
                     radius: 35,
-                    backgroundImage: AssetImage(''),
+                    backgroundImage: NetworkImage(
+                        'https://imageproxy.wolt.com/menu/menu-images/5e31b8bffc976d04113c03ee/e8a24902-3140-11ed-ac42-fece14553f35____________.jpeg'),
                   ),
                   const SizedBox(height: 10),
                   FutureBuilder(
@@ -83,9 +86,12 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.home),
-              trailing: const Text(
+              leading: const Icon(
+                Icons.home,
+              ),
+              title: const Text(
                 'דף הבית',
+                textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -93,13 +99,14 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
               },
             ),
             ListTile(
               leading: const Icon(Icons.history),
-              trailing: const Text(
+              title: const Text(
                 'היסטורית הזמנות',
+                textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -107,13 +114,20 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const OrderHistory();
+                    },
+                  ),
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              trailing: const Text(
-                'אזור אישי',
+              title: const Text(
+                'עריכת תפריט',
+                textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -121,13 +135,20 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const EditMenu();
+                    },
+                  ),
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.logout),
-              trailing: const Text(
+              title: const Text(
                 'התנתקות',
+                textAlign: TextAlign.right,
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -144,6 +165,13 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar(
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(1),
+              child: Container(
+                color: myColors.buttonColor,
+                height: 2,
+              ),
+            ),
             iconTheme: const IconThemeData(
               color: myColors.buttonColor,
             ),

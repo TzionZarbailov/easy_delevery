@@ -1,4 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:easy_delevery/services/auth_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/components/my_button.dart';
@@ -12,14 +16,51 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNumController = TextEditingController();
+  final _emailController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
-    _phoneNumController.dispose();
     super.dispose();
+  }
+
+  Future passwordReset() async {
+    try {
+      AuthServices authServices = AuthServices();
+
+      await authServices.resetPassword(_emailController.text.trim());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'הסיסמה נשלחה לכתובת הדוא"ל שלך',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'אנא הכנס כתובת דוא"ל תקינה',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -87,49 +128,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                     ),
                     const SizedBox(height: 25),
                     MyButton(
+                      color: const Color(0xFFF98F13),
                       text: 'איפוס סיסמה',
                       horizontal: 75,
                       vertical: double.minPositive,
                       fontSize: 15,
-                      onTap: () async {
-                        if (await AuthServices()
-                            .checkIfEmailExists(_emailController.text)) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'הסיסמה נשלחה לכתובת הדוא"ל שלך',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                            Navigator.pop(context);
-                            AuthServices().resetPassword(_emailController.text);
-                          }
-                        } else {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'אנא הכנס כתובת דוא"ל תקינה',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      color: const Color(0xFFF98F13),
+                      onTap: passwordReset,
                     ),
                   ],
                 ),

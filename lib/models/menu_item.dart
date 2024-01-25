@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class MenuItem {
   final String id;
   final String name;
-  final String description;
+  final List<String> description;
   final double price;
   final Category category;
   final Image image;

@@ -1,3 +1,4 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:easy_delevery/services/auth_services.dart';
 
@@ -9,7 +10,8 @@ import 'package:easy_delevery/components/text_home_screen.dart';
 class LoginScreen extends StatefulWidget {
   final VoidCallback showRegisterPage;
 
-  const LoginScreen({super.key, required this.showRegisterPage});
+  const LoginScreen({Key? key, required this.showRegisterPage})
+      : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -36,63 +38,64 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future signIn(context) async {
+  Future signIn() async {
     try {
-      await AuthServices()
-          .signInWithEmailAndPassword(
-              _emailController.text, _passwordController.text)
-          .then((value) => null);
-    } catch (_) {
+      await AuthServices().signInWithEmailAndPassword(
+          _emailController.text, _passwordController.text);
+    } catch (e) {
+      print(e);
       showDialog(
         context: context,
-        builder: (context) => Center(
-          child: AlertDialog(
-            backgroundColor: myColors.inputColor,
-            title: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '!שגיאה',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            content: const Text(
-              '.שם משתמש או סיסמה לא נכונים',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+        builder: (context) {
+          return Center(
+            child: AlertDialog(
+              backgroundColor: myColors.inputColor,
+              title: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    child: const Text(
-                      'נסה שוב',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    '!שגיאה',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
+              content: const Text(
+                '.שם משתמש או סיסמה לא נכונים',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 17,
+                ),
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        'נסה שוב',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       );
     }
     _passwordController.clear();
@@ -217,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 horizontal: 22,
                 vertical: 5,
                 onTap: () async {
-                  signIn(context);
+                  signIn();
                 },
               ),
 
