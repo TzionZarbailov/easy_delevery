@@ -1,6 +1,7 @@
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/image_picker.dart';
 import 'package:easy_delevery/components/my_button.dart';
+import 'package:easy_delevery/components/my_drop_dowm_button.dart';
 import 'package:flutter/material.dart';
 
 class FirstPicture extends StatelessWidget {
@@ -54,7 +55,35 @@ class FirstPicture extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 8),
-                child: const MyImagePicker(),
+                child: const Column(
+                  children: [
+                    MyImagePicker(),
+
+                    //* Text
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        '? איזה סוג מסעדה אתה',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+
+                    //* drop button
+                    MyDropdownButton(
+                      categories: [
+                        '...',
+                        'קינוח',
+                        'אסייתי',
+                        'איטלקי',
+                        'המבורגר'
+                      ],
+                    ),
+                  ],
+                ),
               ),
               MyButton(
                 text: 'סיום',

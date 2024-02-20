@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 import 'package:flutter/material.dart';
 import 'package:easy_delevery/services/auth_services.dart';
 
@@ -26,9 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _passwordController.addListener(() {
-      setState(() {});
-    });
+    _passwordController.clear();
+    _emailController.clear();
   }
 
   @override
@@ -40,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future signIn() async {
     try {
-      await AuthServices().signInWithEmailAndPassword(
+      await AuthServices.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
     } catch (e) {
       print(e);
@@ -245,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   IconButton(
                     focusColor: Colors.white,
                     onPressed: () async {
-                      await AuthServices().signInWithGoogle();
+                      await AuthServices.signInWithGoogle();
                     },
                     icon: Image.asset(
                       'lib/assets/images/google-logo.png',

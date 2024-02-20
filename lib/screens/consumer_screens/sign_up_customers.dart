@@ -122,9 +122,9 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
         ),
       );
 
-      await AuthServices().registerWithEmailAndPassword(email, password);
+      await AuthServices.registerWithEmailAndPassword(email, password);
 
-      await UserServices().addUser(newConsumer);
+      await UserServices().addUserAutoId(newConsumer);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());

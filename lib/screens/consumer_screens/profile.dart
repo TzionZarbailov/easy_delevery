@@ -53,7 +53,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: AuthServices().signOut,
+                onPressed: AuthServices.signOut,
                 child: const Text(
                   'התנתקות',
                   style: TextStyle(

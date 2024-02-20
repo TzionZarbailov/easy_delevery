@@ -6,18 +6,24 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthServices {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String get getEmail {
+  static String get getEmail {
     return _auth.currentUser!.email!;
   }
 
   // sign in with email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  static Future signInWithEmailAndPassword(
+      String email, String password) async {
     await _auth.signInWithEmailAndPassword(
         email: email.trim(), password: password.trim());
   }
 
+  // get uuid
+  static String getUuid() {
+    return _auth.currentUser!.uid;
+  }
+
   // signInWithGoogle
-  Future signInWithGoogle() async {
+  static Future signInWithGoogle() async {
     //* begin interactive sign-in process
     final GoogleSignInAccount? googleSignInAccount =
         await GoogleSignIn().signIn();
@@ -34,26 +40,17 @@ class AuthServices {
   }
 
   // register with email and password
-  Future registerWithEmailAndPassword(String email, String password) async {
-    try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email.trim(), password: password.trim());
-      User? user = result.user;
-      return user;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
+  static Future registerWithEmailAndPassword(
+      String email, String password) async {
+    UserCredential result = await _auth.createUserWithEmailAndPassword(
+        email: email.trim(), password: password.trim());
+    User? user = result.user;
+    return user;
   }
 
   // sign out
-  Future signOut() async {
-    try {
-      await _auth.signOut();
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
+  static Future signOut() async {
+    await _auth.signOut();
   }
 
   // reset password

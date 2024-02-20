@@ -81,9 +81,10 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     if (errors.isEmpty && !ValidationHelper().isUserAlreadyExists(email)) {
       errors.add('.המשתמש כבר קיים');
     }
-    if (errors.isEmpty && !ValidationHelper().isRestaurantIdAlreadyExists(restaurantId)) {
-      errors.add('.העסק כבר קיים');
-    }
+    // if (errors.isEmpty &&
+    //     !ValidationHelper().isRestaurantIdAlreadyExists(restaurantId)) {
+    //   errors.add('.העסק כבר קיים');
+    // }
 
     if (errors.isEmpty) {
       // Create new business owner
@@ -151,11 +152,11 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
         ),
       );
 
-      await AuthServices().registerWithEmailAndPassword(email, password);
+      await AuthServices.registerWithEmailAndPassword(email, password);
 
-      await UserServices().addUser(newBusinessOwner);
+      await UserServices().addUserAutoId(newBusinessOwner);
 
-      await RestaurantServices().addRestaurant(newRestaurant);
+      await RestaurantServices.addRestaurantAutoId(newRestaurant);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());

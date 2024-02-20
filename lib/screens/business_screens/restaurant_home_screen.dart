@@ -1,5 +1,8 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'package:easy_delevery/screens/business_screens/order_history.dart';
 import 'package:easy_delevery/screens/business_screens/edit_menu.dart';
+import 'package:easy_delevery/services/restaurant_services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,39 +12,24 @@ import 'package:easy_delevery/services/auth_services.dart';
 
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/my_button.dart';
-import 'package:easy_delevery/models/user.dart';
 
 class RestaurantHomeScreen extends StatefulWidget {
-  const RestaurantHomeScreen({super.key, this.businessOwner});
-  final BusinessOwner? businessOwner;
+  const RestaurantHomeScreen({
+    super.key,
+  });
 
   @override
   State<RestaurantHomeScreen> createState() => _RestaurantHomeScreen();
 }
 
 class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final userAuth = FirebaseAuth.instance.currentUser!;
 
   List<String> docID = [];
 
-  // get restaurant name
-  Future getDocId() async {
-    await FirebaseFirestore.instance.collection('users').get().then(
-          // ignore: avoid_function_literals_in_foreach_calls
-          (snapshot) => snapshot.docs.forEach(
-            (document) {
-              // ignore: avoid_print
-              print(document.reference);
-
-              docID.add(document.reference.id);
-            },
-          ),
-        );
-  }
-
   getRestaurantName() {
-    for (int i = 0; i < docID.length; i++) {
-      if (docID[i] == AuthServices().getEmail) {
+    for (var i = 0; i < docID.length; i++) {
+      if (docID[i].isNotEmpty) {
         return GetRestaurantName(documentId: docID[i]);
       }
     }
@@ -50,6 +38,11 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -77,11 +70,18 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   FutureBuilder(
-                    future: getDocId(),
+                    future: RestaurantServices().getDocId(docID),
                     builder: (context, snapshot) {
-                      return getRestaurantName();
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Loading indicator while waiting
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Display error
+                      } else {
+                        return getRestaurantName(); // Use snapshot data
+                      }
                     },
-                  ),
+                  )
                 ],
               ),
             ),
@@ -155,7 +155,7 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                     fontSize: 17),
               ),
               onTap: () async {
-                await AuthServices().signOut();
+                await AuthServices.signOut();
               },
             ),
           ],
@@ -177,9 +177,15 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
             ),
             backgroundColor: Colors.black,
             title: FutureBuilder(
-              future: getDocId(),
+              future: RestaurantServices().getDocId(docID),
               builder: (context, snapshot) {
-                return getRestaurantName();
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(); // Loading indicator while waiting
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}'); // Display error
+                } else {
+                  return getRestaurantName(); // Use snapshot data
+                }
               },
             ),
             centerTitle: true,

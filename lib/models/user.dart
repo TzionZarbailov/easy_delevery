@@ -1,4 +1,5 @@
 class User {
+  // random id;
   final String fullName; //* This is the name of the user
   final String email; //* This is the email of the user
   final String password; //* This is the password of the user

@@ -13,16 +13,22 @@ class GetRestaurantName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // get the collection
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    CollectionReference restaurants =
+        FirebaseFirestore.instance.collection('restaurants');
 
     return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(documentId).get(),
+      future: restaurants.doc(documentId).get(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return const Text("loading...");
+        } else {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
           return Text(
-            data['businessName'],
+            data['name'],
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -30,7 +36,6 @@ class GetRestaurantName extends StatelessWidget {
             ),
           );
         }
-        return const Text("loading...");
       },
     );
   }

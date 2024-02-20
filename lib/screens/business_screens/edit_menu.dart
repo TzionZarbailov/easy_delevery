@@ -1,5 +1,7 @@
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/my_button.dart';
+import 'package:easy_delevery/screens/business_screens/category_screen.dart';
+import 'package:easy_delevery/screens/business_screens/edit_menu_for_restaurant.dart';
 import 'package:easy_delevery/screens/business_screens/first_picture.dart';
 import 'package:flutter/material.dart';
 
@@ -56,6 +58,7 @@ class EditMenu extends StatelessWidget {
           ),
           child: Column(
             children: [
+              //* edit first picture for restaurant
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -64,7 +67,8 @@ class EditMenu extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const FirstPicture()),
+                          builder: (context) => const FirstPicture(),
+                        ),
                       );
                     },
                     child: const Text(
@@ -79,13 +83,22 @@ class EditMenu extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 25),
+
+              //* edit category for restaurant
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CategoryScreen(),
+                        ),
+                      );
+                    },
                     child: const Text(
-                      'הוספת פריטים',
+                      'עריכת קטגוריות למסעדה',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -96,30 +109,22 @@ class EditMenu extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 25),
+
+              //* edit menu for restaurant
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditMenuForRestaurant(),
+                        ),
+                      );
+                    },
                     child: const Text(
-                      'הסרת פריטים',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      'פריטים קיימים',
+                      'עריכת תפריט מסעדה',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
