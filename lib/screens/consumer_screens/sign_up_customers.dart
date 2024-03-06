@@ -75,7 +75,6 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
         address: address,
         floor: floor,
         apartmentNumber: apartmentNumber,
-        role: 'consumer',
       );
 
       showDialog(
@@ -124,7 +123,7 @@ class _SignUpCustomersState extends State<SignUpCustomers> {
 
       await AuthServices.registerWithEmailAndPassword(email, password);
 
-      await UserServices().addUserAutoId(newConsumer);
+      await UserServices().addUser(newConsumer);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());

@@ -6,6 +6,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthServices {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  String get getUid {
+    return _auth.currentUser!.uid;
+  }
+
   static String get getEmail {
     return _auth.currentUser!.email!;
   }
@@ -15,11 +19,6 @@ class AuthServices {
       String email, String password) async {
     await _auth.signInWithEmailAndPassword(
         email: email.trim(), password: password.trim());
-  }
-
-  // get uuid
-  static String getUuid() {
-    return _auth.currentUser!.uid;
   }
 
   // signInWithGoogle

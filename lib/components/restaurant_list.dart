@@ -35,12 +35,12 @@ class RestaurantList extends StatelessWidget {
                   Container(
                     height: 150,
                     decoration: BoxDecoration(
-                      image: restaurant.restaurantImage != null
-                          ? DecorationImage(
-                              image: restaurant.restaurantImage!.image,
-                              fit: BoxFit.cover,
-                            )
-                          : null,
+                      // image: restaurant.restaurantImage != null
+                      //     ? DecorationImage(
+                      //         image: restaurant.restaurantImage!.image,
+                      //         fit: BoxFit.cover,
+                      //       )
+                      //     : null,
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Column(
@@ -99,10 +99,10 @@ List<Restaurant> restaurants = [
     phoneNumber: '0527715057',
     workHours: '11:00/00:00',
     isOpen: true,
-    restaurantImage: Image(
-      image: NetworkImage(
-          "https://imageproxy.wolt.com/menu/menu-images/5e31b8bffc976d04113c03ee/e8a24902-3140-11ed-ac42-fece14553f35____________.jpeg"),
-    ),
+    // restaurantImage: Image(
+    //   image: NetworkImage(
+    //       "https://imageproxy.wolt.com/menu/menu-images/5e31b8bffc976d04113c03ee/e8a24902-3140-11ed-ac42-fece14553f35____________.jpeg"),
+    // ),
   ),
   const Restaurant(
     id: '522',
@@ -112,10 +112,10 @@ List<Restaurant> restaurants = [
     phoneNumber: '0527715055',
     workHours: '11:00/00:00',
     isOpen: true,
-    restaurantImage: Image(
-      image: NetworkImage(
-          "https://imageproxy.wolt.com/venue/5f4376a5d45c89d466ee15ce/8f182b88-9cbe-11ed-9a53-22d5e8c71181__________whatsapp__2023_01_25______11.16.31.jpg"),
-    ),
+    // restaurantImage: Image(
+    //   image: NetworkImage(
+    //       "https://imageproxy.wolt.com/venue/5f4376a5d45c89d466ee15ce/8f182b88-9cbe-11ed-9a53-22d5e8c71181__________whatsapp__2023_01_25______11.16.31.jpg"),
+    // ),
   ),
   const Restaurant(
     id: '523',
@@ -125,10 +125,10 @@ List<Restaurant> restaurants = [
     phoneNumber: '0527715059',
     workHours: '11:00/00:00',
     isOpen: true,
-    restaurantImage: Image(
-      image: NetworkImage(
-          "https://www.goldamotzkin.co.il/wp-content/uploads/2021/12/15613362700441_b.jpg"),
-    ),
+    // restaurantImage: Image(
+    //   image: NetworkImage(
+    //       "https://www.goldamotzkin.co.il/wp-content/uploads/2021/12/15613362700441_b.jpg"),
+    // ),
   ),
   const Restaurant(
     id: '525',
@@ -138,10 +138,10 @@ List<Restaurant> restaurants = [
     phoneNumber: '0542149401',
     workHours: '11:00/00:00',
     isOpen: true,
-    restaurantImage: Image(
-      image: NetworkImage(
-          "https://imageproxy.wolt.com/venue/5e1c8c3ffb1b66ead9006623/0464628a-5d61-11ea-b091-0a586479e855_yaelitz-19.jpg"),
-    ),
+    // restaurantImage: Image(
+    //   image: NetworkImage(
+    //       "https://imageproxy.wolt.com/venue/5e1c8c3ffb1b66ead9006623/0464628a-5d61-11ea-b091-0a586479e855_yaelitz-19.jpg"),
+    // ),
   ),
   const Restaurant(
     id: '527',
@@ -151,9 +151,9 @@ List<Restaurant> restaurants = [
     phoneNumber: '0527715054',
     workHours: '11:00/00:00',
     isOpen: true,
-    restaurantImage: Image(
-      image: NetworkImage(
-          'https://images.rest.co.il/Customers/80349835/224eb6fb7fcd4ab5ae5241332b2d6241.jpg'),
-    ),
+    // restaurantImage: Image(
+    //   image: NetworkImage(
+    //       'https://images.rest.co.il/Customers/80349835/224eb6fb7fcd4ab5ae5241332b2d6241.jpg'),
+    // ),
   ),
 ];

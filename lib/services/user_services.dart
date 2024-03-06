@@ -9,17 +9,19 @@ class UserServices {
   final CollectionReference _user =
       FirebaseFirestore.instance.collection('users');
 
-  // CREATE: add a new user and doc is email
-  // Future<void> addUser(User user) async {
-  //   await _user.doc(user.email.trim()).set(user.toMap());
-  // }
+  final AuthServices _auth = AuthServices();
 
-  // CREATE: add a new user and autmatically generate doc id
-  Future<void> addUserAutoId(User user) async {
-    await _user.add(user.toMap());
+  //* CREATE: add a new user and doc is email
+  Future<void> addUser(User user) async {
+    await _user.doc(_auth.getUid).set(user.toMap());
   }
 
-  static Future<String> getBusinessNameByDocId(String docId) async {
+  // // CREATE: add a new user and autmatically generate doc id
+  // Future<void> addUserAutoId(User user) async {
+  //   await _user.add(user.toMap());
+  // }
+
+   Future<String> getBusinessNameByDocId(String docId) async {
     // Get a DocumentReference for the document with the specified ID
     DocumentReference docRef =
         FirebaseFirestore.instance.collection('businessName').doc(docId);

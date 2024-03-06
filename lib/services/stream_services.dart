@@ -51,13 +51,15 @@ class StreamServices {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while waiting for the authentication state
-          return const CircularProgressIndicator();
+          return CircularProgressIndicator(
+            color: Colors.orange[400],
+          );
         } else if (snapshot.hasData) {
           User? user = snapshot.data;
           if (user != null) {
             // Check if the authentication provider is Google
             if (user.providerData
-                .any((userInfo) => userInfo.providerId == 'google.com')) {
+                .any((userInfo) => userInfo.uid == 'google.com')) {
               // Navigate to the ConsumerHomeScreen
               return const HomeScreen();
             } else {
@@ -67,7 +69,9 @@ class StreamServices {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Show a loading indicator while waiting for the Firestore data
-                    return const CircularProgressIndicator();
+                    return CircularProgressIndicator(
+                      color: Colors.orange[400],
+                    );
                   } else if (snapshot.hasData) {
                     String? docId = snapshot.data;
                     if (docId != null) {
@@ -81,16 +85,18 @@ class StreamServices {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             // Show a loading indicator while waiting for the Firestore data
-                            return const CircularProgressIndicator();
+                            return CircularProgressIndicator(
+                              color: Colors.orange[400],
+                            );
                           } else if (snapshot.hasData) {
                             String? role = snapshot.data!.get('role');
                             if (role == 'consumer') {
                               // Navigate to the ConsumerHomeScreen
-                              print(docId);
+
                               return const HomeScreen();
                             } else if (role == 'businessOwner') {
                               // Navigate to the RestaurantHomeScreen
-                              print(docId);
+                              
                               return const RestaurantHomeScreen();
                             }
                           }

@@ -4,9 +4,16 @@ import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_drop_dowm_button.dart';
 import 'package:flutter/material.dart';
 
-class FirstPicture extends StatelessWidget {
+class FirstPicture extends StatefulWidget {
   const FirstPicture({super.key});
 
+  @override
+  State<FirstPicture> createState() => _FirstPictureState();
+}
+
+String categoryValue = '';
+
+class _FirstPictureState extends State<FirstPicture> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,12 +62,12 @@ class FirstPicture extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(
                     vertical: MediaQuery.of(context).size.height / 8),
-                child: const Column(
+                child: Column(
                   children: [
-                    MyImagePicker(),
+                    const MyImagePicker(),
 
                     //* Text
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
                         '? איזה סוג מסעדה אתה',
@@ -74,13 +81,18 @@ class FirstPicture extends StatelessWidget {
 
                     //* drop button
                     MyDropdownButton(
-                      categories: [
+                      categories: const [
                         '...',
                         'קינוח',
                         'אסייתי',
                         'איטלקי',
                         'המבורגר'
                       ],
+                      onValueChanged: (value) {
+                        setState(() {
+                          categoryValue = value;
+                        });
+                      },
                     ),
                   ],
                 ),

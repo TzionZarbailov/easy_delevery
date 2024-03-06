@@ -35,7 +35,7 @@ class Consumer extends User {
     required String email,
     required String password,
     required String phoneNumber,
-    required String role,
+    String? role,
     required this.city,
     required this.address,
     required this.floor,
@@ -45,7 +45,7 @@ class Consumer extends User {
           email: email,
           password: password,
           phoneNumber: phoneNumber,
-          role: role,
+          role: 'consumer',
         );
 
   Consumer.fromMap(Map<String, dynamic> map)
@@ -82,14 +82,14 @@ class BusinessOwner extends User {
     required String email,
     required String password,
     required String phoneNumber,
-    required String role,
+    String? role,
     required this.businessName,
   }) : super(
           email: email,
           password: password,
           fullName: fullName,
           phoneNumber: phoneNumber,
-          role: role,
+          role: 'businessOwner',
         );
 
   BusinessOwner.fromMap(Map<String, dynamic> map)

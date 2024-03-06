@@ -1,7 +1,12 @@
+// ignore_for_file: avoid_print
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/image_picker.dart';
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_drop_dowm_button.dart';
+import 'package:easy_delevery/models/menu_item.dart';
+import 'package:easy_delevery/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 class DialogBox extends StatefulWidget {
@@ -15,9 +20,50 @@ class _DialogBoxState extends State<DialogBox> {
   // form key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  CollectionReference restaurant =
+      FirebaseFirestore.instance.collection('restaurants');
+
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+
+ late String categoryValue = '';
+  
+  Future newMeal() async {
+    try {
+      AuthServices authServices = AuthServices();
+      DocumentReference docRef = restaurant.doc(authServices.getUid);
+      DocumentSnapshot docSnapshot = await docRef.get();
+
+      MenuItem newItem = MenuItem(
+          name: _nameController.text,
+          description: _descriptionController.text.split('\n'),
+          price: double.parse(_priceController.text),
+          category: categoryValue,
+          image: 'image');
+
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+        if (data['menuItems'] == null) {
+          await docRef.update({
+            'menuItems': [newItem.toMap()],
+          });
+        } else {
+          List menuItems = data['menuItems'];
+          menuItems.add(newItem.toMap());
+          await docRef.update({
+            'menuItems': menuItems,
+          });
+        }
+      } else {
+        await docRef.set({
+          'menuItems': [newItem.toMap()],
+        });
+      }
+    } catch (e) {
+      print('Error updating category: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,15 +190,13 @@ class _DialogBoxState extends State<DialogBox> {
                   ],
                 ),
 
-                const SizedBox(
+                SizedBox(
                   child: MyDropdownButton(
-                    categories: [
-                      '...',
-                      'ראשונות',
-                      'עיקריות',
-                      'קינוחים',
-                      'שתיה',
-                    ],
+                    onValueChanged: (value) {
+                      setState(() {
+                        categoryValue = value;
+                      });
+                    },
                   ),
                 ),
 
@@ -228,9 +272,10 @@ class _DialogBoxState extends State<DialogBox> {
                   text: 'אישור',
                   horizontal: 75,
                   vertical: 5,
-                  onTap: () {
+                  onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       Navigator.of(context).pop();
+                      return await newMeal();
                     }
                   },
                 ),

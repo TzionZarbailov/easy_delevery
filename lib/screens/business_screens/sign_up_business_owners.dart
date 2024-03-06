@@ -95,7 +95,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
         password: password,
         phoneNumber: phoneNumber,
         businessName: businessName,
-        role: 'businessOwner',
       );
 
       Restaurant newRestaurant = Restaurant(
@@ -154,9 +153,9 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
 
       await AuthServices.registerWithEmailAndPassword(email, password);
 
-      await UserServices().addUserAutoId(newBusinessOwner);
+      await UserServices().addUser(newBusinessOwner);
 
-      await RestaurantServices.addRestaurantAutoId(newRestaurant);
+      await RestaurantServices().addRestaurant(newRestaurant);
 
       // Clear text controllers
       _controllers.forEach((_, controller) => controller.clear());

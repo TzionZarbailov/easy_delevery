@@ -5,7 +5,6 @@ import 'package:easy_delevery/screens/business_screens/edit_menu.dart';
 import 'package:easy_delevery/services/restaurant_services.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/services/get_firestore/get_restaurant_name.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:easy_delevery/services/auth_services.dart';
@@ -73,7 +72,9 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                     future: RestaurantServices().getDocId(docID),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator(); // Loading indicator while waiting
+                        return CircularProgressIndicator(
+                          color: Colors.orange[400],
+                        ); // Loading indicator while waiting
                       } else if (snapshot.hasError) {
                         return Text(
                             'Error: ${snapshot.error}'); // Display error
@@ -180,7 +181,9 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
               future: RestaurantServices().getDocId(docID),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(); // Loading indicator while waiting
+                  return CircularProgressIndicator(
+                    color: Colors.orange[400],
+                  ); // Loading indicator while waiting
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}'); // Display error
                 } else {

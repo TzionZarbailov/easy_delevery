@@ -1,9 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/my_button.dart';
-import 'package:easy_delevery/screens/business_screens/restaurant_home_screen.dart';
+import 'package:easy_delevery/services/auth_services.dart';
+
 import 'package:easy_delevery/services/restaurant_services.dart';
 
 import 'package:flutter/material.dart';
@@ -25,50 +26,46 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   List<String> doc = [];
 
-  late int counter = 1;
-
-  get restaurantId => RestaurantServices().getDocId(doc);
-
-  String getRestaurant() {
-    for (var i = 0; i < doc.length; i++) {
-      if (doc[i].isNotEmpty) {
-        return doc[i];
-      }
-    }
-    return '';
-  }
+  int counter = 0;
 
   // get function to update category in restaurant collection
   Future _updateCategory() async {
-    DocumentReference docRef = restaurant.doc(getRestaurant());
-    DocumentSnapshot docSnapshot = await docRef.get();
+    try {
+      AuthServices authServices = AuthServices();
+      DocumentReference docRef = restaurant.doc(authServices.getUid);
+      DocumentSnapshot docSnapshot = await docRef.get();
 
-    Category newCategory = Category(
-      id: counter.toString(), // replace with the correct id
-      name: _categoryController.text,
-    );
+      Category newCategory = Category(
+        id: counter.toString(), // replace with the correct id
+        name: _categoryController.text,
+      );
 
-    if (docSnapshot.exists) {
-      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
-      if (data['categories'] == null) {
-        await docRef.update({
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+        if (data['categories'] == null) {
+          await docRef.update({
+            'categories': [newCategory.toMap()],
+          });
+        } else {
+          List categories = data['categories'];
+          categories.add(newCategory.toMap());
+          await docRef.update({
+            'categories': categories,
+          });
+        }
+      } else {
+        await docRef.set({
           'categories': [newCategory.toMap()],
         });
-      } else {
-        List categories = data['categories'];
-        categories.add(newCategory.toMap());
-        await docRef.update({
-          'categories': categories,
-        });
       }
-    } else {
-      await docRef.set({
-        'categories': [newCategory.toMap()],
-      });
+      counter = counter + 1;
+      _categoryController.clear();
+    } catch (e) {
+      print('Error updating category: $e');
     }
-    counter = counter + 1;
-    _categoryController.clear();
   }
+
+  // delete category function for restaurant service
 
   @override
   void dispose() {
@@ -76,7 +73,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
     super.dispose();
   }
 
-  // controller for category text field
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,102 +120,177 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              //* Text add category
-              const Text(
-                'הוספת קטגוריה חדשה',
-                style: TextStyle(
-                    color: myColors.buttonColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 15),
-
-              //* add category text field
-              TextFormField(
-                controller: _categoryController,
-                keyboardType: TextInputType.text,
-                style: const TextStyle(
-                  color: Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              children: [
+                //* Text add category
+                const Text(
+                  'הוספת קטגוריה חדשה',
+                  style: TextStyle(
+                      color: myColors.buttonColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
-                textAlign: TextAlign.end,
-                decoration: const InputDecoration(
-                  hintText: 'שם הקטגוריה',
-                  hintStyle: TextStyle(
+                const SizedBox(height: 15),
+
+                //* add category text field
+                TextFormField(
+                  controller: _categoryController,
+                  keyboardType: TextInputType.text,
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(25),
+                  textAlign: TextAlign.end,
+                  decoration: const InputDecoration(
+                    hintText: 'שם הקטגוריה',
+                    hintStyle: TextStyle(
+                      color: Colors.white,
                     ),
-                    borderSide: BorderSide(
-                      color: myColors.buttonColor,
-                      width: 1.5,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(25),
-                    ),
-                    borderSide: BorderSide(
-                      color: Colors.yellow,
-                      width: 2.0,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              //* add myButton
-              MyButton(
-                text: 'הוספה',
-                fontSize: 17,
-                horizontal: MediaQuery.of(context).size.width / 3.5,
-                vertical: 5,
-                onTap: _updateCategory,
-              ),
-
-              const SizedBox(height: 35),
-
-              //* delete category
-              const Text(
-                'מחיקת קטגוריה',
-                style: TextStyle(
-                  color: myColors.buttonColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              //* all categories
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(25),
+                      ),
+                      borderSide: BorderSide(
+                        color: myColors.buttonColor,
+                        width: 1.5,
                       ),
                     ),
-                    const Text(
-                      'שם הקטגוריה',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(25),
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.yellow,
+                        width: 2.0,
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 15),
+                //* add myButton
+                MyButton(
+                  text: 'הוספה',
+                  fontSize: 17,
+                  horizontal: MediaQuery.of(context).size.width / 3.5,
+                  vertical: 5,
+                  onTap: () {
+                    if (_categoryController.text.isNotEmpty &&
+                        _categoryController.text.trim() != '') {
+                      _updateCategory();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            textAlign: TextAlign.right,
+                            'אנא הכנס שם קטגוריה',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                ),
+
+                const SizedBox(height: 35),
+
+                //* delete category
+                const Text(
+                  'מחיקת קטגוריה',
+                  style: TextStyle(
+                    color: myColors.buttonColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                //* all categories
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(25),
+                    ),
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: RestaurantServices().getCategories(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                        DocumentSnapshot restaurantDoc = snapshot
+                            .data!.docChanges
+                            .firstWhere((document) =>
+                                document.doc.id == AuthServices().getUid)
+                            .doc;
+                        Map<String, dynamic> data =
+                            restaurantDoc.data() as Map<String, dynamic>;
+                        if (data['categories'] is List) {
+                          List<Map<String, dynamic>> categoriesList =
+                              List<Map<String, dynamic>>.from(
+                                  data['categories']);
+                          return ListView.builder(
+                            itemCount: categoriesList.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> categoryMap =
+                                  categoriesList[index];
+                              String categoryName = categoryMap[
+                                  'name']; // replace 'name' with the actual key
+                              return ListTile(
+                                title: Text(
+                                  categoryName,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                                leading: IconButton(
+                                  onPressed: () {
+                                    RestaurantServices().deleteCategory(
+                                        restaurantDoc.id,
+                                        restaurantDoc['categories'][index]);
+                                  }, // replace with the actual function
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return const Center(
+                            child: Text(
+                              'לא נמצאו קטגוריות',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                          );
+                        }
+                      } else {
+                        return const Text(
+                          'No restaurant found',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
