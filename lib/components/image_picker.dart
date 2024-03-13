@@ -1,13 +1,20 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations, depend_on_referenced_packages
 
+import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 class MyImagePicker extends StatefulWidget {
-  const MyImagePicker({super.key});
+  final Function(String imageUrl) onImageSelected;
+
+  const MyImagePicker({
+    super.key,
+    required this.onImageSelected,
+  });
 
   @override
   State<MyImagePicker> createState() => _MyImagePickerState();
@@ -17,34 +24,50 @@ class _MyImagePickerState extends State<MyImagePicker> {
   Uint8List? _image;
   File? selectedImage;
 
+  final ImagePicker _picker = ImagePicker();
+  late String imageUrl;
+
   @override
   void dispose() {
     _image = null;
     super.dispose();
   }
 
+  Future _uploadFile(String path) async {
+    final ref = storage.FirebaseStorage.instance
+        .ref()
+        .child('images')
+        .child('${DateTime.now().toIso8601String() + p.basename(path)}');
+
+    final result = await ref.putFile(File(path));
+    final fileUrl = await result.ref.getDownloadURL();
+
+    setState(() {
+      imageUrl = fileUrl;
+    });
+    widget.onImageSelected(imageUrl);
+  }
+
   //* Get image from gallery
   Future _pickImageFromGallery() async {
-    final returnImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final returnImage = await _picker.pickImage(source: ImageSource.gallery);
     if (returnImage == null) return;
     setState(() {
       selectedImage = File(returnImage.path);
       _image = File(returnImage.path).readAsBytesSync();
     });
-    Navigator.pop(context);
+    await _uploadFile(returnImage.path);
   }
 
   //* Get image from camera
   Future _pickImageFromCamera() async {
-    final returnImage =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    final returnImage = await _picker.pickImage(source: ImageSource.camera);
     if (returnImage == null) return;
     setState(() {
       selectedImage = File(returnImage.path);
       _image = File(returnImage.path).readAsBytesSync();
     });
-    Navigator.pop(context);
+    await _uploadFile(returnImage.path);
   }
 
   void showImagePickerOption(BuildContext context) {

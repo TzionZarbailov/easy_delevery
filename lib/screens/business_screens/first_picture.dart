@@ -13,6 +13,8 @@ class FirstPicture extends StatefulWidget {
 
 String categoryValue = '';
 
+late String imageUrl;
+
 class _FirstPictureState extends State<FirstPicture> {
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,13 @@ class _FirstPictureState extends State<FirstPicture> {
                     vertical: MediaQuery.of(context).size.height / 8),
                 child: Column(
                   children: [
-                    const MyImagePicker(),
+                    MyImagePicker(
+                      onImageSelected: (image) {
+                        setState(() {
+                          imageUrl = image;
+                        });
+                      },
+                    ),
 
                     //* Text
                     const Padding(

@@ -45,18 +45,22 @@ class Restaurant {
   }
 
   // from map
-  Restaurant.fromMap(Map<String, dynamic> map)
-      : id = map['id'],
-        name = map['name'],
-        restaurantImage = map['restaurantImage'],
-        phoneNumber = map['phoneNumber'],
-        address = map['address'],
-        city = map['city'],
-        isOpen = map['isOpen'],
-        restaurantType = map['restaurantType'],
-        workHours = map['workHours'],
-        categories = map['categories'],
-        menuItems = map['menuItems'];
+ factory Restaurant.fromMap(Map<String, dynamic> map)
+  {
+    return Restaurant(
+      id: map['id'],
+      name: map['name'],
+      restaurantImage: map['restaurantImage'],
+      address: map['address'],
+      city: map['city'],
+      phoneNumber: map['phoneNumber'],
+      workHours: map['workHours'],
+      isOpen: map['isOpen'],
+      restaurantType: map['restaurantType'],
+      categories: map['categories'],
+      menuItems: map['menuItems'],
+    );
+  }
 
   void addMenuItem(MenuItem menuItem) {
     menuItems!.add(menuItem);

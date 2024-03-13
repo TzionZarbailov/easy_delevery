@@ -72,6 +72,13 @@ class RestaurantServices {
     return categories;
   }
 
+  // get all menu items of a restaurant
+  Stream<QuerySnapshot> getMenuItems() {
+    final menuItems =
+        restaurants.orderBy('menuItems', descending: true).snapshots();
+    return menuItems;
+  }
+
   // UPDATE: update a restaurant
   Future<void> updateRestaurant(String id, Map<String, dynamic> newdata) async {
     await restaurants.doc(id).update(newdata);
@@ -85,6 +92,16 @@ class RestaurantServices {
     });
   }
 
+  Future<void> deleteMenuItem(
+      String docID, Map<String, dynamic> menuItemToRemove) {
+    return restaurants.doc(docID).update({
+      'menuItems': FieldValue.arrayRemove([menuItemToRemove])
+    });
+  }
+
+ 
+
+
   // update menu item in a restaurant by doc id
   Future<void> updateMenuItem(
       String docId, Map<String, dynamic> updatedData) async {
@@ -96,20 +113,6 @@ class RestaurantServices {
     } catch (e) {
       print('שגיאה בעדכון ה-MenuItem: $e');
     }
-  }
-
-  Future<void> uploadImageUint(String docId, Uint8List image) async {
-    final docRef =
-        FirebaseFirestore.instance.collection('restaurants').doc(docId);
-    docRef.get().then((document) async {
-      if (document.exists) {
-        await docRef.update({
-          'restaurantImage': image,
-        });
-      } else {
-        print('Document does not exist on the database');
-      }
-    });
   }
 
   Future<void> uploadImageFile(String docId, File imageFile) async {

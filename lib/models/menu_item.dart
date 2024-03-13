@@ -1,5 +1,3 @@
-
-
 class MenuItem {
   final String name;
   final List<String> description;
@@ -27,10 +25,13 @@ class MenuItem {
   }
 
   // map the data from the MenuItem object to the database
-  MenuItem.fromMap(Map<String, dynamic> map)
-      : name = map['name'],
-        description = map['description'],
-        price = map['price'],
-        category = map['category'],
-        image = map['image'];
+  factory MenuItem.fromMap(Map<String, dynamic> map) {
+    return MenuItem(
+      name: map['name'],
+      description: List<String>.from(map['description']), // Change this line
+      price: (map['price'] as num).toDouble(),
+      category: map['category'],
+      image: map['image'],
+    );
+  }
 }

@@ -1,5 +1,13 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/dialog_box.dart';
+import 'package:easy_delevery/components/my_list_tile.dart';
+import 'package:easy_delevery/models/menu_item.dart';
+
+import 'package:easy_delevery/services/auth_services.dart';
+import 'package:easy_delevery/services/restaurant_services.dart';
 import 'package:flutter/material.dart';
 
 class EditMenuForRestaurant extends StatefulWidget {
@@ -74,6 +82,63 @@ class _EditMenuForRestaurantState extends State<EditMenuForRestaurant> {
               ),
             ),
           ],
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: RestaurantServices().getMenuItems(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.orange[400],
+                ),
+              );
+            } else {
+              DocumentSnapshot menuItem = snapshot.data!.docChanges
+                  .firstWhere(
+                      (document) => document.doc.id == AuthServices().getUid)
+                  .doc;
+
+              Map<String, dynamic> data =
+                  menuItem.data() as Map<String, dynamic>;
+
+              if (data['menuItems'] is List) {
+                List<Map<String, dynamic>> menuItemsList =
+                    List<Map<String, dynamic>>.from(data['menuItems']);
+
+                return ListView.builder(
+                  itemCount: menuItemsList.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> menuItemMap = menuItemsList[index];
+
+                    MenuItem item = MenuItem.fromMap(menuItemMap);
+
+                    return MyListTile(
+                      nameDish: item.name,
+                      toppingsDish: item.description.join(','),
+                      priceDish: item.price.toString(),
+                      imageDish: item.image,
+                      onTap: () {
+                        RestaurantServices().deleteMenuItem(
+                            AuthServices().getUid, menuItemsList[index]);
+                      },
+                    );
+                  },
+                );
+              }
+            }
+            return const SizedBox(
+              child: Center(
+                child: Text(
+                  'אין פריטים בתפריט',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

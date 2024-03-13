@@ -27,12 +27,13 @@ class _DialogBoxState extends State<DialogBox> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
- late String categoryValue = '';
-  
+  late String categoryValue;
+  late String imageUrl;
+
   Future newMeal() async {
     try {
-      AuthServices authServices = AuthServices();
-      DocumentReference docRef = restaurant.doc(authServices.getUid);
+      AuthServices auth = AuthServices();
+      DocumentReference docRef = restaurant.doc(auth.getUid);
       DocumentSnapshot docSnapshot = await docRef.get();
 
       MenuItem newItem = MenuItem(
@@ -40,7 +41,7 @@ class _DialogBoxState extends State<DialogBox> {
           description: _descriptionController.text.split('\n'),
           price: double.parse(_priceController.text),
           category: categoryValue,
-          image: 'image');
+          image: imageUrl);
 
       if (docSnapshot.exists) {
         Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
@@ -102,7 +103,13 @@ class _DialogBoxState extends State<DialogBox> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.1,
                   width: MediaQuery.of(context).size.width * 0.3,
-                  child: const MyImagePicker(),
+                  child: MyImagePicker(
+                    onImageSelected: (image) {
+                      setState(() {
+                        imageUrl = image;
+                      });
+                    },
+                  ),
                 ),
 
                 Row(
