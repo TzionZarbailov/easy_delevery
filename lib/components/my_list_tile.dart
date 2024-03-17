@@ -77,8 +77,10 @@ class MyListTile extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
-                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
                     ),
+
+                    const SizedBox(height: 5),
 
                     //* toppings of the dish
                     Expanded(
@@ -98,17 +100,21 @@ class MyListTile extends StatelessWidget {
                       ),
                     ),
 
+                    const SizedBox(height: 5),
+
                     //* price of the dish
-                    Text(
-                      '₪ ' + priceDish,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
+                    Expanded(
+                      child: Text(
+                        '₪ ' + priceDish,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Row(
                   children: [
                     // * image of the dish

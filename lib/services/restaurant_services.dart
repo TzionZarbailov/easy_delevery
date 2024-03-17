@@ -58,6 +58,7 @@ class RestaurantServices {
     await restaurants.doc(_auth.getUid).set(restaurant.toMap());
   }
 
+
   // get all categories of a restaurant
   Stream<QuerySnapshot> getCategories() {
     final categories =
@@ -79,9 +80,15 @@ class RestaurantServices {
     return menuItems;
   }
 
-  // UPDATE: update a restaurant
-  Future<void> updateRestaurant(String id, Map<String, dynamic> newdata) async {
-    await restaurants.doc(id).update(newdata);
+  // UPDATE: update restaurant data
+  Future<void> updateRestaurantData(
+      String docID, Map<String, dynamic> restaurantData) {
+    return restaurants.doc(docID).update(restaurantData);
+  }
+
+  //* is open restaurant?
+  updateIsOpen(String docID, bool isOpen) {
+    return restaurants.doc(docID).update({'isOpen': isOpen});
   }
 
   // DELETE: delete categories in a restaurant
@@ -96,37 +103,6 @@ class RestaurantServices {
       String docID, Map<String, dynamic> menuItemToRemove) {
     return restaurants.doc(docID).update({
       'menuItems': FieldValue.arrayRemove([menuItemToRemove])
-    });
-  }
-
- 
-
-
-  // update menu item in a restaurant by doc id
-  Future<void> updateMenuItem(
-      String docId, Map<String, dynamic> updatedData) async {
-    try {
-      final menuItemsCollection =
-          FirebaseFirestore.instance.collection('menuItems');
-      await menuItemsCollection.doc(docId).update(updatedData);
-      print('ה-MenuItem עודכן בהצלחה!');
-    } catch (e) {
-      print('שגיאה בעדכון ה-MenuItem: $e');
-    }
-  }
-
-  Future<void> uploadImageFile(String docId, File imageFile) async {
-    final docRef =
-        FirebaseFirestore.instance.collection('restaurants').doc(docId);
-    docRef.get().then((document) async {
-      if (document.exists) {
-        Uint8List image = await imageFile.readAsBytes();
-        await docRef.update({
-          'restaurantImage': image, // Use 'restaurantImage' as the key
-        });
-      } else {
-        print('Document does not exist on the database');
-      }
     });
   }
 }

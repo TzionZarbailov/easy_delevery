@@ -22,6 +22,11 @@ class _MyDropdownButtonState extends State<MyDropdownButton> {
   String dropdownValue = '';
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.categories != null && widget.categories!.isNotEmpty) {
       dropdownValue =

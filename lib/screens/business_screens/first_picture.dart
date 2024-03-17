@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/image_picker.dart';
 import 'package:easy_delevery/components/my_button.dart';
 import 'package:easy_delevery/components/my_drop_dowm_button.dart';
+import 'package:easy_delevery/services/auth_services.dart';
+import 'package:easy_delevery/services/restaurant_services.dart';
 import 'package:flutter/material.dart';
 
 class FirstPicture extends StatefulWidget {
@@ -11,9 +15,126 @@ class FirstPicture extends StatefulWidget {
   State<FirstPicture> createState() => _FirstPictureState();
 }
 
+//* category value from the drop button
 String categoryValue = '';
 
-late String imageUrl;
+//* image url from the image picker
+String imageUrl = '';
+
+//* check if the fields are not empty
+Future isExsist(BuildContext context) async {
+  try {
+    if (imageUrl.isNotEmpty && categoryValue.isNotEmpty) {
+      await RestaurantServices().updateRestaurantData(
+        AuthServices().getUid,
+        {
+          'restaurantImage': imageUrl,
+          'restaurantType': categoryValue,
+        },
+      );
+
+      imageUrl = '';
+      categoryValue = '';
+
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '! התמונה וסוג המסעדה נשמרו בהצלחה',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else if (imageUrl.isNotEmpty) {
+      await RestaurantServices().updateRestaurantData(
+        AuthServices().getUid,
+        {'restaurantImage': imageUrl},
+      );
+      imageUrl = '';
+
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '! התמונה נשמרה בהצלחה',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else if (categoryValue.isNotEmpty) {
+      await RestaurantServices().updateRestaurantData(
+        AuthServices().getUid,
+        {'restaurantType': categoryValue},
+      );
+      categoryValue = '';
+
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '! סוג המסעדה נשמר בהצלחה',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'יש למלא לפחות אחד מהשדות',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } catch (error) {
+    print('Error: $error');
+  }
+}
+
+@override
+void dispose() {
+  isExsist;
+}
 
 class _FirstPictureState extends State<FirstPicture> {
   @override
@@ -109,8 +230,8 @@ class _FirstPictureState extends State<FirstPicture> {
                 text: 'סיום',
                 horizontal: 35,
                 vertical: 5,
-                onTap: () => Navigator.pop(context),
-              ),
+                onTap: () => isExsist(context),
+              )
             ],
           ),
         ),

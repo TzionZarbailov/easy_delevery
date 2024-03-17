@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/screens/business_screens/order_history.dart';
 import 'package:easy_delevery/screens/business_screens/edit_menu.dart';
 import 'package:easy_delevery/services/restaurant_services.dart';
@@ -62,30 +63,81 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const CircleAvatar(
-                    radius: 35,
-                    backgroundImage: NetworkImage(
-                        'https://imageproxy.wolt.com/menu/menu-images/5e31b8bffc976d04113c03ee/e8a24902-3140-11ed-ac42-fece14553f35____________.jpeg'),
-                  ),
-                  const SizedBox(height: 10),
-                  FutureBuilder(
-                    future: RestaurantServices().getDocId(docID),
+                  //* GET: Restaurant image and name
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('restaurants')
+                        .doc(userAuth.uid)
+                        .snapshots(),
                     builder: (context, snapshot) {
+                      //* If the connection is active
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator(
                           color: Colors.orange[400],
-                        ); // Loading indicator while waiting
+                        );
+
+                        //* Snapshot data is has error
                       } else if (snapshot.hasError) {
-                        return Text(
-                            'Error: ${snapshot.error}'); // Display error
+                        return Text('Error: ${snapshot.error}');
+
+                        //* Display error
                       } else {
-                        return getRestaurantName(); // Use snapshot data
+                        DocumentSnapshot docSnapshot = snapshot.data!;
+
+                        //* If the document does not exist
+                        if (!docSnapshot.exists) {
+                          return const Text(
+                            'לא קיימת מסעדה עם המשתמש הזה',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                        //* If the document exists and contains data as expected then display the data
+                        Map<String, dynamic> data =
+                            docSnapshot.data() as Map<String, dynamic>;
+                        if (!data.containsKey('restaurantImage') ||
+                            !data.containsKey('name')) {
+                          return const Text('Missing data');
+                        }
+                        //* Get the restaurant image and name
+                        final String restaurantImage = data['restaurantImage'];
+                        final String restaurantName = data['name'];
+
+                        //* Return the restaurant image and name
+                        return Column(
+                          children: [
+                            //* Restaurant image
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundImage: NetworkImage(
+                                restaurantImage,
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            //* Restaurant name
+                            Text(
+                              restaurantName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ); // Use snapshot data
                       }
                     },
                   )
                 ],
               ),
             ),
+
+            //* Home screen
             ListTile(
               leading: const Icon(
                 Icons.home,
@@ -103,6 +155,8 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                 Navigator.of(context).pop();
               },
             ),
+
+            // * Order history
             ListTile(
               leading: const Icon(Icons.history),
               title: const Text(
@@ -124,6 +178,8 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                 );
               },
             ),
+
+            // * Edit menu
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text(
@@ -145,6 +201,8 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                 );
               },
             ),
+
+            // * Sign out
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text(
@@ -209,13 +267,45 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    MyButton(
-                      text: 'פתיחת מסעדה',
-                      horizontal: 10,
-                      vertical: 10,
-                      fontSize: 15,
-                      onTap: () {},
-                    ),
+                    // * StreamBuilder to get the isOpen status of the restaurant
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('restaurants')
+                          .doc(userAuth.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: Colors.orange[400],
+                          );
+                        }
+
+                        final docSnapshot = snapshot.data!;
+                        final data = docSnapshot.data() as Map<String, dynamic>;
+
+                        final bool? isOpen = data['isOpen'];
+
+                        if (isOpen == null) {
+                          return const Text('לא קיימים נתונים כאלה');
+                        }
+
+                        return MyButton(
+                          text: isOpen ? 'סגירת מסעדה ' : 'פתיחת מסעדה',
+                          color:
+                              isOpen ? Colors.yellow[900] : Colors.yellow[800],
+                          horizontal: 25,
+                          vertical: 10,
+                          fontSize: 15,
+                          onTap: () async {
+                            await RestaurantServices().updateIsOpen(
+                              AuthServices().getUid,
+                              !isOpen,
+                            );
+                          },
+                        );
+                      },
+                    )
                   ],
                 ),
               ),

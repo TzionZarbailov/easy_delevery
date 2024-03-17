@@ -30,6 +30,7 @@ class _MyImagePickerState extends State<MyImagePicker> {
   @override
   void dispose() {
     _image = null;
+    selectedImage = null;
     super.dispose();
   }
 

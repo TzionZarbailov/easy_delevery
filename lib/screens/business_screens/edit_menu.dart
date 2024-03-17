@@ -136,8 +136,8 @@ class EditMenu extends StatelessWidget {
               ),
               SizedBox(height: MediaQuery.of(context).size.height / 4),
               MyButton(
-                text: 'שמירה',
-                horizontal: 45,
+                text: 'סיום',
+                horizontal: 100,
                 vertical: double.minPositive,
                 fontSize: 20,
                 onTap: () {
