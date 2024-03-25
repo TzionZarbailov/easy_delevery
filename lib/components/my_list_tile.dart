@@ -24,7 +24,11 @@ class MyListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 105,
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      width: 100,
+      margin: const EdgeInsets.symmetric(
+        vertical: 5,
+        horizontal: 10,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(35),
         gradient: LinearGradient(
@@ -120,7 +124,7 @@ class MyListTile extends StatelessWidget {
                     // * image of the dish
                     Container(
                       height: 100,
-                      width: 100,
+                      width: 85,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         image: imageDish.isNotEmpty

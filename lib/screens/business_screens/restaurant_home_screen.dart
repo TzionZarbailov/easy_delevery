@@ -24,7 +24,6 @@ class RestaurantHomeScreen extends StatefulWidget {
 
 class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
   final userAuth = FirebaseAuth.instance.currentUser!;
-
   List<String> docID = [];
 
   getRestaurantName() {
@@ -103,7 +102,12 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                           return const Text('Missing data');
                         }
                         //* Get the restaurant image and name
-                        final String restaurantImage = data['restaurantImage'];
+
+                        final String restaurantImage =
+                            data['restaurantImage'].toString().isEmpty ||
+                                    data['restaurantImage'] == null
+                                ? 'https://d3m9l0v76dty0.cloudfront.net/system/photos/9533310/original/c33af26ab721782740796a3ef68e6aaa.png' // Default image
+                                : data['restaurantImage'];
                         final String restaurantName = data['name'];
 
                         //* Return the restaurant image and name
@@ -112,9 +116,7 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                             //* Restaurant image
                             CircleAvatar(
                               radius: 40,
-                              backgroundImage: NetworkImage(
-                                restaurantImage,
-                              ),
+                              backgroundImage: NetworkImage(restaurantImage),
                             ),
 
                             const SizedBox(height: 10),

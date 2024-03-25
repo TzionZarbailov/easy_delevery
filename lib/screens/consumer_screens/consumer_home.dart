@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_delevery/components/restaurant_list.dart';
 import 'package:easy_delevery/components/categories.dart';
@@ -9,12 +10,21 @@ class ConsumerHome extends StatefulWidget {
   State<ConsumerHome> createState() => _ConsumerHomeState();
 }
 
+final user = FirebaseAuth.instance.currentUser!;
+
 class _ConsumerHomeState extends State<ConsumerHome> {
+  //* ValueNotifier to keep track of the selected category
+  final ValueNotifier<String> selectedCategory = ValueNotifier('הכל');
+
+  // * TextEditingController for the search bar
+  final TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[200],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -39,16 +49,19 @@ class _ConsumerHomeState extends State<ConsumerHome> {
 
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: Colors.grey[350],
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: TextField(
+                        controller: searchController,
                         textAlign: TextAlign.right,
-                        decoration: InputDecoration(
-                            border: InputBorder.none, hintText: 'חיפוש'),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'חיפוש',
+                        ),
                       ),
                     ),
                     Container(
@@ -80,32 +93,51 @@ class _ConsumerHomeState extends State<ConsumerHome> {
               ),
 
               //* Categories list view
-              const Categories(),
+              Categories(
+                onTap: (String category) {
+                  selectedCategory.value = category;
+                },
+              ),
 
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'פופולרי',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  ValueListenableBuilder<String>(
+                    valueListenable: selectedCategory,
+                    builder: (context, value, child) {
+                      if (value == 'הכל') {
+                        return const Text(
+                          'כל המסעדות',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        );
+                      } else {
+                        return Text(
+                          'מסעדות $value',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
 
               //* list view Restaurants
-              const RestaurantList(onTap: null),
-
-              // SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     await AuthServices().signOut();
-              //   },
-              //   child: const Text('התנתקות'),
-              // ),
+              ValueListenableBuilder<String>(
+                valueListenable: selectedCategory,
+                builder: (context, value, child) {
+                  return RestaurantList(
+                    restaurantType: value.toString(),
+                  );
+                },
+              ),
             ],
           ),
         ),

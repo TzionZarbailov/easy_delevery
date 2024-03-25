@@ -21,16 +21,44 @@ String categoryValue = '';
 //* image url from the image picker
 String imageUrl = '';
 
+//* show snackbar
+void showSnackBar(BuildContext context, String message, Color backgroundColor) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            message,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: backgroundColor,
+    ),
+  );
+}
+
 //* check if the fields are not empty
-Future isExsist(BuildContext context) async {
+Future<void> isExsist(BuildContext context) async {
   try {
-    if (imageUrl.isNotEmpty && categoryValue.isNotEmpty) {
+    Map<String, String> dataToUpdate = {};
+
+    if (imageUrl.isNotEmpty) {
+      dataToUpdate['restaurantImage'] = imageUrl;
+    }
+
+    if (categoryValue.isNotEmpty) {
+      dataToUpdate['restaurantType'] = categoryValue;
+    }
+
+    if (dataToUpdate.isNotEmpty) {
       await RestaurantServices().updateRestaurantData(
         AuthServices().getUid,
-        {
-          'restaurantImage': imageUrl,
-          'restaurantType': categoryValue,
-        },
+        dataToUpdate,
       );
 
       imageUrl = '';
@@ -38,103 +66,24 @@ Future isExsist(BuildContext context) async {
 
       Navigator.pop(context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '! התמונה וסוג המסעדה נשמרו בהצלחה',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else if (imageUrl.isNotEmpty) {
-      await RestaurantServices().updateRestaurantData(
-        AuthServices().getUid,
-        {'restaurantImage': imageUrl},
-      );
-      imageUrl = '';
+      String message = dataToUpdate.keys.length > 1
+          ? '! התמונה וסוג המסעדה נשמרו בהצלחה'
+          : (dataToUpdate.keys.first == 'restaurantImage'
+              ? '! התמונה נשמרה בהצלחה'
+              : '! סוג המסעדה נשמר בהצלחה');
 
-      Navigator.pop(context);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '! התמונה נשמרה בהצלחה',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else if (categoryValue.isNotEmpty) {
-      await RestaurantServices().updateRestaurantData(
-        AuthServices().getUid,
-        {'restaurantType': categoryValue},
-      );
-      categoryValue = '';
-
-      Navigator.pop(context);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '! סוג המסעדה נשמר בהצלחה',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.green,
-        ),
-      );
+      showSnackBar(context, message, Colors.green);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'יש למלא לפחות אחד מהשדות',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
+      showSnackBar(context, 'יש למלא לפחות אחד מהשדות', Colors.red);
     }
   } catch (error) {
     print('Error: $error');
+    showSnackBar(context, 'An error occurred', Colors.red);
   }
 }
 
 @override
-void dispose() {
-  isExsist;
-}
+void dispose() {}
 
 class _FirstPictureState extends State<FirstPicture> {
   @override
@@ -215,7 +164,8 @@ class _FirstPictureState extends State<FirstPicture> {
                         'קינוח',
                         'אסייתי',
                         'איטלקי',
-                        'המבורגר'
+                        'המבורגר',
+                        'מקסיקני',
                       ],
                       onValueChanged: (value) {
                         setState(() {

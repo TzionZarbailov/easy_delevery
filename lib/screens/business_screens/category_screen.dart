@@ -229,8 +229,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             .firstWhere((document) =>
                                 document.doc.id == AuthServices().getUid)
                             .doc;
+
                         Map<String, dynamic> data =
                             restaurantDoc.data() as Map<String, dynamic>;
+
                         if (data['categories'] is List) {
                           List<Map<String, dynamic>> categoriesList =
                               List<Map<String, dynamic>>.from(
@@ -278,13 +280,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           );
                         }
                       } else {
-                        return const Text(
-                          'No restaurant found',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        );
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.orange[700],
+                            ),
+                          );
+                        } else {
+                          return const Center(
+                            child: Text(
+                              'לא נמצאו קטגוריות',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                          );
+                        }
                       }
                     },
                   ),

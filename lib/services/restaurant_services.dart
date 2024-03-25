@@ -1,12 +1,9 @@
 // ignore_for_file: unrelated_type_equality_checks, avoid_function_literals_in_foreach_calls, avoid_print
 
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/models/restaurant.dart';
 import 'package:easy_delevery/services/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 
 class RestaurantServices {
   // get collection of restaurants
@@ -58,6 +55,12 @@ class RestaurantServices {
     await restaurants.doc(_auth.getUid).set(restaurant.toMap());
   }
 
+  // get all restaurants to the list
+  Stream<QuerySnapshot> getAllRestaurants() {
+    final restaurants =
+        FirebaseFirestore.instance.collection('restaurants').snapshots();
+    return restaurants;
+  }
 
   // get all categories of a restaurant
   Stream<QuerySnapshot> getCategories() {
@@ -89,6 +92,17 @@ class RestaurantServices {
   //* is open restaurant?
   updateIsOpen(String docID, bool isOpen) {
     return restaurants.doc(docID).update({'isOpen': isOpen});
+  }
+
+  // GET: get all restaurants by restaurantType
+  Stream<QuerySnapshot> getRestaurantsByType(String restaurantType) {
+    if (restaurantType == 'הכל') {
+      return restaurants.snapshots();
+    } else {
+      return restaurants
+          .where('restaurantType', isEqualTo: restaurantType)
+          .snapshots();
+    }
   }
 
   // DELETE: delete categories in a restaurant
