@@ -23,8 +23,8 @@ class MyListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 105,
-      width: 100,
+      height: MediaQuery.of(context).size.height * 0.13,
+      width: double.infinity,
       margin: const EdgeInsets.symmetric(
         vertical: 5,
         horizontal: 10,
@@ -123,8 +123,8 @@ class MyListTile extends StatelessWidget {
                   children: [
                     // * image of the dish
                     Container(
-                      height: 100,
-                      width: 85,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      width: MediaQuery.of(context).size.width * 0.2,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         image: imageDish.isNotEmpty

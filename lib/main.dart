@@ -1,4 +1,3 @@
-import 'package:easy_delevery/components/restaurant_details.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_delevery/screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
         '/sign_up_customers': (context) => const SignUpCustomers(),
         '/restaurant_home_screen': (context) => const RestaurantHomeScreen(),
         '/home_screen': (context) => const MainScreen(),
-        '/restaurant_details': (context) => const RestaurantDetails(),
+       
       },
     );
   }

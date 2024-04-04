@@ -19,6 +19,24 @@ class _ConsumerHomeState extends State<ConsumerHome> {
   // * TextEditingController for the search bar
   final TextEditingController searchController = TextEditingController();
 
+  String searchText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // * Clear the search bar when the category changes
+    selectedCategory.addListener(() {
+      searchController.clear();
+    });
+
+    //* Listen to the search bar changes
+    searchController.addListener(() {
+      setState(() {
+        searchText = searchController.text;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +46,7 @@ class _ConsumerHomeState extends State<ConsumerHome> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               const Row(
@@ -58,6 +76,7 @@ class _ConsumerHomeState extends State<ConsumerHome> {
                       child: TextField(
                         controller: searchController,
                         textAlign: TextAlign.right,
+                        keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'חיפוש',
@@ -134,7 +153,12 @@ class _ConsumerHomeState extends State<ConsumerHome> {
                 valueListenable: selectedCategory,
                 builder: (context, value, child) {
                   return RestaurantList(
-                    restaurantType: value.toString(),
+                    restaurantType: searchController.text.isNotEmpty
+                        ? 'הכל'
+                        : value.toString(),
+                    searchText: searchController.text.isNotEmpty
+                        ? searchController.text
+                        : null,
                   );
                 },
               ),

@@ -33,7 +33,7 @@ class Categories extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 70,
+      height: MediaQuery.of(context).size.height * 0.1,
       child: ListView.builder(
         itemCount: categories.length,
         scrollDirection: Axis.horizontal,
@@ -45,10 +45,6 @@ class Categories extends StatelessWidget {
           Icon categoryIcon;
 
           switch (category) {
-            case Category.all:
-              categoryName = 'הכל';
-              categoryIcon = const Icon(Icons.category);
-
             case Category.italian:
               categoryName = 'איטלקי';
               categoryIcon = const Icon(Icons.local_pizza);
@@ -68,6 +64,7 @@ class Categories extends StatelessWidget {
             case Category.mexican:
               categoryName = 'מקסיקני';
               categoryIcon = const Icon(FontAwesomeIcons.pepperHot);
+
             default:
               categoryName = 'הכל';
               categoryIcon = const Icon(Icons.category);
@@ -75,7 +72,6 @@ class Categories extends StatelessWidget {
 
           return GestureDetector(
             onTap: () => onTap(categoryName),
-            
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 15),
               child: Row(

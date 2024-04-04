@@ -62,6 +62,31 @@ class RestaurantServices {
     return restaurants;
   }
 
+  // get resaurant by click on the restaurant
+  Future<Restaurant> getRestaurant(String docID) async {
+    final docSnapshot = await restaurants.doc(docID).get();
+
+    if (docSnapshot.exists) {
+      final data = docSnapshot.data()!;
+      return Restaurant.fromMap(
+          Map<String, dynamic>.from(data as Map<String, dynamic>));
+    } else {
+      throw Exception('Restaurant not found');
+    }
+  }
+
+  Future<Restaurant> getRestaurantById(String id) async {
+    // Fetch the restaurant data from your data source using the provided id
+    // For example, if you're using Firestore, you might do something like this:
+    var doc = await FirebaseFirestore.instance.collection('restaurants').doc(id).get();
+
+    // Then, convert the fetched data into a Restaurant object and return it
+    // This will depend on how your Restaurant class is defined
+    var restaurant = Restaurant.fromDocument(doc);
+
+    return restaurant;
+  }
+
   // get all categories of a restaurant
   Stream<QuerySnapshot> getCategories() {
     final categories =
@@ -103,6 +128,14 @@ class RestaurantServices {
           .where('restaurantType', isEqualTo: restaurantType)
           .snapshots();
     }
+  }
+
+  //GET: get restaurant by name for search bar
+  Stream<QuerySnapshot> getRestaurantsByName(String restaurantName) {
+    //* //The '\uf8ff' is a very high Unicode value which will select all strings that start with restaurantName.
+    return restaurants
+        .orderBy('name')
+        .startAt([restaurantName]).endAt(['$restaurantName\uf8ff']).snapshots();
   }
 
   // DELETE: delete categories in a restaurant

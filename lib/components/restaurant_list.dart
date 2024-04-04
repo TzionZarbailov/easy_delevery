@@ -10,26 +10,31 @@ import 'package:flutter/material.dart';
 
 class RestaurantList extends StatelessWidget {
   final String? restaurantType;
-  final TextEditingController? searchController;
+  final String? searchText;
+
   const RestaurantList({
     super.key,
     this.restaurantType,
-    this.searchController,
+    this.searchText,
   });
 
-  void _openRestaurantDetails(BuildContext context, Restaurant restaurant) {
+  void _openRestaurantDetails(BuildContext context, String restaurantId) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return RestaurantDetails(restaurant: restaurant);
+          return RestaurantDetails(
+            restaurantId: restaurantId,
+          );
         });
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: RestaurantServices().getRestaurantsByType(restaurantType!),
+      stream: searchText != null
+          ? RestaurantServices().getRestaurantsByName(searchText!)
+          : RestaurantServices().getRestaurantsByType(restaurantType!),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
@@ -39,8 +44,17 @@ class RestaurantList extends StatelessWidget {
           );
         }
         if (snapshot.hasData) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              snapshot.data!.docs.isEmpty) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height / 5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.orange[400],
+                ),
+              ),
+            );
           }
           final restaurants = snapshot.data!.docs.map((doc) {
             final data = doc.data() as Map<String, dynamic>;
@@ -48,9 +62,7 @@ class RestaurantList extends StatelessWidget {
               id: data['id'] ?? '',
               name: data['name'] ?? '',
               address: data['address'] ?? '',
-              city: data['city'] ?? '',
               phoneNumber: data['phoneNumber'] ?? '',
-              workHours: data['workHours'] ?? '',
               isOpen: data['isOpen'],
               restaurantImage: data['restaurantImage'] ?? '',
             );
@@ -95,8 +107,10 @@ class RestaurantList extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap: () {
-                          _openRestaurantDetails(context, restaurant);
-                          print('Restaurant ID: ${restaurant.id}');
+                          _openRestaurantDetails(
+                              context, snapshot.data!.docs[index].id);
+                          print(
+                              'Restaurant ID: ${snapshot.data!.docs[index].id}');
                         },
                         splashColor: myColors.buttonColor.withOpacity(0.5),
                         child: Column(

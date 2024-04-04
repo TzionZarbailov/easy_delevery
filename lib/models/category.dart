@@ -16,7 +16,10 @@ class Category {
   }
 
   // map the data from the Category object to the database
-  Category.fromMap(Map<String, dynamic> map)
-      : id = map['id'],
-        name = map['name'];
+  factory Category.fromMap(Map<String, dynamic> map) {
+    return Category(
+      id: map['id'],
+      name: map['name'],
+    );
+  }
 }

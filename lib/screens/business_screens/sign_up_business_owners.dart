@@ -101,8 +101,6 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
         id: restaurantId,
         name: businessName,
         address: address,
-        city: city,
-        workHours: workHours,
         phoneNumber: businessPhone,
         isOpen: false,
       );

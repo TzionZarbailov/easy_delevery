@@ -29,7 +29,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   int counter = 0;
 
   // get function to update category in restaurant collection
-  Future _updateCategory() async {
+  Future<void> _updateCategory() async {
     try {
       AuthServices authServices = AuthServices();
       DocumentReference docRef = restaurant.doc(authServices.getUid);
@@ -80,6 +80,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //* text for no categories available
+    Widget textWidget = const Text(
+      'אין קטגוריות זמינות',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+      ),
+    );
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -223,7 +232,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   child: StreamBuilder<QuerySnapshot>(
                     stream: RestaurantServices().getCategories(),
                     builder: (context, snapshot) {
-                      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: snapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? CircularProgressIndicator(
+                                  color: Colors.orange[700],
+                                )
+                              : textWidget,
+                        );
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.docs.isNotEmpty) {
                         DocumentSnapshot restaurantDoc = snapshot
                             .data!.docChanges
                             .firstWhere((document) =>
@@ -237,46 +256,47 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           List<Map<String, dynamic>> categoriesList =
                               List<Map<String, dynamic>>.from(
                                   data['categories']);
-                          return ListView.builder(
-                            itemCount: categoriesList.length,
-                            itemBuilder: (context, index) {
-                              Map<String, dynamic> categoryMap =
-                                  categoriesList[index];
-                              String categoryName = categoryMap[
-                                  'name']; // replace 'name' with the actual key
-                              return ListTile(
-                                title: Text(
-                                  categoryName,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
+
+                          if (categoriesList.isEmpty) {
+                            return Center(
+                              child: textWidget,
+                            );
+                          } else {
+                            return ListView.builder(
+                              itemCount: categoriesList.length,
+                              itemBuilder: (context, index) {
+                                Map<String, dynamic> categoryMap =
+                                    categoriesList[index];
+                                String categoryName = categoryMap[
+                                    'name']; // replace 'name' with the actual key
+                                return ListTile(
+                                  title: Text(
+                                    categoryName,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.right,
                                   ),
-                                  textAlign: TextAlign.right,
-                                ),
-                                leading: IconButton(
-                                  onPressed: () {
-                                    RestaurantServices().deleteCategory(
-                                        restaurantDoc.id,
-                                        restaurantDoc['categories'][index]);
-                                  }, // replace with the actual function
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
+                                  leading: IconButton(
+                                    onPressed: () {
+                                      RestaurantServices().deleteCategory(
+                                          restaurantDoc.id,
+                                          restaurantDoc['categories'][index]);
+                                    }, // replace with the actual function
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          );
+                                );
+                              },
+                            );
+                          }
                         } else {
-                          return const Center(
-                            child: Text(
-                              'לא נמצאו קטגוריות',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
+                          return Center(
+                            child: textWidget,
                           );
                         }
                       } else {
@@ -288,14 +308,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             ),
                           );
                         } else {
-                          return const Center(
-                            child: Text(
-                              'לא נמצאו קטגוריות',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
+                          return Center(
+                            child: textWidget,
                           );
                         }
                       }
