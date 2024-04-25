@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/models/restaurant.dart';
-import 'package:easy_delevery/components/restaurant_details.dart';
+import 'package:easy_delevery/screens/consumer_screens/restaurant_details.dart';
 import 'package:easy_delevery/services/restaurant_services.dart';
 
 import 'package:flutter/material.dart';

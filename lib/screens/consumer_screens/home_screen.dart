@@ -2,9 +2,7 @@ import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/screens/consumer_screens/consumer_home.dart';
 
 import 'package:easy_delevery/screens/consumer_screens/profile.dart';
-import 'package:easy_delevery/screens/consumer_screens/shopping_cart.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart' as badge;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _pages = [
     const ConsumerHome(),
-    const ShoppingCart(),
     const Profile(),
   ];
 
@@ -60,29 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: 30,
               ),
               label: 'דף הבית',
-            ),
-            NavigationDestination(
-              icon: badge.Badge(
-                showBadge: true,
-                badgeStyle: badge.BadgeStyle(
-                  badgeColor: myColors.buttonColor,
-                  padding: EdgeInsets.symmetric(horizontal: 7, vertical: 0),
-                ),
-                badgeContent: Text(
-                  '0',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                child: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.black,
-                  size: 30,
-                ),
-              ),
-              label: 'עגלה',
             ),
             NavigationDestination(
               icon: Icon(

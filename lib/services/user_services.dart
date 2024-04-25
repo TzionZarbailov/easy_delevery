@@ -16,12 +16,7 @@ class UserServices {
     await _user.doc(_auth.getUid).set(user.toMap());
   }
 
-  // // CREATE: add a new user and autmatically generate doc id
-  // Future<void> addUserAutoId(User user) async {
-  //   await _user.add(user.toMap());
-  // }
-
-   Future<String> getBusinessNameByDocId(String docId) async {
+  Future<String> getBusinessNameByDocId(String docId) async {
     // Get a DocumentReference for the document with the specified ID
     DocumentReference docRef =
         FirebaseFirestore.instance.collection('businessName').doc(docId);

@@ -35,16 +35,6 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: Drawer(
@@ -103,11 +93,12 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                         }
                         //* Get the restaurant image and name
 
-                        final String restaurantImage =
-                            data['restaurantImage'].toString().isEmpty ||
-                                    data['restaurantImage'] == null
-                                ? 'https://d3m9l0v76dty0.cloudfront.net/system/photos/9533310/original/c33af26ab721782740796a3ef68e6aaa.png' // Default image
-                                : data['restaurantImage'];
+                        final String restaurantImage = data['restaurantImage']
+                                    .toString()
+                                    .isEmpty ||
+                                data['restaurantImage'] == null
+                            ? 'https://d3m9l0v76dty0.cloudfront.net/system/photos/9533310/original/c33af26ab721782740796a3ef68e6aaa.png' // Default image
+                            : data['restaurantImage'];
                         final String restaurantName = data['name'];
 
                         //* Return the restaurant image and name

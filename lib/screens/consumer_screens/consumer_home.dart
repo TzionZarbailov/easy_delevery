@@ -73,6 +73,7 @@ class _ConsumerHomeState extends State<ConsumerHome> {
                 child: Row(
                   children: [
                     Expanded(
+                      // * Text field for the search
                       child: TextField(
                         controller: searchController,
                         textAlign: TextAlign.right,

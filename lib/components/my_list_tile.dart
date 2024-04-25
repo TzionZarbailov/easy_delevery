@@ -23,7 +23,7 @@ class MyListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.13,
+      height: MediaQuery.of(context).size.height * 0.11,
       width: double.infinity,
       margin: const EdgeInsets.symmetric(
         vertical: 5,
