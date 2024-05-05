@@ -88,10 +88,21 @@ class ValidationHelper {
 // Vaild for address
   bool isValidAddress(String address) {
     final RegExp regex = RegExp(
-      r'^[a-zA-Z0-9\u0590-\u05FF ]+$',
+      r'^[\u0590-\u05FF][a-zA-Z0-9\u0590-\u05FF ]*\d+$',
     );
     return regex.hasMatch(address);
   }
+
+  // Vaild for floor number
+  bool isValidFloorNumber(String floorNumber) {
+    final RegExp regex = RegExp(
+      r'^[0-9]+$',
+    );
+    return regex.hasMatch(floorNumber);
+  }
+
+  // Vaild for apartment number
+  
 
 // Check if the restaurant is open
   bool isRestaurantOpen(String openingTime, String closingTime) {

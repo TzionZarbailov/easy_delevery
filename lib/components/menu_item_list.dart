@@ -1,14 +1,13 @@
 import 'package:easy_delevery/models/menu_item.dart';
-import 'package:easy_delevery/models/order.dart';
+import 'package:easy_delevery/models/shipping.dart';
 
-import 'package:easy_delevery/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 class MenuItemList extends StatefulWidget {
   final String documentId;
   final List<MenuItem> menuItems;
   final String category;
-  final Function(Order)? onOrderAdded;
+  final Function(Shipping)? onOrderAdded;
 
   const MenuItemList({
     super.key,
@@ -25,7 +24,7 @@ class MenuItemList extends StatefulWidget {
 class _MenuItemListState extends State<MenuItemList> {
   bool isToppingSelected = false;
 
-  List<Order> orders = [];
+  List<Shipping> orders = [];
 
   void selectMenuItem(BuildContext context, int index) {
     showModalBottomSheet(
@@ -278,20 +277,15 @@ class _MenuItemListState extends State<MenuItemList> {
                           elevation: 0,
                         ),
                         onPressed: () async {
-                          Order order = Order(
-                            consumerId: AuthServices.getEmail,
-                            busniessOwnersId: widget.documentId,
-                            items: widget.menuItems,
-                            totalAmount: quantity,
-                            totalPrice:
-                                widget.menuItems[index].price * quantity,
+                          Shipping order = Shipping(
+                            items: widget.menuItems[index],
+                            amount: quantity,
+                            price: widget.menuItems[index].price * quantity,
                             comments: toppingSelected.keys
                                 .where(
                                   (topping) => toppingSelected[topping] == true,
                                 )
                                 .toList(),
-                            orderStatus: 'pending',
-                            orderTime: DateTime.now(),
                           );
 
                           setState(() {
@@ -303,6 +297,8 @@ class _MenuItemListState extends State<MenuItemList> {
                           }
 
                           Navigator.of(context).pop(order);
+
+                          print(order);
                         },
                         child: const Text(
                           'הוספה להזמנה',

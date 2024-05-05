@@ -95,7 +95,7 @@ class _EditMenuForRestaurantState extends State<EditMenuForRestaurant> {
             } else {
               DocumentSnapshot menuItem = snapshot.data!.docChanges
                   .firstWhere(
-                      (document) => document.doc.id == AuthServices().getUid)
+                      (document) => document.doc.id == AuthServices.getUid)
                   .doc;
 
               Map<String, dynamic> data =
@@ -119,7 +119,7 @@ class _EditMenuForRestaurantState extends State<EditMenuForRestaurant> {
                       imageDish: item.image,
                       onTap: () {
                         RestaurantServices().deleteMenuItem(
-                            AuthServices().getUid, menuItemsList[index]);
+                            AuthServices.getUid, menuItemsList[index]);
                       },
                     );
                   },

@@ -57,7 +57,7 @@ Future<void> isExsist(BuildContext context) async {
 
     if (dataToUpdate.isNotEmpty) {
       await RestaurantServices().updateRestaurantData(
-        AuthServices().getUid,
+        AuthServices.getUid,
         dataToUpdate,
       );
 

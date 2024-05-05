@@ -48,6 +48,20 @@ class Consumer extends User {
           role: 'consumer',
         );
 
+  // get phone number
+  Consumer.fromDocument(Map<String, dynamic> map)
+      : this(
+          email: map['email'],
+          password: map['password'],
+          fullName: map['fullName'],
+          address: map['address'],
+          floor: map['floor'],
+          city: map['city'],
+          apartmentNumber: map['apartmentNumber'],
+          phoneNumber: map['phoneNumber'],
+          role: map['role'],
+        );
+
   Consumer.fromMap(Map<String, dynamic> map)
       : this(
           email: map['email'],

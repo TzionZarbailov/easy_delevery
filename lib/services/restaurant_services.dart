@@ -9,7 +9,6 @@ class RestaurantServices {
   // get collection of restaurants
   final CollectionReference restaurants =
       FirebaseFirestore.instance.collection('restaurants');
-  final AuthServices _auth = AuthServices();
 
   final userAuth = FirebaseAuth.instance.currentUser!;
 
@@ -52,7 +51,7 @@ class RestaurantServices {
   }
 
   Future<void> addRestaurant(Restaurant restaurant) async {
-    await restaurants.doc(_auth.getUid).set(restaurant.toMap());
+    await restaurants.doc(AuthServices.getUid).set(restaurant.toMap());
   }
 
   // get all restaurants to the list
@@ -78,7 +77,10 @@ class RestaurantServices {
   Future<Restaurant> getRestaurantById(String id) async {
     // Fetch the restaurant data from your data source using the provided id
     // For example, if you're using Firestore, you might do something like this:
-    var doc = await FirebaseFirestore.instance.collection('restaurants').doc(id).get();
+    var doc = await FirebaseFirestore.instance
+        .collection('restaurants')
+        .doc(id)
+        .get();
 
     // Then, convert the fetched data into a Restaurant object and return it
     // This will depend on how your Restaurant class is defined

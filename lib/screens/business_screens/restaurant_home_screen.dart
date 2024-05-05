@@ -292,7 +292,7 @@ class _RestaurantHomeScreen extends State<RestaurantHomeScreen> {
                           fontSize: 15,
                           onTap: () async {
                             await RestaurantServices().updateIsOpen(
-                              AuthServices().getUid,
+                              AuthServices.getUid,
                               !isOpen,
                             );
                           },

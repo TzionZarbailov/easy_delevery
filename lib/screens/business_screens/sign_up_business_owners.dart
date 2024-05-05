@@ -31,9 +31,7 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     'restaurantPhone': TextEditingController(),
     'password': TextEditingController(),
     'restaurantName': TextEditingController(),
-    'city': TextEditingController(),
     'address': TextEditingController(),
-    'time': TextEditingController(),
   };
   //* add a new business owner to the database
 
@@ -44,11 +42,10 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
     String password = _controllers['password']!.text;
     String fullName = _controllers['fullName']!.text;
     String phoneNumber = _controllers['phone']!.text;
-    String city = _controllers['city']!.text;
+
     String address = _controllers['address']!.text;
     String businessName = _controllers['restaurantName']!.text;
     String businessPhone = _controllers['restaurantPhone']!.text;
-    String workHours = _controllers['time']!.text;
 
     // Create new user in auth and firestore
     final List<String> errors = [];
@@ -467,37 +464,19 @@ class _SignUpBusinessOwnersState extends State<SignUpBusinessOwners> {
                     children: [
                       Expanded(
                         child: buildTextField(
-                          padding: EdgeInsets.only(left: width / 15),
+                          padding: EdgeInsets.only(left: width / 3),
                           keyboardType: TextInputType.streetAddress,
                           controller: _controllers['address']!,
                           labelText: 'כתובת',
                         ),
                       ),
-                      const SizedBox(width: 40),
-                      Expanded(
-                        child: buildTextField(
-                          padding: EdgeInsets.only(left: width / 15),
-                          keyboardType: TextInputType.streetAddress,
-                          controller: _controllers['city']!,
-                          labelText: 'עיר',
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: buildTextField(
-                          padding: EdgeInsets.only(left: width / 2),
-                          keyboardType: TextInputType.datetime,
-                          controller: _controllers['time']!,
-                          labelText: 'שעות פעילות',
-                        ),
-                      ),
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 15,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [

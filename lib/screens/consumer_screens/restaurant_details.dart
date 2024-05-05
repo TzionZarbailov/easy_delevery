@@ -1,6 +1,6 @@
 import 'package:easy_delevery/colors/my_colors.dart';
 import 'package:easy_delevery/components/menu_item_list.dart';
-import 'package:easy_delevery/models/order.dart';
+import 'package:easy_delevery/models/shipping.dart';
 import 'package:easy_delevery/models/restaurant.dart';
 import 'package:easy_delevery/screens/consumer_screens/shopping_cart.dart';
 import 'package:easy_delevery/services/restaurant_services.dart';
@@ -20,7 +20,7 @@ class RestaurantDetails extends StatefulWidget {
 
 class _RestaurantDetailsState extends State<RestaurantDetails> {
   // Initialize newIndex
-  List<Order> orders = [];
+  List<Shipping> orders = [];
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +230,7 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    onPressed: Order.getTotalQuantity(orders) == 0
+                    onPressed: Shipping.getQuantity(orders) == 0
                         ? null
                         : () async {
                             final result = await Navigator.push(
@@ -255,7 +255,7 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
                         Text(
                           'סיום הזמנה',
                           style: TextStyle(
-                            color: Order.getTotalQuantity(orders) == 0
+                            color: Shipping.getQuantity(orders) == 0
                                 ? Colors.grey
                                 : Colors.black,
                             fontSize: 20,
@@ -270,9 +270,9 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
                             fontSize: 14,
                           ),
                           label: Text(
-                            Order.getTotalQuantity(orders).toString(),
+                            Shipping.getQuantity(orders).toString(),
                             style: TextStyle(
-                              color: Order.getTotalQuantity(orders) == 0
+                              color: Shipping.getQuantity(orders) == 0
                                   ? Colors.grey
                                   : Colors.black,
                               fontWeight: FontWeight.bold,
@@ -281,7 +281,7 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
                           ),
                           child: Icon(
                             Icons.shopping_cart,
-                            color: Order.getTotalQuantity(orders) == 0
+                            color: Shipping.getQuantity(orders) == 0
                                 ? Colors.grey
                                 : Colors.black,
                           ),

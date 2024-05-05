@@ -32,8 +32,7 @@ class _DialogBoxState extends State<DialogBox> {
 
   Future newMeal() async {
     try {
-      AuthServices auth = AuthServices();
-      DocumentReference docRef = restaurant.doc(auth.getUid);
+      DocumentReference docRef = restaurant.doc(AuthServices.getUid);
       DocumentSnapshot docSnapshot = await docRef.get();
 
       MenuItem newItem = MenuItem(

@@ -31,8 +31,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   // get function to update category in restaurant collection
   Future<void> _updateCategory() async {
     try {
-      AuthServices authServices = AuthServices();
-      DocumentReference docRef = restaurant.doc(authServices.getUid);
+      DocumentReference docRef = restaurant.doc(AuthServices.getUid);
       DocumentSnapshot docSnapshot = await docRef.get();
 
       Category newCategory = Category(
@@ -246,7 +245,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         DocumentSnapshot restaurantDoc = snapshot
                             .data!.docChanges
                             .firstWhere((document) =>
-                                document.doc.id == AuthServices().getUid)
+                                document.doc.id == AuthServices.getUid)
                             .doc;
 
                         Map<String, dynamic> data =

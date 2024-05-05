@@ -1,10 +1,9 @@
-import 'package:easy_delevery/models/menu_item.dart';
-import 'package:easy_delevery/models/order.dart';
+import 'package:easy_delevery/models/shipping.dart';
 import 'package:easy_delevery/screens/consumer_screens/payment_screen.dart';
 import 'package:flutter/material.dart';
 
 class ShoppingCart extends StatefulWidget {
-  final List<Order> orders;
+  final List<Shipping> orders;
   final String restaurantDocId;
 
   const ShoppingCart({
@@ -81,7 +80,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                             ),
                             content: Text(
                               order.comments.isEmpty
-                                  ? 'אין שינויים במנה'
+                                  ? '.אין שינויים'
                                   : order.comments
                                       .map((comment) =>
                                           comment.replaceFirst('', 'בלי '))
@@ -152,7 +151,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                               ),
 
                               Text(
-                                order.items[index].name,
+                                order.items.name,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -172,7 +171,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                order.totalPrice.toStringAsFixed(2),
+                                order.price.toStringAsFixed(2),
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
                                   color: Colors.red,
@@ -180,7 +179,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                               ),
                               const SizedBox(width: 25),
                               Text(
-                                '${MenuItem.getTotalQuantity(order.items)}  יחידות',
+                                '${order.amount}  יחידות',
                                 textAlign: TextAlign.right,
                               ),
                             ],
@@ -188,7 +187,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           trailing: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
-                              order.items[index].image,
+                              order.items.image,
                               width: 100,
                               height: 100,
                               fit: BoxFit.cover,
@@ -210,7 +209,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  Order.getTotalPrice(widget.orders).toStringAsFixed(2),
+                  Shipping.getPrice(widget.orders).toStringAsFixed(2),
                   style: const TextStyle(
                     color: Colors.red,
                     fontSize: 20,
@@ -257,17 +256,19 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaymentScreen(
-                      orders: widget.orders,
-                      restaurantDoc: widget.restaurantDocId,
-                    ),
-                  ),
-                );
-              },
+              onPressed: (Shipping.getPrice(widget.orders) != 0)
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PaymentScreen(
+                            orders: widget.orders,
+                            restaurantDoc: widget.restaurantDocId,
+                          ),
+                        ),
+                      );
+                    }
+                  : null,
               child: const Text(
                 'מעבר לתשלום',
                 style: TextStyle(

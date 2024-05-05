@@ -6,54 +6,30 @@ import 'package:easy_delevery/services/auth_services.dart';
 
 class UserServices {
   // get collection of users
-  final CollectionReference _user =
+  static final CollectionReference _user =
       FirebaseFirestore.instance.collection('users');
-
-  final AuthServices _auth = AuthServices();
 
   //* CREATE: add a new user and doc is email
   Future<void> addUser(User user) async {
-    await _user.doc(_auth.getUid).set(user.toMap());
+    await _user.doc(AuthServices.getUid).set(user.toMap());
   }
 
-  Future<String> getBusinessNameByDocId(String docId) async {
-    // Get a DocumentReference for the document with the specified ID
-    DocumentReference docRef =
-        FirebaseFirestore.instance.collection('businessName').doc(docId);
+  // Get: get a consumer by doc id order by phone number
+  static Future getUser(String uid, String getName) async {
+    DocumentSnapshot doc = await _user.doc(uid).get();
 
-    // Get a DocumentSnapshot for the document
-    DocumentSnapshot docSnapshot = await docRef.get();
-
-    // If the document exists, return the restaurant name
-    if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
-      String? userEmail = AuthServices.getEmail;
-      if (data != null && data['email'] == userEmail) {
-        return data['businessName'];
-      }
-    }
-
-    // If the document doesn't exist, or it doesn't have a 'name' field, return null
-    return '';
-  }
-
-  // Get: get a user
-  Future getUser() async {
-    List docId = [];
-    await _user.get().then(
-          (value) => value.docs.forEach(
-            (document) {
-              print(document.reference);
-              docId.add(document.id);
-            },
-          ),
-        );
-    return docId;
+    return doc[getName];
   }
 
   // UPDATE: update a user by email
   Future<void> updateBusinessOwner(
       String email, Map<String, dynamic> newdata) async {
     await _user.doc(email).update(newdata);
+  }
+
+  // update user by uid
+  static Future<void> updateUser(
+      String uid, Map<String, dynamic> newdata) async {
+    await _user.doc(uid).update(newdata);
   }
 }

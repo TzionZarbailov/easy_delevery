@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthServices {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String get getUid {
+  static String get getUid {
     return _auth.currentUser!.uid;
   }
 

@@ -74,7 +74,7 @@ class _MyDropdownButtonState extends State<MyDropdownButton> {
           if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
             DocumentSnapshot restaurantDoc = snapshot.data!.docChanges
                 .firstWhere(
-                    (document) => document.doc.id == AuthServices().getUid)
+                    (document) => document.doc.id == AuthServices.getUid)
                 .doc;
 
             if (restaurantDoc.exists) {
