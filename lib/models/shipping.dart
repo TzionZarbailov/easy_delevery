@@ -42,10 +42,12 @@ class Shipping {
   }
 
 // map the data from the Order object to the database
-  Shipping.fromMap(Map<String, dynamic> map)
-      : items = MenuItem.fromMap(
-            map['items']), // Assuming MenuItem has a fromMap() method
-        amount = map['amount'],
-        price = map['price'],
-        comments = map['comments'];
+  factory Shipping.fromMap(Map<String, dynamic> map) {
+    return Shipping(
+      items: MenuItem.fromMap(map['items']),
+      amount: map['amount'],
+      price: map['price'],
+      comments: List<String>.from(map['comments']),
+    );
+  }
 }

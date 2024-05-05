@@ -3,6 +3,9 @@ import 'package:easy_delevery/models/shipping.dart';
 class Order {
   final String consumerId;
   final String restaurantId;
+  final String consumerName;
+  final String consumerAddress;
+  final String resturantName;
   final List<Shipping> shipping;
   final int totalAmount; // total quantity of the order
   final double totalPirce; // total price of the order
@@ -16,6 +19,9 @@ class Order {
   Order({
     required this.consumerId,
     required this.restaurantId,
+    required this.resturantName,
+    required this.consumerName,
+    required this.consumerAddress,
     required this.shipping,
     required this.totalAmount,
     required this.totalPirce,
@@ -32,6 +38,9 @@ class Order {
     return Order(
       consumerId: map['consumerId'],
       restaurantId: map['restaurantId'],
+      resturantName: map['resturantName'],
+      consumerName: map['consumerName'],
+      consumerAddress: map['consumerAddress'],
       shipping: List<Shipping>.from(map['shipping']),
       totalAmount: map['totalAmount'],
       totalPirce: map['totalPirce'],
@@ -49,6 +58,9 @@ class Order {
     return {
       'consumerId': consumerId,
       'restaurantId': restaurantId,
+      'resturantName': resturantName,
+      'consumerName': consumerName,
+      'consumerAddress': consumerAddress,
       'shipping': shipping
           .map((item) => item.toMap())
           .toList(), // Assuming Shipping has a toMap() method

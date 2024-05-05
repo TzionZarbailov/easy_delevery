@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class RestaurantServices {
   // get collection of restaurants
-  final CollectionReference restaurants =
+  static final CollectionReference restaurants =
       FirebaseFirestore.instance.collection('restaurants');
 
   final userAuth = FirebaseAuth.instance.currentUser!;
@@ -55,23 +55,29 @@ class RestaurantServices {
   }
 
   // get all restaurants to the list
-  Stream<QuerySnapshot> getAllRestaurants() {
-    final restaurants =
-        FirebaseFirestore.instance.collection('restaurants').snapshots();
-    return restaurants;
-  }
+  // Stream<QuerySnapshot> getAllRestaurants() {
+  //   final restaurants =
+  //       FirebaseFirestore.instance.collection('restaurants').snapshots();
+  //   return restaurants;
+  // }
 
   // get resaurant by click on the restaurant
-  Future<Restaurant> getRestaurant(String docID) async {
-    final docSnapshot = await restaurants.doc(docID).get();
+  // Future<Restaurant> getRestaurant(String docID) async {
+  //   final docSnapshot = await restaurants.doc(docID).get();
 
-    if (docSnapshot.exists) {
-      final data = docSnapshot.data()!;
-      return Restaurant.fromMap(
-          Map<String, dynamic>.from(data as Map<String, dynamic>));
-    } else {
-      throw Exception('Restaurant not found');
-    }
+  //   if (docSnapshot.exists) {
+  //     final data = docSnapshot.data()!;
+  //     return Restaurant.fromMap(
+  //         Map<String, dynamic>.from(data as Map<String, dynamic>));
+  //   } else {
+  //     throw Exception('Restaurant not found');
+  //   }
+  // }
+
+  static Future getRestaurantName(String uid, String getName) async {
+    DocumentSnapshot doc = await restaurants.doc(uid).get();
+
+    return doc[getName];
   }
 
   Future<Restaurant> getRestaurantById(String id) async {
@@ -96,12 +102,12 @@ class RestaurantServices {
     return categories;
   }
 
-  // get all categories of a restaurant
-  Stream<QuerySnapshot> getCategoriesByDocId(String docID) {
-    final categories =
-        restaurants.doc(docID).collection('categories').snapshots();
-    return categories;
-  }
+  // // get all categories of a restaurant
+  // Stream<QuerySnapshot> getCategoriesByDocId(String docID) {
+  //   final categories =
+  //       restaurants.doc(docID).collection('categories').snapshots();
+  //   return categories;
+  // }
 
   // get all menu items of a restaurant
   Stream<QuerySnapshot> getMenuItems() {

@@ -8,6 +8,7 @@ import 'package:easy_delevery/screens/consumer_screens/payment_by_credit.dart';
 
 import 'package:easy_delevery/services/auth_services.dart';
 import 'package:easy_delevery/services/order_services.dart';
+import 'package:easy_delevery/services/restaurant_services.dart';
 import 'package:easy_delevery/services/user_services.dart';
 import 'package:flutter/material.dart';
 
@@ -68,9 +69,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   isCashOrCreditList() async {
+    String consumerName =
+        await UserServices.getUser(AuthServices.getUid, 'fullName');
+    String consumerAddress =
+        await UserServices.getUser(AuthServices.getUid, 'address');
+    String resturantName = await RestaurantServices.getRestaurantName(
+        widget.restaurantDoc, 'name');
+
     Order order = Order(
       consumerId: AuthServices.getUid,
       restaurantId: widget.restaurantDoc,
+      resturantName: resturantName,
+      consumerName: consumerName,
+      consumerAddress: consumerAddress,
       shipping: widget.orders,
       totalAmount: Shipping.getQuantity(widget.orders),
       totalPirce: totalPice,

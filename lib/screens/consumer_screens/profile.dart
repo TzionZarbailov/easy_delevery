@@ -1,3 +1,5 @@
+import 'package:easy_delevery/screens/consumer_screens/my_order_screen.dart';
+import 'package:easy_delevery/screens/consumer_screens/my_personal_details.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_delevery/colors/my_colors.dart';
@@ -5,6 +7,9 @@ import 'package:easy_delevery/services/auth_services.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
+
+// Color(0xFFF8E3CA),
+// Color(0xC8F4AE5C),
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +46,89 @@ class Profile extends StatelessWidget {
         ),
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(myColors.buttonColor),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9, // Set the width
+                height: 60, // Set the height
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color(0xC8F4AE5C)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MyOrderScreen(),
+                    ),
+                  ),
+                  child: const Text(
+                    'הזמנות שלי',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                onPressed: AuthServices.signOut,
-                child: const Text(
-                  'התנתקות',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9, // Set the width
+                height: 60,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color(0xFFF8E3CA),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MyPersonalDetails(),
+                    ),
+                  ),
+                  child: const Text(
+                    'שינוי פרטים אישיים',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9, // Set the width
+                height: 60,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color(0xC8F4AE5C),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
+                  ),
+                  onPressed: AuthServices.signOut,
+                  child: const Text(
+                    'התנתקות',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
